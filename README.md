@@ -1,4 +1,7 @@
 # SWP
+
+Setup git
+{
 download git 
 create a new file(emty)
 right click in the emty file click on the "Open git bash here"
@@ -8,3 +11,4 @@ git config --global user.email "your-email@example.com"
 git config --list
 git remote add origin https://github.com/ckchfbc/SWP.git
 git pull origin main 
+}
