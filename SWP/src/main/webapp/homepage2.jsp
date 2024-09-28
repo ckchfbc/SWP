@@ -16,6 +16,12 @@
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
         <title>JSP Page</title>
         <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
             .card {
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
@@ -33,23 +39,19 @@
 
             a{
                 text-decoration: none;
-            }
-
-            #searchForm {
-                display: none;
-            }
+            }            
         </style>
     </head>
     <body>
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-md navbar-light bg-white position-fixed w-100 p-0 p-1 top-0 start-0">
-            <div class="container d-flex p-0">
+        <nav class="navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
+            <div class="container">
                 <a class="navbar-brand" href="#"><h1>DriveAura</h1></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto align-items-center-md">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="#">Product</a>
                         </li>
@@ -61,42 +63,50 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Zalo</a>
-                        </li>                        
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Login</a>
                         </li>
-                        <li class="nav-item align-items-center">
-                            <a class="nav-link" href="#" id="searchButton"><i class="fa-solid fa-magnifying-glass"></i></a>
-                            <script>
-                                // Khi nhấp vào nút tìm kiếm, hiển thị hộp tìm kiếm
-                                document.getElementById('searchButton').addEventListener('click', function () {
-                                    const searchForm = document.getElementById('searchForm');
-                                    // Chỉ hiển thị nếu nó đang ẩn
-                                    if (searchForm.style.display === 'none' || searchForm.style.display === '') {
-                                        searchForm.style.display = 'block';
-                                    } else {
-                                        searchForm.style.display = 'none';
-                                    }
-                                });
-                            </script>
+                        <!-- Nút tìm kiếm -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa-solid fa-magnifying-glass"></i></a>
                         </li>
                     </ul>
                 </div>
-            </div>            
+            </div>
         </nav>
-        <!-- tìm kiếm -->
-        <section class="d-flex justify-content-end mt-5">
-            <form id="searchForm" class="p-3 w-50">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit">Tìm</button>
+
+        <!-- Modal tìm kiếm -->
+        <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchModalLabel">Tìm Kiếm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="searchForm">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
+                                <button class="btn btn-outline-secondary" type="submit">Tìm</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
-        </section>
-        <!-- Hero Section -->
-        <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white" style="height: 80vh; background-image: url('path/to/your/hero-image.jpg'); background-size: cover; background-position: center;">
+            </div>
+        </div>
+        <!--        <script>
+                    document.getElementById('searchButton').addEventListener('click', function () {
+                        document.body.style.overflow = 'hidden';
+                    });
+        
+                    // Đóng modal và khôi phục cuộn
+                    document.querySelector('.btn-close').addEventListener('click', function () {
+                        document.body.style.overflow = 'auto';
+                    });
+                </script>-->
+        <!-- Slider Section -->
+        <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white mt-5" style="height: 80vh; background-image: url('path/to/your/hero-image.jpg'); background-size: cover; background-position: center;">
             <div class="container">
                 <h1 class="display-4">Find Your Perfect Vehicle Online</h1>
                 <p class="lead">The World's Largest Used Car Dealership</p>
