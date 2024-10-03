@@ -10,9 +10,9 @@ package ConstantGG;
  */
 public class Iconstant1 {
 
-//    public static final String GOOGLE_CLIENT_ID = "660845253786-djntvvn4rk8lnt6vmrbop3blvttdmrnm.apps.googleusercontent.com";
+    public static final String GOOGLE_CLIENT_ID = "660845253786-djntvvn4rk8lnt6vmrbop3blvttdmrnm.apps.googleusercontent.com";
 
-//    public static final String GOOGLE_CLIENT_SECRET = "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";
+    public static final String GOOGLE_CLIENT_SECRET = "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";
 
     public static final String GOOGLE_REDIRECT_URI = "http://localhost:8080/LoginController/Login";
 
