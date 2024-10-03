@@ -8,13 +8,19 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <%
+            //Thử control + f5 để refresh cache, hoặc gõ '${host}/../..' vào cái link
+            String host = request.getRequestURI();
+        %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- AE copy từ đây tới title nếu tạo jsp mới thêm các thể khác thì thêm trên <title> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="css/font.css"/>
-        <title>JSP Page</title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/font.css"/>
+        <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
+        <title >DriveAura</title>
         <style>
             *{
                 margin: 0;
@@ -39,10 +45,23 @@
 
             a{
                 text-decoration: none;
-            }            
+            }
+
+            @font-face {
+                font-family: 'Kirsty'; /* Your font name */
+                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            .navbar-brand  {
+                font-family: 'Kirsty', sans-serif;
+                color: #050B20;
+            }
         </style>
     </head>
-    <body>
+    <body>        
+
         <!-- Navigation -->
         <nav class="navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
@@ -63,10 +82,44 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Zalo</a>
+                        </li>                        
+                        <!-- Nút logOut cho customer -->
+
+                        <%
+                            // Lấy danh sách cookies từ request
+                            Cookie[] cookies = request.getCookies();
+                            String userEmail = null;
+
+                            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
+                            if (cookies != null) {
+                                for (Cookie cookie : cookies) {
+                                    System.out.println(cookie.getName());
+                                    if (cookie.getName().equals("userEmail")) {
+                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
+                                        break;
+                                    } else {
+                                        System.out.println("ko có cookies");
+                                    }
+                                }
+                            }
+
+                            // Kiểm tra nếu cookie "userEmail" tồn tại
+                            if (userEmail != null) {
+                        %>
+                        <!-- Hiển thị nút nếu có cookie userEmail -->
+                        <form action="LoginController" method="post">
+                            <button class="btn btn-primary" type="submit" name="logOut">Log Out</button>
+                        </form>
+                        <%
+                        } else {
+                        %>
+                        <!-- Hiển thị thông báo nếu không có cookie -->
+                        <li class="nav-item">                            
+                            <a class="nav-link" href="${host}/HomePageController/Login">Login</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Login</a>
-                        </li>
+                        <%
+                            }
+                        %>
                         <!-- Nút tìm kiếm -->
                         <li class="nav-item">
                             <a class="nav-link" href="#" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa-solid fa-magnifying-glass"></i></a>
@@ -95,17 +148,7 @@
                 </div>
             </div>
         </div>
-        <!--        <script>
-                    document.getElementById('searchButton').addEventListener('click', function () {
-                        document.body.style.overflow = 'hidden';
-                    });
-        
-                    // Đóng modal và khôi phục cuộn
-                    document.querySelector('.btn-close').addEventListener('click', function () {
-                        document.body.style.overflow = 'auto';
-                    });
-                </script>-->
-        <!-- Slider Section -->
+
         <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white mt-5" style="height: 80vh; background-image: url('path/to/your/hero-image.jpg'); background-size: cover; background-position: center;">
             <div class="container">
                 <h1 class="display-4">Find Your Perfect Vehicle Online</h1>
@@ -187,6 +230,16 @@
                 </div>
             </div>
         </section>
+
+
+
+
+
+
+
+
+
+
         <!-- Why Choose Us -->
         <section class="bg-dark text-white py-5">
             <div class="container">

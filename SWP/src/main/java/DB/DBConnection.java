@@ -8,9 +8,9 @@ import java.sql.ResultSet;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://b4ahfmnx4jrojobntyx5-mysql.services.clever-cloud.com:3306/b4ahfmnx4jrojobntyx5";
-    private static final String USER = "uvdr4fkzqajg36cz";
-    private static final String PASSWORD = "7UBqNbhUUclHXv2wlCrB";
+    private static final String URL = "jdbc:mysql://26.57.132.168:3306/swp";
+    private static final String USER = "ckchfbc";
+    private static final String PASSWORD = "1412";
 
     public static Connection getConnection() {
         Connection conn = null;
