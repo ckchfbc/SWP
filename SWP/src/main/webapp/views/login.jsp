@@ -62,10 +62,7 @@
                                     <i class="fa-solid fa-eye p-0 m-0" id="icon"></i>
                                 </button>
                             </div>
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="rememberMe"  name="rememberBtn">
-                                <label class="form-check-label" for="rememberMe">Remember me</label>
-                            </div>
+                            <span id="passwordError" class="text-danger mb-3"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
                             <button type="submit" class="btn btn-dark w-100 mb-3" name="loginBtn">Login</button>
                             <div class="text-center">Or</div>
                             <a class="btn btn-outline-dark w-100 mt-3" href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/LoginController/Login&response_type=code&client_id=660845253786-djntvvn4rk8lnt6vmrbop3blvttdmrnm.apps.googleusercontent.com&approval_prompt=force&state=login">

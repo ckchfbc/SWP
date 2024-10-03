@@ -6,6 +6,7 @@ package DAOs;
 
 import DB.DBConnection;
 import Encryption.MD5;
+import Models.AccountModel;
 import Models.CustomerAccountModel;
 import Models.GoogleAccount;
 import java.sql.Connection;
@@ -123,5 +124,78 @@ public class AccountDAO {
             return null;
         }
         return cus_acc;
+    }
+
+    public boolean addNewAccount(String email, String name, String passwword) {
+        String sql = "INSERT INTO user_account (email, password , role, date_created, status) VALUES (?, ?, ?, ?, ?)";
+        MD5 md5 = new MD5();
+        String hashPassword = md5.getMd5(passwword);
+        String role = "customer";
+        String date_created = String.valueOf(LocalDate.now());
+        boolean status = true;
+
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.setString(2, hashPassword);
+            stmt.setString(3, role);
+            stmt.setString(4, date_created);
+            stmt.setBoolean(5, status);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean addNewCustomerAccount(String email, String name) {
+        String sql = "SELECT * FROM user_account where email = ? and role = ? and status = true";
+        String sql2 = "insert into customers (user_id, name, email) values (?, ?, ?)";
+        String role = "customer";
+
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, email);
+            stm.setString(2, role);
+            PreparedStatement stm2 = conn.prepareStatement(sql2);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                stm2.setInt(1, rs.getInt("user_id"));
+                stm2.setString(2, name);
+                stm2.setString(3, email);
+                stm2.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
+    public boolean loginAccount(String email, String password) {
+        String sql = "SELECT * FROM user_account where email=? and password = ?";
+        MD5 md5 = new MD5();
+        String hassPassword = md5.getMd5(password);
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.setString(2, hassPassword);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                }else{
+                    return false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

@@ -47,7 +47,7 @@
                         <%
                             session.removeAttribute("message");
                         %>
-                        <form action="/LoginController" method="POST">
+                        <form onsubmit="return validateForm()" action="/LoginController" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
                                 <input name="nameTxt" required type="text" class="form-control" id="name" placeholder="Enter your name">
@@ -55,13 +55,18 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address</label>
                                 <input name="emailTxt" required type="email" class="form-control" id="email" placeholder="Enter your email">
+                                <span id="emailError" class="text-danger"></span> <!-- Thêm thẻ này để hiển thị lỗi -->
                             </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input name="pwdTxt" required type="password" class="form-control" id="password" placeholder="Enter your password">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="mb-3 d-flex">
+                                <input required type="password" class="form-control" id="password" name="pwdTxt" placeholder="Enter your password">
+                                <button type="button" class="form-control btn" id="showPassword" onclick="togglePassword()" style="width: 50px;">
+                                    <i class="fa-solid fa-eye p-0 m-0" id="icon"></i>
+                                </button>
                             </div>
+                            <span id="passwordError" class="text-danger mb-3"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
                             <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="terms" name="agreeBox">
+                                <input required type="checkbox" class="form-check-input" id="terms" name="agreeBox">
                                 <label class="form-check-label" for="terms">I agree to the <a href="#">terms & policy</a></label>
                             </div>
                             <button type="submit" class="btn btn-dark w-100 mb-3" name="signUpBtn">Sign Up</button>
@@ -80,5 +85,51 @@
                 <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/loginImage.jpg'); background-size: cover; background-position: center;"></div>
             </div>
         </div>
+        <script>
+            function validateForm() {
+                console.log("Form validation started"); // Xác định hàm này có chạy không
+                var email = document.getElementById("email").value;
+                var password = document.getElementById("password").value;
+                var emailError = document.getElementById("emailError");
+                var passwordError = document.getElementById("passwordError");
+
+                // Reset thông báo lỗi
+                emailError.textContent = "";
+                passwordError.textContent = "";
+
+                // Regular expression kiểm tra định dạng email
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    emailError.textContent = "Email không hợp lệ.";
+                    console.log("Email không hợp lệ");
+                    return false; // Dừng form submit
+                }
+
+                // Regular expression kiểm tra mật khẩu
+                var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
+                if (!passwordRegex.test(password)) {
+                    passwordError.textContent = "Mật khẩu phải có từ 6-32 ký tự, ít nhất 1 chữ in hoa, 1 số và 1 ký tự đặc biệt.";
+                    console.log("Password không hợp lệ");
+                    return false; // Dừng form submit
+                }
+
+                console.log("Form validation passed"); // Form hợp lệ
+                return true;
+            }
+            function togglePassword() {
+                var passwordField = document.getElementById("password");
+                var icon = document.getElementById("icon");
+
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                } else {
+                    passwordField.type = "password";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye");
+                }
+            }
+        </script>
     </body>
 </html>

@@ -6,6 +6,7 @@ package Controller;
 
 import DAOs.AccountDAO;
 import GoogleClass.GoogleLogin;
+import Models.AccountModel;
 import Models.CustomerAccountModel;
 import Models.GoogleAccount;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 
 /**
  *
@@ -51,7 +53,7 @@ public class LoginController extends HttpServlet {
 
         // Kiểm tra điều kiện state coi là đăng ký hay đăng nhập
         String state = request.getParameter("state");
-        // Cho đăng ký
+        // Cho đăng ký bằng Google
         if (state.equals("signup")) {
             String code = request.getParameter("code");
             GoogleLogin gg = new GoogleLogin();
@@ -83,7 +85,7 @@ public class LoginController extends HttpServlet {
                 }
             }
         }
-        // Cho đăng nhập
+        // Cho đăng nhập bằng Google
         if (state.equals("login")) {
             String code = request.getParameter("code");
             GoogleLogin gg = new GoogleLogin();
@@ -138,19 +140,55 @@ public class LoginController extends HttpServlet {
             String name = request.getParameter("nameTxt");
             String email = request.getParameter("emailTxt");
             String password = request.getParameter("pwdTxt");
-            String a = request.getParameter("agreeBox");
-            System.out.println(name + " " + email + " " + password + " " + a);
+            String agree = request.getParameter("agreeBox");
+            String currentDate = LocalDate.now().toString();
+
+            if (agree != null) {
+                if (accDao.checkAccountExsit(email)) {
+                    String message = "Account already exists. Please log in.";
+                    // Set cái message thông bào nếu tài khoàn có tồn tại
+                    request.getSession().setAttribute("message", message);
+                    System.out.println("có accroi62");
+                    response.sendRedirect("/HomePageController/SignUp");
+                } else {
+                    if (accDao.addNewAccount(email, name, password)) {
+                        if (accDao.addNewCustomerAccount(email, name)) {
+                            Cookie userCookie = new Cookie("userEmail", email);
+                            userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+                            userCookie.setHttpOnly(true); // Bảo mật
+                            userCookie.setPath("/");
+                            response.addCookie(userCookie); // Thêm cookie vào phản hồi                
+                            response.sendRedirect("/");
+                        }
+                    }
+                }
+            }
+
         }
 
         if (request.getParameter("loginBtn") != null) {
             String email = request.getParameter("emailTxt");
             String password = request.getParameter("pwdTxt");
             String a = request.getParameter("rememberBtn");
-            if(!accDao.checkAccountExsit(email)){
-                String message = "Incorrect Email or Password.";
-                // Set cái message thông bào nếu tài khoàn ko tồn tại
+            if (!accDao.checkAccountExsit(email)) {
+                String message = "Account does not exist. Please register.";
+                // Set cái message thông bào nếu tài khoàn có tồn tại
                 request.getSession().setAttribute("message", message);
                 response.sendRedirect("/HomePageController/Login");
+            } else {
+                if (accDao.loginAccount(email, password)) {
+                    Cookie userCookie = new Cookie("userEmail", email);
+                    userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+                    userCookie.setHttpOnly(true); // Bảo mật
+                    userCookie.setPath("/");
+                    response.addCookie(userCookie); // Thêm cookie vào phản hồi                
+                    response.sendRedirect("/");
+                } else {
+                    String message = "Incorrect Password or Email.";
+                    // Set cái message thông bào nếu tài khoàn có tồn tại
+                    request.getSession().setAttribute("message", message);
+                    response.sendRedirect("/HomePageController/Login");
+                }
             }
         }
     }
