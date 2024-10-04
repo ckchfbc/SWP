@@ -20,7 +20,7 @@
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/font.css"/>
         <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
-        <title >DriveAura</title>
+        <title >DriveAuraaaa</title>
         <style>
             *{
                 margin: 0;
