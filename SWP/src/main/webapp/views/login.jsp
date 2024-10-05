@@ -19,6 +19,27 @@
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
         <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
         <title>Login Page</title>
+        <style>
+            @font-face {
+                font-family: 'Kirsty'; /* Your font name */
+                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            .logo  {
+                font-family: 'Kirsty', sans-serif;
+                color: #050B20;
+            }
+
+            a:hover {
+                color: inherit; /* Giữ nguyên màu */
+            }
+
+            .btn-dark{
+                background-color: #050B20;
+            }
+        </style>
     </head>
     <body>
         <%
@@ -41,6 +62,8 @@
                 <!-- Right side with form -->
                 <div class="col-lg-6 d-flex justify-content-center align-items-center">                     
                     <div class="w-100" style="max-width: 400px;">
+                        <a class="logo text-decoration-none" href="/"><h1 class="mb-5">DriveAura</h1></a>   
+
                         <h2 class="fw-bold">Welcome back!</h2>
                         <c:if test="${not empty message}">
                             <div class="alert alert-warning">${message}</div>
@@ -58,7 +81,7 @@
                             <label for="password" class="form-label">Password</label>
                             <div class="mb-3 d-flex">
                                 <input required type="password" class="form-control" id="password" name="pwdTxt" placeholder="Enter your password">
-                                <button type="button" class="form-control btn" id="showPassword" onclick="togglePassword()" style="width: 50px;">
+                                <button type="button" class="form-control btn btn-outline-dark" id="showPassword" onclick="togglePassword()" style="width: 50px;">
                                     <i class="fa-solid fa-eye p-0 m-0" id="icon"></i>
                                 </button>
                             </div>
@@ -70,7 +93,7 @@
                                 Login with Google
                             </a>
                             <div class="text-center mt-3" name="forgotPwdBtn">
-                                <a href="#">Forgot password?</a>
+                                <a href="/HomePageController/ResetPassword">Forgot password?</a>
                             </div>
                             <div class="text-center mt-2">
                                 Don't have an account? <a href="/HomePageController/SignUp">Sing Up</a>

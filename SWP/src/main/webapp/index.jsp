@@ -65,7 +65,7 @@
         <!-- Navigation -->
         <nav class="navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
-                <a class="navbar-brand" href="#"><h1>DriveAura</h1></a>
+                <a class="navbar-brand" href="/"><h1>DriveAura</h1></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -93,12 +93,9 @@
                             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
                             if (cookies != null) {
                                 for (Cookie cookie : cookies) {
-                                    System.out.println(cookie.getName());
                                     if (cookie.getName().equals("userEmail")) {
                                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
                                         break;
-                                    } else {
-                                        System.out.println("ko có cookies");
                                     }
                                 }
                             }

@@ -142,28 +142,35 @@ public class LoginController extends HttpServlet {
             String password = request.getParameter("pwdTxt");
             String agree = request.getParameter("agreeBox");
             String currentDate = LocalDate.now().toString();
+            String OTP = request.getParameter("OTPResult");
 
-            if (agree != null) {
-                if (accDao.checkAccountExsit(email)) {
-                    String message = "Account already exists. Please log in.";
-                    // Set cái message thông bào nếu tài khoàn có tồn tại
-                    request.getSession().setAttribute("message", message);
-                    System.out.println("có accroi62");
-                    response.sendRedirect("/HomePageController/SignUp");
-                } else {
-                    if (accDao.addNewAccount(email, name, password)) {
-                        if (accDao.addNewCustomerAccount(email, name)) {
-                            Cookie userCookie = new Cookie("userEmail", email);
-                            userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                            userCookie.setHttpOnly(true); // Bảo mật
-                            userCookie.setPath("/");
-                            response.addCookie(userCookie); // Thêm cookie vào phản hồi                
-                            response.sendRedirect("/");
+            if (OTP.equals("Success")) {
+                if (agree != null) {
+                    if (accDao.checkAccountExsit(email)) {
+                        String message = "Account already exists. Please log in.";
+                        // Set cái message thông bào nếu tài khoàn có tồn tại
+                        request.getSession().setAttribute("message", message);
+                        System.out.println("có accroi62");
+                        response.sendRedirect("/HomePageController/SignUp");
+                    } else {
+                        if (accDao.addNewAccount(email, name, password)) {
+                            if (accDao.addNewCustomerAccount(email, name)) {
+                                Cookie userCookie = new Cookie("userEmail", email);
+                                userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+                                userCookie.setHttpOnly(true); // Bảo mật
+                                userCookie.setPath("/");
+                                response.addCookie(userCookie); // Thêm cookie vào phản hồi                
+                                response.sendRedirect("/");
+                            }
                         }
                     }
                 }
+            } else {
+                String message = "Please re-enter the OTP code to verify.";
+                // Set cái message thông bào nếu tài khoàn có tồn tại
+                request.getSession().setAttribute("message", message);
+                response.sendRedirect("/HomePageController/Login");
             }
-
         }
 
         if (request.getParameter("loginBtn") != null) {

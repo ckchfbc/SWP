@@ -12,6 +12,18 @@
         <servlet-name>LoginController</servlet-name>
         <servlet-class>Controller.LoginController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SendOtpServlet</servlet-name>
+        <servlet-class>OTP.SendOtpServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VerifyOtpServlet</servlet-name>
+        <servlet-class>OTP.VerifyOtpServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResetPasswordController</servlet-name>
+        <servlet-class>Controller.ResetPasswordController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -23,6 +35,18 @@
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendOtpServlet</servlet-name>
+        <url-pattern>/SendOtpServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyOtpServlet</servlet-name>
+        <url-pattern>/VerifyOtpServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordController</servlet-name>
+        <url-pattern>/ResetPasswordController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
