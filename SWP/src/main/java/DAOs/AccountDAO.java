@@ -186,13 +186,33 @@ public class AccountDAO {
             try ( ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean resetPassword(String email, String password) {
+        String sql = "UPDATE user_account SET email = ?, password = ? WHERE email = ?;";
+        MD5 md5 = new MD5();
+        PreparedStatement stmt = null;
+        String hassPassword = md5.getMd5(password);
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.setString(2, hassPassword);
+            stmt.setString(3, email);
+
+            int rowsAffected = stmt.executeUpdate(); // Lưu số hàng bị ảnh hưởng
+            return rowsAffected > 0;
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }

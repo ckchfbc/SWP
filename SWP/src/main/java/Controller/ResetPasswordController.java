@@ -4,10 +4,10 @@
  */
 package Controller;
 
+import DAOs.AccountDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author thaii
  */
-public class HomePageController extends HttpServlet {
+public class ResetPasswordController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,10 +35,10 @@ public class HomePageController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomePageController</title>");
+            out.println("<title>Servlet ResetPasswordController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomePageController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ResetPasswordController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,26 +56,7 @@ public class HomePageController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String host = request.getRequestURI();
-        if (host.equals("") || host.equals("/")) {
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-        }
-        if (host.startsWith("/HomePageController/SignUp")) {
-            request.getRequestDispatcher("/views/signup.jsp").forward(request, response);
-        }
-        
-        if (host.startsWith("/HomePageController/Login")) {
-            request.getRequestDispatcher("/views/login.jsp").forward(request, response);
-        }
-        
-        if(host.equals("/HomePageController/ResetPassword")){
-            request.getRequestDispatcher("/views/resetPWD.jsp").forward(request, response);
-        }
-        
-        if(host.equals("/HomePageController/ResetSuccess")){
-            request.getRequestDispatcher("/views/resetPWDSuccess.jsp").forward(request, response);
-        }
-        
+        processRequest(request, response);
     }
 
     /**
@@ -88,7 +69,25 @@ public class HomePageController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {              
+            throws ServletException, IOException {
+        String email = request.getParameter("emailTxt");
+        String password = request.getParameter("pwdTxt");
+        String OTPResult = request.getParameter("OTPResult");
+
+        if (request.getParameter("resetPWDBtn") != null) {
+            if (OTPResult.equals("Success")) {
+                AccountDAO accDAO = new AccountDAO();
+                if (accDAO.resetPassword(email, password)) {
+                    response.sendRedirect("/HomePageController/ResetSuccess");;
+                } else {
+                    String message = "Reset not success please try again.";
+                    // Set cái message thông bào nếu ko reset dc
+                    request.getSession().setAttribute("message", message);
+                    response.sendRedirect("/HomePageController/ResetPassword");
+                }
+            }
+        }
+
     }
 
     /**

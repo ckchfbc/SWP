@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package OTP;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author thaii
  */
-public class HomePageController extends HttpServlet {
+@WebServlet(name = "VerifyOtpServlet", urlPatterns = {"/VerifyOtpServlet"})
+public class VerifyOtpServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,10 +36,10 @@ public class HomePageController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomePageController</title>");
+            out.println("<title>Servlet VerifyOtpServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomePageController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet VerifyOtpServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,26 +57,7 @@ public class HomePageController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String host = request.getRequestURI();
-        if (host.equals("") || host.equals("/")) {
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-        }
-        if (host.startsWith("/HomePageController/SignUp")) {
-            request.getRequestDispatcher("/views/signup.jsp").forward(request, response);
-        }
-        
-        if (host.startsWith("/HomePageController/Login")) {
-            request.getRequestDispatcher("/views/login.jsp").forward(request, response);
-        }
-        
-        if(host.equals("/HomePageController/ResetPassword")){
-            request.getRequestDispatcher("/views/resetPWD.jsp").forward(request, response);
-        }
-        
-        if(host.equals("/HomePageController/ResetSuccess")){
-            request.getRequestDispatcher("/views/resetPWDSuccess.jsp").forward(request, response);
-        }
-        
+        processRequest(request, response);
     }
 
     /**
@@ -88,7 +70,17 @@ public class HomePageController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {              
+            throws ServletException, IOException {
+        String enteredOtp = request.getParameter("otp");
+        String sessionOtp = String.valueOf(request.getSession().getAttribute("otp"));
+
+        // Kiểm tra mã OTP
+        if (enteredOtp.equals(sessionOtp)) {
+            response.getWriter().println("Success.");
+        } else {
+            response.getWriter().println("Fail.");
+        }
+        request.getSession().removeAttribute("otp");
     }
 
     /**
