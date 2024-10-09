@@ -135,7 +135,7 @@ public class LoginController extends HttpServlet {
             }
             response.sendRedirect("/"); // Chuyển hướng sau khi xóa cookie
         }
-
+        // Đăng ký bình thường
         if (request.getParameter("signUpBtn") != null) {
             String name = request.getParameter("nameTxt");
             String email = request.getParameter("emailTxt");
@@ -143,6 +143,17 @@ public class LoginController extends HttpServlet {
             String agree = request.getParameter("agreeBox");
             String currentDate = LocalDate.now().toString();
             String OTP = request.getParameter("OTPResult");
+            String emailSendOTP = (String) request.getSession().getAttribute("emailSendOTP");
+            System.out.println("send otp: " + emailSendOTP);
+            System.out.println("email: " + email);
+            if (!email.equals(emailSendOTP)) {
+                String message = "The email sent does not match the verified email.";
+                // Set cái message thông bào nếu tài khoàn có tồn tại
+                request.getSession().setAttribute("message", message);
+                System.out.println("ko trung email ");
+                response.sendRedirect("/HomePageController/SignUp");
+                return;
+            }
 
             if (OTP.equals("Success")) {
                 if (agree != null) {
@@ -176,7 +187,7 @@ public class LoginController extends HttpServlet {
         if (request.getParameter("loginBtn") != null) {
             String email = request.getParameter("emailTxt");
             String password = request.getParameter("pwdTxt");
-            String a = request.getParameter("rememberBtn");
+            String a = request.getParameter("rememberBtn");            
             if (!accDao.checkAccountExsit(email)) {
                 String message = "Account does not exist. Please register.";
                 // Set cái message thông bào nếu tài khoàn có tồn tại

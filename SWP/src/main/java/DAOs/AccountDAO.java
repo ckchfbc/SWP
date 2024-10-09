@@ -210,7 +210,7 @@ public class AccountDAO {
             stmt.setString(2, hassPassword);
             stmt.setString(3, email);
 
-            int rowsAffected = stmt.executeUpdate(); // Lưu số hàng bị ảnh hưởng
+            int rowsAffected = stmt.executeUpdate(); 
             return rowsAffected > 0;
             
         } catch (SQLException e) {
