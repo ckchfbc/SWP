@@ -212,7 +212,29 @@ public class AccountDAO {
 
             int rowsAffected = stmt.executeUpdate(); 
             return rowsAffected > 0;
-            
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isAdmin(String email) {
+        String sql = "select * from user_account where role = 'admin' and email=?;";
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

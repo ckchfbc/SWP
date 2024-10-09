@@ -188,25 +188,34 @@ public class LoginController extends HttpServlet {
             String email = request.getParameter("emailTxt");
             String password = request.getParameter("pwdTxt");
             String a = request.getParameter("rememberBtn");            
+            String a = request.getParameter("rememberBtn");
             if (!accDao.checkAccountExsit(email)) {
                 String message = "Account does not exist. Please register.";
                 // Set cái message thông bào nếu tài khoàn có tồn tại
                 request.getSession().setAttribute("message", message);
                 response.sendRedirect("/HomePageController/Login");
             } else {
-                if (accDao.loginAccount(email, password)) {
-                    Cookie userCookie = new Cookie("userEmail", email);
-                    userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                    userCookie.setHttpOnly(true); // Bảo mật
-                    userCookie.setPath("/");
-                    response.addCookie(userCookie); // Thêm cookie vào phản hồi                
-                    response.sendRedirect("/");
+                if (!accDao.isAdmin(email)) {
+                    if (accDao.loginAccount(email, password)) {
+                        Cookie userCookie = new Cookie("userEmail", email);
+                        userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+                        userCookie.setHttpOnly(true); // Bảo mật
+                        userCookie.setPath("/");
+                        response.addCookie(userCookie); // Thêm cookie vào phản hồi                
+                        response.sendRedirect("/");
+                    } else {
+                        String message = "Incorrect Password or Email.";
+                        // Set cái message thông bào nếu tài khoàn có tồn tại
+                        request.getSession().setAttribute("message", message);
+                        response.sendRedirect("/HomePageController/Login");
+                    }
                 } else {
-                    String message = "Incorrect Password or Email.";
-                    // Set cái message thông bào nếu tài khoàn có tồn tại
-                    request.getSession().setAttribute("message", message);
-                    response.sendRedirect("/HomePageController/Login");
+                    if (accDao.loginAccount(email, password)) {
+                        request.getSession().setAttribute("admin", email);
+                        response.sendRedirect("/AdminController");
+                    }
                 }
+
             }
         }
     }
