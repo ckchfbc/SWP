@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Properties;
 import java.util.Random;
+
 /**
  *
  * @author thaii
@@ -77,20 +78,21 @@ public class SendOtpServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("email");
+        String emailSendOTP = request.getParameter("email");
         // Tạo mã OTP ngẫu nhiên
         int otp = new Random().nextInt(999999);
 
         // Gửi mã OTP đến email
-        if (sendEmail(email, otp)) {
+        if (sendEmail(emailSendOTP, otp)) {
             // Lưu mã OTP vào session để xác minh sau này
             request.getSession().setAttribute("otp", otp);
+            request.getSession().setAttribute("emailSendOTP", emailSendOTP);
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().println("Gửi email không thành công. Vui lòng thử lại.");
         }
-                
+
     }
 
     /**
@@ -138,4 +140,3 @@ public class SendOtpServlet extends HttpServlet {
     }
 
 }
-

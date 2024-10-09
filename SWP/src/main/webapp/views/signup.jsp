@@ -106,9 +106,13 @@
                 document.getElementById('sendOtpButton').className = document.getElementById('sendOtpButton').className.replace('mb-3', '').trim();
             }
 
+            function hideAlert() {
+                var alertElement = document.getElementById('alertOTP');
+                alertElement.classList.add('d-none');
+            }
+
             function sendOtp() {
                 const email = $('#email').val();
-
                 $.ajax({
                     type: "POST",
                     url: "/SendOtpServlet",
@@ -120,7 +124,8 @@
                         $('#notificationOtp').hide();
                     },
                     error: function (xhr, status, error) {
-                        alert("Lỗi: " + error);
+                        $('#alertOTP').removeClass('d-none');
+                        $('#notificationOtp').attr('hidden', true);
                     }
                 });
             }
@@ -144,7 +149,8 @@
 
             function disableButtonWithCountdown() {
                 var sendOtpButton = document.getElementById("sendOtpButton");
-                var otpSend = document.getElementById("otpSend"); // Giả sử id của thẻ là otpSend
+                var otpSend = document.getElementById("otpSend");
+                var alertOTP = document.getElementById("alertOTP");
                 var countdown = 60;
 
                 // Vô hiệu hóa nút
@@ -158,8 +164,8 @@
                     countdown--;
                     sendOtpButton.innerText = "Chờ " + countdown + " giây";
 
-                    // Kiểm tra nếu otpSend không có class mb-3 thì dừng bộ đếm
-                    if (!otpSend.classList.contains('mb-3')) {
+                    // Kiểm tra nếu otpSend không có class mb-3 thì dừng bộ đếm                    
+                    if (!otpSend.classList.contains('mb-3') || !alertOTP.classList.contains('d-none')) {
                         clearInterval(interval);
                         sendOtpButton.disabled = false;
                         sendOtpButton.innerText = "Send OTP";
@@ -201,7 +207,7 @@
                     <%
                         session.removeAttribute("message");
                     %>
-                    <form onsubmit="return validateForm()" action="/ResetPasswordController" method="POST">
+                    <form onsubmit="return validateForm()" action="/LoginController" method="POST">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input name="nameTxt" required type="text" class="form-control" id="name" placeholder="Enter your name">
@@ -220,6 +226,10 @@
                         </div>
                         <span id="passwordError" class="text-danger mb-3"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
                         <!-- Bắt đầu phần OTP -->
+                        <div class="alert alert-warning alert-dismissible fade d-none show" role="alert" id="alertOTP">
+                            You should enter your email.
+                            <button type="button" class="btn-close" aria-label="Close" onclick="hideAlert()"></button>
+                        </div>
                         <div class="d-flex mb-3 align-items-center" id="otpSend">
                             <button type="button" class="btn btn-outline-primary me-3" id="sendOtpButton" onclick="showNoti();
                                     sendOtp();
