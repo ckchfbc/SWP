@@ -188,7 +188,6 @@ public class LoginController extends HttpServlet {
             String email = request.getParameter("emailTxt");
             String password = request.getParameter("pwdTxt");
             String a = request.getParameter("rememberBtn");            
-            String a = request.getParameter("rememberBtn");
             if (!accDao.checkAccountExsit(email)) {
                 String message = "Account does not exist. Please register.";
                 // Set cái message thông bào nếu tài khoàn có tồn tại
