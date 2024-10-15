@@ -15,9 +15,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
-        <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
+        <link rel="icon" href="${host}/ImageController/a/logo.png" type="image/x-icon">
         <title>Login Page</title>
         <style>
             @font-face {
@@ -57,7 +56,7 @@
         <div class="container-fluid vh-100">
             <div class="row h-100">
                 <!-- Left side with background -->
-                <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/loginImage.jpg'); background-size: cover; background-position: center;"></div>
+                <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/a/loginImage.jpg'); background-size: cover; background-position: center;"></div>
 
                 <!-- Right side with form -->
                 <div class="col-lg-6 d-flex justify-content-center align-items-center">                     
@@ -89,7 +88,7 @@
                             <button type="submit" class="btn btn-dark w-100 mb-3" name="loginBtn">Login</button>
                             <div class="text-center">Or</div>
                             <a class="btn btn-outline-dark w-100 mt-3" href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/LoginController/Login&response_type=code&client_id=660845253786-djntvvn4rk8lnt6vmrbop3blvttdmrnm.apps.googleusercontent.com&approval_prompt=force&state=login">
-                                <img src="${host}/ImageController/logoGG.png" style="width: 20px;" alt="Google Logo"> 
+                                <img src="${host}/ImageController/a/logoGG.png" style="width: 20px;" alt="Google Logo"> 
                                 Login with Google
                             </a>
                             <div class="text-center mt-3" name="forgotPwdBtn">

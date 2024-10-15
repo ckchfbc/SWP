@@ -16,6 +16,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 
 /**
@@ -161,7 +162,6 @@ public class LoginController extends HttpServlet {
                         String message = "Account already exists. Please log in.";
                         // Set cái message thông bào nếu tài khoàn có tồn tại
                         request.getSession().setAttribute("message", message);
-                        System.out.println("có accroi62");
                         response.sendRedirect("/HomePageController/SignUp");
                     } else {
                         if (accDao.addNewAccount(email, name, password)) {
@@ -187,7 +187,7 @@ public class LoginController extends HttpServlet {
         if (request.getParameter("loginBtn") != null) {
             String email = request.getParameter("emailTxt");
             String password = request.getParameter("pwdTxt");
-            String a = request.getParameter("rememberBtn");            
+            String a = request.getParameter("rememberBtn");
             if (!accDao.checkAccountExsit(email)) {
                 String message = "Account does not exist. Please register.";
                 // Set cái message thông bào nếu tài khoàn có tồn tại
@@ -210,8 +210,10 @@ public class LoginController extends HttpServlet {
                     }
                 } else {
                     if (accDao.loginAccount(email, password)) {
-                        request.getSession().setAttribute("admin", email);
-                        response.sendRedirect("/AdminController");
+                        // Tạo một session admin mới
+                        HttpSession session = request.getSession();
+                        session.setAttribute("admin", "true");
+                        response.sendRedirect("/AdminController/Dashboard");
                     }
                 }
 

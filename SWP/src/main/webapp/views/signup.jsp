@@ -18,7 +18,7 @@
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
-        <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
+        <link rel="icon" href="${host}/ImageController/a/logo.png" type="image/x-icon">
         <title>Sign Up Page</title>
         <style>
             @font-face {
@@ -253,7 +253,7 @@
                         <button type="submit" class="btn btn-dark w-100 mb-3" name="signUpBtn">Sign Up</button>
                         <div class="text-center">Or</div>   
                         <a class="btn btn-outline-dark w-100 mt-3" href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/LoginController/SignUp&response_type=code&client_id=660845253786-djntvvn4rk8lnt6vmrbop3blvttdmrnm.apps.googleusercontent.com&approval_prompt=force&state=signup">
-                            <img src="${host}/ImageController/logoGG.png" style="width: 20px;" alt="Google Logo"> 
+                            <img src="${host}/ImageController/a/logoGG.png" style="width: 20px;" alt="Google Logo"> 
                             Sign up with Google
                         </a>
                     </form>
@@ -263,7 +263,7 @@
                 </div>
             </div>  
             <!-- Right side with background -->
-            <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/loginImage.jpg'); background-size: cover; background-position: center;"></div>
+            <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/a/loginImage.jpg'); background-size: cover; background-position: center;"></div>
         </div>
     </div>
 </body>
