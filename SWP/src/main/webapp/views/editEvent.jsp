@@ -10,12 +10,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
-            rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <!-- Quill Editor -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
-        <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <style>
             #editor-container {
                 height: 200px;
@@ -24,8 +25,12 @@
     </head>
     <body>
         <div class="container mt-5">
-            <h2>Create Event</h2>
+            <h2>Edit Event</h2>
             <form action="EventController" method="post" enctype="multipart/form-data" id="eventForm">
+                <div class="mb-3">
+                    <label for="eventId" class="form-label">Event Id:</label>
+                    <input type="text" class="form-control" id="eventId" name="event_id" readonly>
+                </div>
                 <div class="mb-3">
                     <label for="eventName" class="form-label">Event Name:</label>
                     <input type="text" class="form-control" id="eventName" name="event_name" required>
@@ -37,7 +42,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="eventImage" class="form-label">Upload Image:</label>
-                    <input type="file" class="form-control" id="eventImage" name="event_image" required>
+                    <input type="file" class="form-control" id="eventImage" name="event_image">
+                    <!-- Button to Open the Modal -->
+                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Open Image
+                    </button>
                 </div>
                 <div class="mb-3">
                     <label for="dateStart" class="form-label">Date Start:</label>
@@ -54,9 +63,27 @@
                 </div>
                 <!-- Phần alert của bắt lỗi -->
 
-                <button type="submit" class="btn btn-primary" name="createEvent">Submit</button>
+                <button type="submit" class="btn btn-primary" name="editEvent">Submit</button>
             </form>
+            <div class="container mt-5">
+                <!-- The Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">View Image</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img id="eventImagePreview" src="" alt="Event Image" class="img-fluid" style="max-width: 100%;">
+                            </div>                        
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
         <script>
             var toolbarOptions = [
                 ['bold', 'italic', 'underline', 'strike'], // toggled buttons
@@ -145,6 +172,38 @@
                 alertError.classList.remove("d-none");
                 alertText.innerHTML = mess;
             }
+
+            function fetchEventById(eventId) {
+                $.ajax({
+                    url: "/EventController", // Đường dẫn tới EventController
+                    type: "POST", // Phương thức HTTP GET
+                    data: {eventId: eventId}, // Gửi ID sự kiện
+                    dataType: "json", // Định dạng dữ liệu trả về
+                    success: function (event) {
+                        // Điền dữ liệu vào form
+                        $('#eventId').val(event.event_id);
+                        $('#eventName').val(event.event_name);
+                        $('#eventDetails').val(event.event_details); // Nếu cần hiển thị lại trong editor, cần dùng quill
+                        quill.root.innerHTML = event.event_details; // Cập nhật nội dung cho Quill editor
+                        $('#dateStart').val(event.date_start);
+                        $('#dateEnd').val(event.date_end);
+                        // Nếu có hình ảnh thì hiển thị ở đây (cần thêm logic để xử lý)
+                        $('#eventImagePreview').attr('src', '/ImageController/b/' + event.event_id);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Có lỗi xảy ra khi lấy dữ liệu sự kiện: " + error);
+                    }
+                });
+            }
+            $(document).ready(function () {
+                // Lấy URL hiện tại
+                var urlPath = window.location.pathname; // Lấy đường dẫn URL
+                var parts = urlPath.split('/'); // Chia nhỏ đường dẫn thành mảng theo ký tự '/'
+
+                // Giả sử eventId nằm ở phần thứ 4 trong mảng (index 3), điều chỉnh nếu cần
+                var eventId = parts[parts.length - 1]; // Lấy phần cuối cùng của đường dẫn (ID sự kiện)
+                fetchEventById(eventId); // Gọi hàm để lấy dữ liệu sự kiện
+            });
         </script>
     </body>
 </html>

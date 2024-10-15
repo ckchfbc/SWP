@@ -31,6 +31,7 @@ import java.util.List;
  */
 @MultipartConfig(maxFileSize = 16177215) // 16MB
 public class EventController extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -75,6 +76,9 @@ public class EventController extends HttpServlet {
         if (host.equals("/EventController/Create")) {
             request.getRequestDispatcher("/views/createEvent.jsp").forward(request, response);
         }
+        if (host.startsWith("/EventController/Edit")) {
+            request.getRequestDispatcher("/views/editEvent.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -88,7 +92,8 @@ public class EventController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        EventDAO eventDAO = new EventDAO();
+        // Phần create event
         if (request.getParameter("createEvent") != null) {
             // Nhận các tham số từ form
             String eventName = request.getParameter("event_name").trim();
@@ -104,10 +109,45 @@ public class EventController extends HttpServlet {
                 inputStream = filePart.getInputStream();
             }
             EventModels event = new EventModels(eventName, eventDetails, inputStream, dateStart, dateEnd, event_status);
-            EventDAO eventDAO = new EventDAO();
             boolean isCreated = eventDAO.createEvent(event);
 
             if (isCreated) {
+                response.setContentType("text/html;charset=UTF-8");
+                try ( PrintWriter out = response.getWriter()) {
+
+                    out.println("<script>");
+                    out.println("window.close();");
+                    out.println("</script>");
+
+                }
+            }
+        }
+
+        //Phần edit
+        if (request.getParameter("editEvent") != null) {
+            // Nhận các tham số từ form
+            System.out.println("id " + request.getParameter("event_id"));
+            int eventId = Integer.parseInt(request.getParameter("event_id"));
+            String eventName = request.getParameter("event_name").trim();
+            String eventDetails = request.getParameter("event_details");
+            String dateStart = request.getParameter("date_start");
+            String dateEnd = request.getParameter("date_end");
+            Part filePart = request.getPart("event_image");
+            InputStream inputStream = null;
+            EventModels event = null;
+            // Nhận file ảnh từ form            
+            boolean isUpdated = false;
+            if (filePart == null) {
+                event = new EventModels(eventName, eventDetails, inputStream, dateStart, dateEnd);
+                isUpdated = eventDAO.editEventWithoutImg(event, eventId);
+
+            } else {
+                inputStream = filePart.getInputStream();
+                event = new EventModels(eventName, eventDetails, inputStream, dateStart, dateEnd);
+                isUpdated = eventDAO.editEventWithImg(event, eventId);
+            }
+
+            if (isUpdated) {
                 response.setContentType("text/html;charset=UTF-8");
                 try ( PrintWriter out = response.getWriter()) {
 
@@ -126,12 +166,11 @@ public class EventController extends HttpServlet {
         if ("true".equals(fetchData)) {
             List<EventModels> events = new ArrayList<>();
             try {
-                events = EventDAO.getAllEvents(); // Giả sử EventDAO.getAllEvents() trả về danh sách sự kiện
-                System.out.println("lấy dữ liệu r");
+                events = eventDAO.getAllEvents(); // Trả về danh sách sự kiện
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            
+
             // Thiết lập kiểu phản hồi là JSON
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -140,6 +179,54 @@ public class EventController extends HttpServlet {
             Gson gson = new Gson();
             String eventsJson = gson.toJson(events);
             response.getWriter().write(eventsJson);
+        }
+
+        //Phần của edit cái event
+        if (request.getParameter("eventId") != null) {
+            int eventId = Integer.parseInt(request.getParameter("eventId"));
+            EventModels event = null;
+            try {
+                event = eventDAO.getEventById(eventId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (event != null) {
+                response.setContentType("application/json");
+                response.getWriter().write(new Gson().toJson(event)); // Sử dụng Gson để chuyển đổi đối tượng thành JSON
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND); // Trả về mã lỗi 404 nếu không tìm thấy sự kiện
+                response.getWriter().write("{\"error\": \"Event not found\"}"); // Trả về thông báo lỗi dạng JSON
+            }
+        }
+
+        if (request.getParameter("createEvent") != null) {
+            // Nhận các tham số từ form
+            String eventName = request.getParameter("event_name").trim();
+            String eventDetails = request.getParameter("event_details");
+            String dateStart = request.getParameter("date_start");
+            String dateEnd = request.getParameter("date_end");
+            Boolean event_status = true;
+            // Nhận file ảnh từ form
+            Part filePart = request.getPart("event_image");
+            InputStream inputStream = null;
+            if (filePart != null) {
+                // Lấy nội dung của file upload
+                inputStream = filePart.getInputStream();
+            }
+            EventModels event = new EventModels(eventName, eventDetails, inputStream, dateStart, dateEnd, event_status);
+            boolean isCreated = eventDAO.createEvent(event);
+
+            if (isCreated) {
+                response.setContentType("text/html;charset=UTF-8");
+                try ( PrintWriter out = response.getWriter()) {
+
+                    out.println("<script>");
+                    out.println("window.close();");
+                    out.println("</script>");
+
+                }
+            }
         }
 
     }

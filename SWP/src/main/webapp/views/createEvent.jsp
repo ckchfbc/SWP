@@ -14,8 +14,8 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
             rel="stylesheet">
         <!-- Quill Editor -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
-        <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
         <style>
             #editor-container {
                 height: 200px;
@@ -115,14 +115,14 @@
                 // Kiểm tra định dạng ảnh (chỉ cho phép JPEG, PNG, GIF)
                 const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
                 if (eventImage && !validImageTypes.includes(eventImage.type)) {
-                    sendMessageError('Please upload a valid image file (JPEG, PNG, or GIF).');                    
+                    sendMessageError('Please upload a valid image file (JPEG, PNG, or GIF).');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
                 }
 
                 // Kiểm tra ngày (dateStart không nhỏ hơn ngày hiện tại và dateEnd không nhỏ hơn dateStart)
                 if (dateStart < today) {
-                    sendMessageError('Start Date cannot be earlier than today.');                    
+                    sendMessageError('Start Date cannot be earlier than today.');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
                 }
