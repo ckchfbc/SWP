@@ -54,13 +54,13 @@
                                 {data: 'event_name'},
                                 {
                                     data: null,
-                                    render: function (data, type, row) {
+                                    render: function (row) {
                                         return '<button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#detailsModal' + row.event_id + '">View Details</button>';
                                     }
                                 },
                                 {
                                     data: null,
-                                    render: function (data, type, row) {
+                                    render: function (row) {
                                         return '<button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#imageModal' + row.event_id + '">View Image</button>';
                                     }
                                 },
@@ -68,9 +68,9 @@
                                 {data: 'date_end'},
                                 {
                                     data: null,
-                                    render: function (data, type, row) {
-                                        return '<button class="btn btn-primary">Edit</button>' +
-                                                (row.event_status ? '<button class="btn btn-success">Active</button>' : '<button class="btn btn-danger">Disable</button>');
+                                    render: function (row) {
+                                        return '<a target="_blank" href="/EventController/Edit/' + row.event_id + '" class="btn btn-primary me-2">Edit</a>' +
+                                                (row.event_status ? '<button class="btn btn-danger">Disable</button>' : '<button class="btn btn-success">Active</button>');
                                     }
                                 }
                             ]

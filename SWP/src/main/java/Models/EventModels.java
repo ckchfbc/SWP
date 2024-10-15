@@ -23,7 +23,7 @@ public class EventModels {
     public EventModels() {
     }
 
-    public EventModels(int event_id, String event_name, String event_details, InputStream image, String date_start, String date_end) {
+    public EventModels(String event_name, String event_details, InputStream image, String date_start, String date_end) {
         this.event_name = event_name;
         this.event_details = event_details;
         this.image = image;
@@ -37,10 +37,16 @@ public class EventModels {
         this.image = image;
         this.date_start = date_start;
         this.date_end = date_end;
+        this.event_status = event_status;
     }
 
-    
-    
+    public EventModels(String event_name, String event_details, String date_start, String date_end) {
+        this.event_name = event_name;
+        this.event_details = event_details;
+        this.date_start = date_start;
+        this.date_end = date_end;
+    }
+
     public int getEvent_id() {
         return event_id;
     }
@@ -100,5 +106,5 @@ public class EventModels {
     @Override
     public String toString() {
         return "EventModels{" + "event_id=" + event_id + ", event_name=" + event_name + ", event_details=" + event_details + ", image=" + image + ", date_start=" + date_start + ", date_end=" + date_end + ", event_status=" + event_status + '}';
-    }           
+    }
 }
