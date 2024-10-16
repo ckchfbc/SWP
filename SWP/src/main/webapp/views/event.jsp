@@ -18,6 +18,11 @@
         <link
             href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css"
             rel="stylesheet">
+        <style>
+            .modal-body {
+                word-break: break-all;
+            }
+        </style>
     </head>
 
     <body ng-controller>
@@ -38,6 +43,7 @@
         <!-- DataTable Initialization -->
         <script>
             $(document).ready(function () {
+                const today = new Date().toISOString().split('T')[0]; // Ngày hiện tại theo định dạng yyyy-mm-dd                
                 // Gọi AJAX để lấy dữ liệu sự kiện
                 $.ajax({
                     url: "/EventController", // URL của Servlet
@@ -69,15 +75,23 @@
                                 {
                                     data: null,
                                     render: function (row) {
-                                        return '<a target="_blank" href="/EventController/Edit/' + row.event_id + '" class="btn btn-primary me-2">Edit</a>' +
-                                                (row.event_status ? '<button class="btn btn-danger">Disable</button>' : '<button class="btn btn-success">Active</button>');
+                                        if (row.date_end >= today) {
+                                            return '<a target="_blank" href="/EventController/Edit/' + row.event_id + '" class="btn btn-primary me-2">Edit</a>' +
+                                                    (row.event_status ? '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-danger">Disable</a>' : '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-success">Active</a>');
+                                        }else{
+                                            
+                                            return '<p class="text-secondary fw-bold fs-5">Expired</p>';
+                                        }
                                     }
                                 }
                             ]
                         });
-
                         // Create modals for image and details
+                        // Xóa các modal cũ trước khi chèn mới
+                        $('body').find('[id^="imageModal"], [id^="detailsModal"]').remove(); // Xóa tất cả modals có id bắt đầu bằng 'imageModal' hoặc 'detailsModal'
+
                         $.each(events, function (index, event) {
+                            var randomParam = new Date().getTime(); // Sử dụng Math.random()
                             // Create modal for images
                             var imageModal = '<div class="modal fade" id="imageModal' + event.event_id + '" tabindex="-1" aria-labelledby="imageModalLabel' + event.event_id + '" aria-hidden="true">' +
                                     '<div class="modal-dialog modal-lg">' +
@@ -87,7 +101,7 @@
                                     '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                                     '</div>' +
                                     '<div class="modal-body">' +
-                                    '<img src="/ImageController/b/' + event.event_id + '" alt="' + event.event_name + '" class="img-fluid">' +
+                                    '<img src="/ImageController/b/' + event.event_id + '?t=' + randomParam + '" alt="' + event.event_name + '" class="img-fluid">' + // Thêm tham số ngẫu nhiên vào URL 
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
@@ -109,23 +123,16 @@
                                     '</div>';
 
                             // Append modals to the body
-                            $('body').append(imageModal);
-                            $('body').append(detailsModal);
+                            $('body').append(imageModal);  // Append modal to body
+                            $('body').append(detailsModal); // Append modal to body
                         });
                     },
                     error: function (xhr, status, error) {
                         console.error("Có lỗi xảy ra: " + error);
                     }
                 });
-
-                console.log("Trang web đã được tải!");
             });
 
-//            $(document).ready(function () {
-//                var table = new DataTable('#eventsTable', {
-//                    responsive: true
-//                });
-//            });
         </script>
 
         <!-- Table Structure -->
@@ -142,19 +149,9 @@
                 </tr>
             </thead>
             <tbody id="eventBody">
-                <!-- Dữ liệu sẽ được chèn vào đây -->
-                <tr>
-                    <td>First name</td>
-                    <td>Last name</td>
-                    <td>Position</td>
-                    <td>Office</td>
-                    <td>Age</td>
-                    <td>Start date</td>
-                    <td>Salary</td>
-                </tr>
-
+                <!-- Dữ liệu sẽ được chèn vào đây -->                
             </tbody>
-        </table>
+        </table>       
     </body>
 </html>
 </tbody>

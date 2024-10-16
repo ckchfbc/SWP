@@ -54,6 +54,7 @@ public class LoginController extends HttpServlet {
 
         // Kiểm tra điều kiện state coi là đăng ký hay đăng nhập
         String state = request.getParameter("state");
+        System.out.println("state: " + state);
         // Cho đăng ký bằng Google
         if (state.equals("signup")) {
             String code = request.getParameter("code");
@@ -210,15 +211,40 @@ public class LoginController extends HttpServlet {
                     }
                 } else {
                     if (accDao.loginAccount(email, password)) {
-                        // Tạo một session admin mới
-                        HttpSession session = request.getSession();
-                        session.setAttribute("admin", "true");
+                        // Tạo một cookie admin mới
+                        Cookie userCookie = new Cookie("admin", "true");
+                        userCookie.setMaxAge(24 * 60 * 60); // 1 ngày
+                        userCookie.setHttpOnly(true); // Bảo mật
+                        userCookie.setPath("/");
+                        response.addCookie(userCookie); // Thêm cookie vào phản hồi                
                         response.sendRedirect("/AdminController/Dashboard");
+                    } else {
+                        String message = "Incorrect Password or Email.";
+                        // Set cái message thông bào nếu tài khoàn có tồn tại
+                        request.getSession().setAttribute("message", message);
+                        response.sendRedirect("/HomePageController/Login");
                     }
                 }
 
             }
         }
+
+        // Admin log out
+        if (null != request.getParameter("adminOut")) {
+            if (request.getParameter("adminOut").equals("logOut")) {
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if (cookie.getName().equals("admin")) {
+                            cookie.setMaxAge(0); // Xóa cookie bằng cách đặt thời gian sống là 0
+                            response.addCookie(cookie); // Thêm lại cookie đã xóa vào phản hồi
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     /**

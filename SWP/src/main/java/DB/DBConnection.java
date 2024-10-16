@@ -29,7 +29,7 @@ public class DBConnection {
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT DATABASE()");
                 if (rs.next()) {
-                    System.out.println("Connected to database: " + rs.getString(1));
+//                    System.out.println("Connected to database: " + rs.getString(1));
                 }
                 rs.close();
                 stmt.close();

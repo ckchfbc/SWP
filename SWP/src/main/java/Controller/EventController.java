@@ -24,6 +24,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -79,6 +81,23 @@ public class EventController extends HttpServlet {
         if (host.startsWith("/EventController/Edit")) {
             request.getRequestDispatcher("/views/editEvent.jsp").forward(request, response);
         }
+        if (host.startsWith("/EventController/Status/")) {
+            String[] s = host.split("/");
+            String id = s[s.length - 1];
+            EventDAO eventDao = new EventDAO();
+            response.setContentType("text/html;charset=UTF-8");
+            try ( PrintWriter out = response.getWriter()) {
+                boolean isUdapte = eventDao.changeStatus(id);
+                if (isUdapte) {
+                    out.println("<script>");
+                    out.println("window.close();");
+                    out.println("</script>");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
     }
 
     /**
@@ -126,23 +145,24 @@ public class EventController extends HttpServlet {
         //Phần edit
         if (request.getParameter("editEvent") != null) {
             // Nhận các tham số từ form
-            System.out.println("id " + request.getParameter("event_id"));
             int eventId = Integer.parseInt(request.getParameter("event_id"));
             String eventName = request.getParameter("event_name").trim();
             String eventDetails = request.getParameter("event_details");
             String dateStart = request.getParameter("date_start");
             String dateEnd = request.getParameter("date_end");
+            String haveImg = request.getParameter("haveImg");
+            System.out.println("có ảnh hay ko " + haveImg);
             Part filePart = request.getPart("event_image");
             InputStream inputStream = null;
             EventModels event = null;
             // Nhận file ảnh từ form            
             boolean isUpdated = false;
-            if (filePart == null) {
+            inputStream = filePart.getInputStream();
+            if (haveImg.equals("false")) {
                 event = new EventModels(eventName, eventDetails, inputStream, dateStart, dateEnd);
                 isUpdated = eventDAO.editEventWithoutImg(event, eventId);
 
             } else {
-                inputStream = filePart.getInputStream();
                 event = new EventModels(eventName, eventDetails, inputStream, dateStart, dateEnd);
                 isUpdated = eventDAO.editEventWithImg(event, eventId);
             }
@@ -198,37 +218,7 @@ public class EventController extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND); // Trả về mã lỗi 404 nếu không tìm thấy sự kiện
                 response.getWriter().write("{\"error\": \"Event not found\"}"); // Trả về thông báo lỗi dạng JSON
             }
-        }
-
-        if (request.getParameter("createEvent") != null) {
-            // Nhận các tham số từ form
-            String eventName = request.getParameter("event_name").trim();
-            String eventDetails = request.getParameter("event_details");
-            String dateStart = request.getParameter("date_start");
-            String dateEnd = request.getParameter("date_end");
-            Boolean event_status = true;
-            // Nhận file ảnh từ form
-            Part filePart = request.getPart("event_image");
-            InputStream inputStream = null;
-            if (filePart != null) {
-                // Lấy nội dung của file upload
-                inputStream = filePart.getInputStream();
-            }
-            EventModels event = new EventModels(eventName, eventDetails, inputStream, dateStart, dateEnd, event_status);
-            boolean isCreated = eventDAO.createEvent(event);
-
-            if (isCreated) {
-                response.setContentType("text/html;charset=UTF-8");
-                try ( PrintWriter out = response.getWriter()) {
-
-                    out.println("<script>");
-                    out.println("window.close();");
-                    out.println("</script>");
-
-                }
-            }
-        }
-
+        }        
     }
 
     /**
