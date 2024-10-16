@@ -363,4 +363,12 @@
             </div>
         </footer>
     </body>
+    <%
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("admin")) {
+                response.sendRedirect("/AdminController/Dashboard");
+                break;
+            }
+        }
+    %>
 </html>

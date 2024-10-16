@@ -43,6 +43,7 @@
                 <div class="mb-3">
                     <label for="eventImage" class="form-label">Upload Image:</label>
                     <input type="file" class="form-control" id="eventImage" name="event_image">
+                    <input id="haveImg" hidden name="haveImg">
                     <!-- Button to Open the Modal -->
                     <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Open Image
@@ -101,8 +102,6 @@
                 [{'color': []}, {'background': []}], // dropdown with defaults from theme
                 [{'font': []}],
                 [{'align': []}],
-
-                ['link', 'image', 'video'], // link and media
                 ['clean']                                         // remove formatting button
             ];
 
@@ -120,21 +119,29 @@
                 // Lấy giá trị của các input
                 const eventName = document.getElementById('eventName').value;
                 const eventDetails = document.getElementById('eventDetails').value;
-                const eventImage = document.getElementById('eventImage').files[0]; // Lấy file upload
+                const eventImage = document.getElementById('eventImage').files[0];
+                const haveImg = document.getElementById('haveImg');
                 const dateStart = document.getElementById('dateStart').value;
                 const dateEnd = document.getElementById('dateEnd').value;
                 const today = new Date().toISOString().split('T')[0]; // Ngày hiện tại theo định dạng yyyy-mm-dd                
-                // Kiểm tra độ dài của event_name (không quá 255 ký tự)
 
+                if (!eventImage) {
+                    // Nếu không có file, xét value là false
+                    haveImg.value = 'false';
+                } else {
+                    haveImg.value = 'true';
+                }
+
+                // Kiểm tra độ dài của event_name (không quá 255 ký tự)
                 if (eventName.length > 255) {
                     sendMessageError('Event Name cannot exceed 255 characters.');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
                 }
 
-                // Kiểm tra độ dài của event_details (tùy chỉnh theo giới hạn, ở đây là 5000 ký tự)
-                if (eventDetails.length > 500000) {
-                    sendMessageError('Event Details cannot exceed 500000 characters.');
+                // Kiểm tra độ dài của event_details (tùy chỉnh theo giới hạn, ở đây là 5000 ký tự và lớn hơn 300 ký tự)
+                if (eventDetails.length > 5000000 || eventDetails.length < 300) {
+                    sendMessageError('Event Details must from 300 to 5000000 characters .');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
                 }

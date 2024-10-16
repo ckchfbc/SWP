@@ -74,8 +74,6 @@
                 [{'color': []}, {'background': []}], // dropdown with defaults from theme
                 [{'font': []}],
                 [{'align': []}],
-
-                ['link', 'image', 'video'], // link and media
                 ['clean']                                         // remove formatting button
             ];
 
@@ -105,9 +103,9 @@
                     return;
                 }
 
-                // Kiểm tra độ dài của event_details (tùy chỉnh theo giới hạn, ở đây là 5000 ký tự)
-                if (eventDetails.length > 500000) {
-                    sendMessageError('Event Details cannot exceed 500000 characters.');
+                // Kiểm tra độ dài của event_details (tùy chỉnh theo giới hạn, ở đây là 5000000 ký tự và lớn hơn 300 ký tự)
+                if (eventDetails.length > 5000000 || eventDetails.length < 300) {
+                    sendMessageError('Event Details cannot exceed 5000000 characters.');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
                 }

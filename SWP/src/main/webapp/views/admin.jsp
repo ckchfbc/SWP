@@ -17,7 +17,7 @@
         <!-- Font Awesome for Icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <style>
             .nav-link .fa-solid, .fas {
                 margin-right: 10px;
@@ -43,51 +43,44 @@
         </style>
     </head>
     <body>
-        <c:if test="${not empty sessionScope.admin}">
-        </c:if>
-
-        <c:if test="${empty sessionScope.admin}">
-            <!-- Chuyển hướng về trang chủ nếu không có admin trong session -->
-            <script>
-                window.location.href = "/";
-            </script>
-        </c:if>
-        <script type="text/javascript">
-//            $(document).ready(function () {
-//                // Load event.jsp when the button is clicked
-//                $('#loadEventButton').click(function () {
-//                    $('#includeContainer').load('/views/event.jsp');
-//                    $('#mainInclude').hide();
-//                });
-//            });
-            $(document).ready(function () {
-                // Hide the loading icon initially
-                $('#loading').hide();
-
-                // When the button is clicked, show loading icon and load the event.jsp content
-                $('#loadEventButton').click(function () {
-                    // Show loading spinner
-                    $('#loading').show();
-                    $('#mainInclude').hide();
-                    $('#includeContainer').hide();
-                    // Load content with a slight delay to simulate loading effect (optional)
-                    $('#includeContainer').load('/views/event.jsp', function (response, status, xhr) {
-                        // Hide the loading spinner once the content is loaded
-                        $('#loading').hide();
-                        $('#includeContainer').show();
-                        if (status == "error") {
-                            $('#includeContainer').html("<p>Error loading content.</p>");
-                        }
-                    });
+        <%
+            // Lấy danh sách cookies từ request
+            Cookie[] cookies = request.getCookies();
+            boolean isAdmin = false;
+            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        isAdmin = true;
+                        break;
+                    }
+                }
+            }
+            if (!isAdmin) {                
+                response.sendRedirect("/");
+            }
+        %>
+        <script>
+            function logOut() {
+                $.ajax({
+                    url: "/LoginController",
+                    type: "POST",
+                    data: {adminOut: 'logOut'},
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Có lỗi xảy ra khi lấy dữ liệu sự kiện: " + error);
+                    }
                 });
-            });
+            }
         </script>
         <!-- main đây -->
         <div class="container-fluid m-0 p-0">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center">
                 <a class="navbar-brand" href="#">ADMIN DASHBOARD</a>
                 <div class="nav-item justify-content-end">
-                    <button class="btn btn-danger d-flex align-items-center w-100" id="logout-button">
+                    <button onclick="logOut()" class="btn btn-danger d-flex align-items-center w-100" id="logout-button">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Logout</span>
                     </button>
@@ -166,12 +159,11 @@
                             <p>This is the employees section content.</p>
                         </div>
                         <div class="tab-pane fade w-100" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab" id="eventContent">
-                            <button id="loadEventButton" class="btn btn-outline-secondary mb-3">Load Event Page</button>
                             <a target="_blank" href="/EventController/Create" class="btn btn-primary mb-3">Create New Event</a>
-                            <!-- Loading spinner -->
-                            <img id="loading" src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." />
+                            <button id="loadEventButton" class="btn btn-outline-secondary mb-3">Load Event Page</button>
                             <div id="includeContainer" class="w-100 container-fluid p-0 m-0"></div>
-                            <div id="mainInclude">
+                            <!-- Loading spinner -->
+                            <div id="mainEvent">
                                 <%@include file="/views/event.jsp" %> 
                             </div>
                         </div>
@@ -184,18 +176,26 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-            const nav = document.getElementById('v-pills-tab');
-            const toggleNav = () => {
-                if (window.innerWidth < 1200) {
-                    nav.classList.remove('flex-column', 'vh-100');
-                    nav.classList.add('flex-row', 'w-100', 'justify-content-center');
-                } else {
-                    nav.classList.remove('flex-row', 'w-100', 'justify-content-center');
-                    nav.classList.add('flex-column', 'vh-100');
-                }
-            };
-            window.addEventListener('resize', toggleNav);
-            toggleNav();
+                        const nav = document.getElementById('v-pills-tab');
+                        const toggleNav = () => {
+                            if (window.innerWidth < 1200) {
+                                nav.classList.remove('flex-column', 'vh-100');
+                                nav.classList.add('flex-row', 'w-100', 'justify-content-center');
+                            } else {
+                                nav.classList.remove('flex-row', 'w-100', 'justify-content-center');
+                                nav.classList.add('flex-column', 'vh-100');
+                            }
+                        };
+                        window.addEventListener('resize', toggleNav);
+                        toggleNav();
+
+                        var loadEventButton = document.getElementById('loadEventButton');
+                        if (loadEventButton) {
+                            loadEventButton.addEventListener('click', function () {
+                                $('#includeContainer').load('/views/event.jsp');
+                                $('#mainEvent').hide();
+                            });
+                        }
         </script>
     </body>
 </html>

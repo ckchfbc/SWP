@@ -149,7 +149,34 @@ public class EventDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(event.toString());
         return event;
+    }
+
+    public boolean changeStatus(String id) throws SQLException {
+        EventModels event = getEventById(Integer.parseInt(id));
+        String sql = "UPDATE events SET event_status = ? WHERE event_id = ?;";
+        PreparedStatement stmt = null;
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            if (event.isEvent_status() != true) {
+                stmt.setBoolean(1, !event.isEvent_status());
+                stmt.setInt(2, event.getEvent_id());
+                int row = stmt.executeUpdate();
+                if (row > 0) {
+                    return true;
+                }
+            } else {
+                stmt.setBoolean(1, !event.isEvent_status());
+                stmt.setInt(2, event.getEvent_id());
+                int row = stmt.executeUpdate();
+                if (row > 0) {
+                    return true;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
