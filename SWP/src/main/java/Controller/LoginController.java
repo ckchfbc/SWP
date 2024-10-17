@@ -54,7 +54,6 @@ public class LoginController extends HttpServlet {
 
         // Kiểm tra điều kiện state coi là đăng ký hay đăng nhập
         String state = request.getParameter("state");
-        System.out.println("state: " + state);
         // Cho đăng ký bằng Google
         if (state.equals("signup")) {
             String code = request.getParameter("code");
@@ -64,9 +63,7 @@ public class LoginController extends HttpServlet {
             AccountDAO accDAO = new AccountDAO();
             if (accDAO.checkAccountExsit(acc.getEmail())) {
                 String message = "Account already exists. Please log in.";
-                // Set cái message thông bào nếu tài khoàn có tồn tại
-                request.getSession().setAttribute("message", message);
-                response.sendRedirect("/HomePageController/SignUp");
+                sendMessageError(request, response, message, "/HomePageController/SignUp");
             } else {
                 try {
                     if (accDAO.addNewAccountGoogle(acc)) {
@@ -96,9 +93,7 @@ public class LoginController extends HttpServlet {
             AccountDAO accDAO = new AccountDAO();
             if (!accDAO.checkAccountExsit(acc.getEmail())) {
                 String message = "Account does not exist. Please register.";
-                // Set cái message thông bào nếu tài khoàn có tồn tại
-                request.getSession().setAttribute("message", message);
-                response.sendRedirect("/HomePageController/Login");
+                sendMessageError(request, response, message, "/HomePageController/Login");
             } else {
                 String email = acc.getEmail();
                 Cookie userCookie = new Cookie("userEmail", email);
@@ -150,10 +145,7 @@ public class LoginController extends HttpServlet {
             System.out.println("email: " + email);
             if (!email.equals(emailSendOTP)) {
                 String message = "The email sent does not match the verified email.";
-                // Set cái message thông bào nếu tài khoàn có tồn tại
-                request.getSession().setAttribute("message", message);
-                System.out.println("ko trung email ");
-                response.sendRedirect("/HomePageController/SignUp");
+                sendMessageError(request, response, message, "/HomePageController/SignUp");
                 return;
             }
 
@@ -161,9 +153,7 @@ public class LoginController extends HttpServlet {
                 if (agree != null) {
                     if (accDao.checkAccountExsit(email)) {
                         String message = "Account already exists. Please log in.";
-                        // Set cái message thông bào nếu tài khoàn có tồn tại
-                        request.getSession().setAttribute("message", message);
-                        response.sendRedirect("/HomePageController/SignUp");
+                        sendMessageError(request, response, message, "/HomePageController/SignUp");
                     } else {
                         if (accDao.addNewAccount(email, name, password)) {
                             if (accDao.addNewCustomerAccount(email, name)) {
@@ -179,9 +169,7 @@ public class LoginController extends HttpServlet {
                 }
             } else {
                 String message = "Please re-enter the OTP code to verify.";
-                // Set cái message thông bào nếu tài khoàn có tồn tại
-                request.getSession().setAttribute("message", message);
-                response.sendRedirect("/HomePageController/Login");
+                sendMessageError(request, response, message, "/HomePageController/Login");
             }
         }
 
@@ -191,9 +179,7 @@ public class LoginController extends HttpServlet {
             String a = request.getParameter("rememberBtn");
             if (!accDao.checkAccountExsit(email)) {
                 String message = "Account does not exist. Please register.";
-                // Set cái message thông bào nếu tài khoàn có tồn tại
-                request.getSession().setAttribute("message", message);
-                response.sendRedirect("/HomePageController/Login");
+                sendMessageError(request, response, message, "/HomePageController/Login");
             } else {
                 if (!accDao.isAdmin(email)) {
                     if (accDao.loginAccount(email, password)) {
@@ -205,9 +191,7 @@ public class LoginController extends HttpServlet {
                         response.sendRedirect("/");
                     } else {
                         String message = "Incorrect Password or Email.";
-                        // Set cái message thông bào nếu tài khoàn có tồn tại
-                        request.getSession().setAttribute("message", message);
-                        response.sendRedirect("/HomePageController/Login");
+                        sendMessageError(request, response, message, "/HomePageController/Login");
                     }
                 } else {
                     if (accDao.loginAccount(email, password)) {
@@ -220,9 +204,7 @@ public class LoginController extends HttpServlet {
                         response.sendRedirect("/AdminController/Dashboard");
                     } else {
                         String message = "Incorrect Password or Email.";
-                        // Set cái message thông bào nếu tài khoàn có tồn tại
-                        request.getSession().setAttribute("message", message);
-                        response.sendRedirect("/HomePageController/Login");
+                        sendMessageError(request, response, message, "/HomePageController/Login");
                     }
                 }
 
@@ -245,6 +227,11 @@ public class LoginController extends HttpServlet {
             }
         }
 
+    }
+
+    public void sendMessageError(HttpServletRequest request, HttpServletResponse response, String message, String redirect) throws IOException {
+        request.getSession().setAttribute("message", message);
+        response.sendRedirect(redirect);
     }
 
     /**

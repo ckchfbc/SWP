@@ -25,7 +25,7 @@
         </style>
     </head>
 
-    <body ng-controller>
+    <body>
 
         <!-- JavaScript Links -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -132,7 +132,6 @@
                     }
                 });
             });
-
         </script>
 
         <!-- Table Structure -->

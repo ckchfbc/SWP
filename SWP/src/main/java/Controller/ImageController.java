@@ -66,6 +66,7 @@ public class ImageController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String host = request.getRequestURI();
+        // Các ảnh khác
         if (host.startsWith("/ImageController/a/")) {
             // Lấy đường dẫn hình ảnh từ URL sau /ImageController/
             String imagePath = request.getPathInfo().replace("/a", "");
@@ -89,6 +90,7 @@ public class ImageController extends HttpServlet {
             fis.close();
             os.close();
         }
+        // Image event
         if (host.startsWith("/ImageController/b/")) {
             try ( Connection conn = DBConnection.getConnection()) {
                 int eventId = Integer.parseInt(request.getPathInfo().replace("/b/", ""));
@@ -99,6 +101,40 @@ public class ImageController extends HttpServlet {
                 if (resultSet.next()) {
                     // Lấy dữ liệu ảnh dạng binary
                     InputStream inputStream = resultSet.getBinaryStream("image");
+                    OutputStream outputStream = response.getOutputStream();
+
+                    // Thiết lập loại nội dung là hình ảnh
+                    response.setContentType("image/jpeg");
+
+                    byte[] buffer = new byte[4096];
+                    int bytesRead = -1;
+
+                    // Ghi dữ liệu ảnh từ database ra client
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+
+                    inputStream.close();
+                    outputStream.close();
+                }
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                response.getWriter().print("Error: " + ex.getMessage());
+            }
+        }
+
+        // Image của car
+        if(host.startsWith("/ImageController/c/")) {
+            try ( Connection conn = DBConnection.getConnection()) {
+                int eventId = Integer.parseInt(request.getPathInfo().replace("/c/", ""));
+                String sql = "SELECT picture FROM car_image WHERE car_image_id = ?";
+                PreparedStatement statement = conn.prepareStatement(sql);
+                statement.setInt(1, eventId);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    // Lấy dữ liệu ảnh dạng binary
+                    InputStream inputStream = resultSet.getBinaryStream("picture");
                     OutputStream outputStream = response.getOutputStream();
 
                     // Thiết lập loại nội dung là hình ảnh
