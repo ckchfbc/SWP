@@ -56,7 +56,7 @@
                     }
                 }
             }
-            if (!isAdmin) {                
+            if (!isAdmin) {
                 response.sendRedirect("/");
             }
         %>
@@ -144,9 +144,13 @@
                             <h3>Home</h3>
                             <p>This is the home section content.</p>
                         </div>
-                        <div class="tab-pane fade" id="v-pills-cars" role="tabpanel" aria-labelledby="v-pills-cars-tab">
-                            <h3>cars</h3>
-                            <p>This is the cars section content.</p>
+                        <div class="tab-pane fade w-100" id="v-pills-cars" role="tabpanel" aria-labelledby="v-pills-cars-tab">
+                            <a target="_blank" href="/CarController/Create" class="btn btn-primary mb-3">Create New Car</a>
+                            <button id="loadCarButton" class="btn btn-outline-secondary mb-3">Load Car Page</button>
+                            <div id="includeCarContainer" class="w-100 container-fluid p-0 m-0"></div>
+                            <div id="mainCar">
+                                <%@include file="/views/car.jsp" %> 
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="v-pills-cusomers" role="tabpanel"
                              aria-labelledby="v-pills-cusomers-tab">
@@ -161,8 +165,7 @@
                         <div class="tab-pane fade w-100" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab" id="eventContent">
                             <a target="_blank" href="/EventController/Create" class="btn btn-primary mb-3">Create New Event</a>
                             <button id="loadEventButton" class="btn btn-outline-secondary mb-3">Load Event Page</button>
-                            <div id="includeContainer" class="w-100 container-fluid p-0 m-0"></div>
-                            <!-- Loading spinner -->
+                            <div id="includeEventContainer" class="w-100 container-fluid p-0 m-0"></div>
                             <div id="mainEvent">
                                 <%@include file="/views/event.jsp" %> 
                             </div>
@@ -188,12 +191,22 @@
                         };
                         window.addEventListener('resize', toggleNav);
                         toggleNav();
-
+                        
+                        // Load event page
                         var loadEventButton = document.getElementById('loadEventButton');
                         if (loadEventButton) {
                             loadEventButton.addEventListener('click', function () {
-                                $('#includeContainer').load('/views/event.jsp');
+                                $('#includeEventContainer').load('/views/event.jsp');
                                 $('#mainEvent').hide();
+                            });
+                        }
+                        
+                        // Load car page
+                        var loadEventButton = document.getElementById('loadCarButton');
+                        if (loadEventButton) {
+                            loadEventButton.addEventListener('click', function () {
+                                $('#includeCarContainer').load('/views/car.jsp');
+                                $('#mainCar').hide();
                             });
                         }
         </script>

@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Create Event</title>
         <link
             href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
             rel="stylesheet">
@@ -83,6 +83,7 @@
                 },
                 theme: 'snow'
             });
+
             document.getElementById('eventForm').addEventListener('submit', function () {
                 document.getElementById('eventDetails').value = quill.root.innerHTML;
             });
@@ -95,8 +96,9 @@
                 const dateStart = document.getElementById('dateStart').value;
                 const dateEnd = document.getElementById('dateEnd').value;
                 const today = new Date().toISOString().split('T')[0]; // Ngày hiện tại theo định dạng yyyy-mm-dd                
+                const maxSizeInBytes = 16 * 1024 * 1024; // 16 M
+                
                 // Kiểm tra độ dài của event_name (không quá 255 ký tự)
-
                 if (eventName.length > 255) {
                     sendMessageError('Event Name cannot exceed 255 characters.');
                     event.preventDefault(); // Ngăn không cho submit form
@@ -116,6 +118,11 @@
                     sendMessageError('Please upload a valid image file (JPEG, PNG, or GIF).');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
+                }
+
+                if (eventImage.size > maxSizeInBytes) {
+                    sendMessageError("File must not exceed 16 MB.");
+                    event.preventDefault();
                 }
 
                 // Kiểm tra ngày (dateStart không nhỏ hơn ngày hiện tại và dateEnd không nhỏ hơn dateStart)

@@ -124,6 +124,7 @@
                 const dateStart = document.getElementById('dateStart').value;
                 const dateEnd = document.getElementById('dateEnd').value;
                 const today = new Date().toISOString().split('T')[0]; // Ngày hiện tại theo định dạng yyyy-mm-dd                
+                const maxSizeInBytes = 16 * 1024 * 1024; // 16 MB
 
                 if (!eventImage) {
                     // Nếu không có file, xét value là false
@@ -152,6 +153,11 @@
                     sendMessageError('Please upload a valid image file (JPEG, PNG, or GIF).');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
+                }
+
+                if (eventImage.size > maxSizeInBytes) {
+                   sendMessageError("File must not exceed 16 MB.");
+                   event.preventDefault();
                 }
 
                 // Kiểm tra ngày (dateStart không nhỏ hơn ngày hiện tại và dateEnd không nhỏ hơn dateStart)
