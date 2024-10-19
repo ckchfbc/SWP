@@ -4,6 +4,9 @@
  */
 package Controller;
 
+import DAOs.CarDAO;
+import Models.newCarModel;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +14,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -63,19 +69,19 @@ public class HomePageController extends HttpServlet {
         if (host.startsWith("/HomePageController/SignUp")) {
             request.getRequestDispatcher("/views/signup.jsp").forward(request, response);
         }
-        
+
         if (host.startsWith("/HomePageController/Login")) {
             request.getRequestDispatcher("/views/login.jsp").forward(request, response);
         }
-        
-        if(host.equals("/HomePageController/ResetPassword")){
+
+        if (host.equals("/HomePageController/ResetPassword")) {
             request.getRequestDispatcher("/views/resetPWD.jsp").forward(request, response);
         }
-        
-        if(host.equals("/HomePageController/ResetSuccess")){
+
+        if (host.equals("/HomePageController/ResetSuccess")) {
             request.getRequestDispatcher("/views/resetPWDSuccess.jsp").forward(request, response);
         }
-        
+
     }
 
     /**
@@ -88,7 +94,26 @@ public class HomePageController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {              
+            throws ServletException, IOException {
+        CarDAO carDAO = new CarDAO();
+        // Get 4 newCar
+        if (request.getParameter("getNewCar") != null) {
+            if (request.getParameter("getNewCar").equals("true")) {
+                List<newCarModel> cars = new ArrayList<>();
+                try {
+                    cars = carDAO.getNewCars();                    
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }               
+
+                // Chuyển đổi dữ liệu thành JSON
+                Gson gson = new Gson();
+                String jsonResponse = gson.toJson(cars);
+
+                // Gửi JSON phản hồi về client
+                response.getWriter().write(jsonResponse);
+            }
+        }
     }
 
     /**

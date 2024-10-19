@@ -202,9 +202,9 @@
                         }
                         
                         // Load car page
-                        var loadEventButton = document.getElementById('loadCarButton');
-                        if (loadEventButton) {
-                            loadEventButton.addEventListener('click', function () {
+                        var loadCarButton = document.getElementById('loadCarButton');
+                        if (loadCarButton) {
+                            loadCarButton.addEventListener('click', function () {
                                 $('#includeCarContainer').load('/views/car.jsp');
                                 $('#mainCar').hide();
                             });
