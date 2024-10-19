@@ -6,6 +6,7 @@ package DAOs;
 
 import DB.DBConnection;
 import Models.CarModel;
+import Models.newCarModel;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
@@ -175,7 +176,7 @@ public class CarDAO {
             stmt.setInt(7, car.getFuel_id());
             stmt.setString(8, car.getDescription());
             stmt.setInt(9, id);
-            
+
             int row = stmt.executeUpdate();
             if (row > 0) {
                 return true;
@@ -184,5 +185,45 @@ public class CarDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // Get new car
+    public static List<newCarModel> getNewCars() throws SQLException {
+        String sql = "SELECT c.*, \n"
+                + "       (SELECT car_image_id \n"
+                + "        FROM car_image ci \n"
+                + "        WHERE ci.car_id = c.car_id \n"
+                + "        ORDER BY ci.car_image_id ASC \n"
+                + "        LIMIT 1) AS first_car_image_id\n"
+                + "FROM cars c\n"
+                + "WHERE c.status = 1\n"
+                + "  AND c.date_start <= CURDATE()\n"
+                + "ORDER BY c.date_start DESC, c.car_id DESC\n"
+                + "LIMIT 4;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<newCarModel> newCars = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                newCarModel car = new newCarModel();
+                car.setCar_id(rs.getInt("car_id"));
+                car.setBrand_id(rs.getInt("brand_id"));
+                car.setModel_id(rs.getInt("model_id"));
+                car.setCar_name(rs.getString("car_name"));
+                car.setDate_start(rs.getString("date_start"));
+                car.setColor(rs.getString("color"));
+                car.setPrice(rs.getBigDecimal("price"));
+                car.setFuel_id(rs.getInt("fuel_id"));
+                car.setStatus(rs.getBoolean("status"));
+                car.setDescription(rs.getString("description"));
+                car.setFirst_car_image_id(rs.getInt("first_car_image_id"));
+                newCars.add(car);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newCars;
     }
 }

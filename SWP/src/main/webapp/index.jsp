@@ -30,6 +30,7 @@
 
             .card {
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
+                overflow: hidden;
             }
 
             .card:hover {
@@ -57,6 +58,14 @@
             .navbar-brand  {
                 font-family: 'Kirsty', sans-serif;
                 color: #050B20;
+            }
+
+            .zoom-img {
+                transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
+            }
+
+            .card:hover .zoom-img {
+                transform: scale(0.8); /* Zoom out ảnh khi hover */
             }
         </style>
     </head>
@@ -231,12 +240,6 @@
 
 
 
-
-
-
-
-
-
         <!-- Why Choose Us -->
         <section class="bg-dark text-white py-5">
             <div class="container">
@@ -265,60 +268,11 @@
                 </div>
             </div>
         </section>
-        <!-- New Car Section -->
-        <section class="container my-5">
-            <h2 class="text-center mb-4">The New Cars</h2>
 
-            <div class="row">
-                <!-- Car Card 1 -->
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <img src="./images/VF9.jpg" class="card-img-top" alt="Toyota Camry New">
-                        <div class="card-body">
-                            <h5 class="card-title">Toyota Camry New</h5>
-                            <p class="card-text">$40,000</p>
-                            <a href="#" class="btn btn-primary">View Details</a>
-                            <a href="#" class="btn btn-primary">Buy</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Car Card 2 -->
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <img src="./images/VF9.jpg" class="card-img-top" alt="Ranger Black">
-                        <div class="card-body">
-                            <h5 class="card-title">Ranger Black – 2021</h5>
-                            <p class="card-text">$165,000</p>
-                            <a href="#" class="btn btn-primary">View Details</a>
-                            <a href="#" class="btn btn-primary">Buy</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Car Card 3 -->
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <img src="./images/VF9.jpg" class="card-img-top" alt="Ranger White">
-                        <div class="card-body">
-                            <h5 class="card-title">Ranger White – 2022</h5>
-                            <p class="card-text">$25,000</p>
-                            <a href="#" class="btn btn-primary">View Details</a>
-                            <a href="#" class="btn btn-primary">Buy</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Car Card 4 -->
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <img src="./images/VF9.jpg" class="card-img-top" alt="Ford Explorer 2023">
-                        <div class="card-body">
-                            <h5 class="card-title">Ford Explorer 2023</h5>
-                            <p class="card-text">$35,000</p>
-                            <a href="#" class="btn btn-primary">View Details</a>
-                            <a href="#" class="btn btn-primary">Buy</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- New Car Section -->
+        <section class="container my-5" id="newCarContainer">
+            <h2 class="text-center mb-5">The New Cars</h2>
+            <%@include file="/views/newCar.jsp" %>
         </section>
 
         <!-- Footer -->
