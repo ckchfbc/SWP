@@ -17,8 +17,6 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/font.css"/>
         <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
         <title >DriveAura</title>
         <style>
@@ -60,19 +58,13 @@
                 color: #050B20;
             }
 
-            .zoom-img {
-                transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
-            }
 
-            .card:hover .zoom-img {
-                transform: scale(0.8); /* Zoom out ảnh khi hover */
-            }
         </style>
     </head>
     <body>        
 
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
+        <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
                 <a class="navbar-brand" href="/"><h1>DriveAura</h1></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,7 +106,7 @@
                         %>
                         <!-- Hiển thị nút nếu có cookie userEmail -->
                         <form action="LoginController" method="post">
-                            <button class="btn btn-primary" type="submit" name="logOut">Log Out</button>
+                            <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
                         </form>
                         <%
                         } else {
@@ -278,42 +270,7 @@
         <!-- Footer -->
         <footer class="bg-dark text-white py-4">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-3">
-                        <h5>Company</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-white">About Us</a></li>
-                            <li><a href="#" class="text-white">Blog</a></li>
-                            <li><a href="#" class="text-white">Services</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>Quick Links</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-white text-decoration-none">Get in Touch</a></li>
-                            <li><a href="#" class="text-white">Help Center</a></li>
-                            <li><a href="#" class="text-white">Live Chat</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>Our Brands</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-white">Toyota</a></li>
-                            <li><a href="#" class="text-white">Porsche</a></li>
-                            <li><a href="#" class="text-white">BMW</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>Vehicle Types</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-white">Sedan</a></li>
-                            <li><a href="#" class="text-white">SUV</a></li>
-                            <li><a href="#" class="text-white">Convertible</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <hr class="bg-light">
-                <p class="text-center">© 2024 example.com. All rights reserved.</p>
+                <%@include file="/views/footer.jsp" %>
             </div>
         </footer>
     </body>

@@ -46,6 +46,10 @@
                     <label for="price" class="form-label">Price</label>
                     <input type="number" class="form-control" id="price" name="price" required>
                 </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                </div>
                 <div>
                     <label for="description" class="form-label">Description</label>
                     <div id="description"></div>
@@ -75,7 +79,7 @@
                         <input class="form-control me-2" type="file" name="images" id="car_image" multiple>
                         <button type="button" class="btn btn-warning" data-bs-toggle="popover" title="Instructions for Uploading Multiple Images" data-bs-content="Hold down the Ctrl key when selecting multiple images."><i class="fa-solid fa-question"></i></button>    
                     </div>
-                </div>
+                </div>                
                 <!-- Phần alert của bắt lỗi -->
                 <div class="alert alert-warning alert-dismissible fade d-none show mb-3" role="alert" id="alertError">                    
                     <p id="alertTxt" class="p-0 m-0"></p>
@@ -157,6 +161,7 @@
                 let car_name = document.getElementById("car_name").value;
                 let description = document.getElementById("car_description").value;
                 let color = document.getElementById("color").value;
+                let quantity = document.getElementById("quantity").value;
 
                 // Kiểm tra car_name không vượt quá 255 ký tự
                 if (car_name.length > 255) {
@@ -178,19 +183,26 @@
                     event.preventDefault();
                 }
 
-                // Kiểm tra price không vượt quá 12 ký tự
+                // Kiểm tra price không vượt quá 12 ký tự và lớn hơn 0
                 if (price.length > 12) {
-                    sendMessageError('Price cannot exceed 12 characters.');
+                    if (price < 0) {
+                        sendMessageError('Price cannot exceed 12 characters and greater than 0.');
+                        event.preventDefault();
+                    }
+                }
+
+                // Kiểm tra price không vượt quá 12 ký tự và lớn hơn 0
+                if (quantity < 0) {
+                    sendMessageError('Quantity must greater than 0.');
                     event.preventDefault();
                 }
+
 
                 // Kiểm tra description không vượt quá 65,535 ký tự
                 if (description.length > 65535) {
                     sendMessageError('Description cannot exceed 65,535 characters.');
                     event.preventDefault();
                 }
-
-
 
                 // KIểm tra ảnh
                 const imageInput = document.getElementById("car_image");

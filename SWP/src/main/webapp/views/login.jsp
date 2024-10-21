@@ -16,7 +16,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
-        <link rel="icon" href="${host}/ImageController/a/logo.png" type="image/x-icon">
+        <link rel="icon" href="/ImageController/a/logo.png" type="image/x-icon">
         <title>Login Page</title>
         <style>
             @font-face {

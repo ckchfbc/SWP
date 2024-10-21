@@ -134,7 +134,7 @@
                 const otp = $('#otp').val();
                 $.ajax({
                     type: "POST",
-                    url: "VerifyOtpServlet",
+                    url: "/VerifyOtpServlet",
                     data: {otp: otp},
                     success: function () {
                         $('#verificationResult').val('Success');
@@ -243,7 +243,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/loginImage.jpg'); background-size: cover; background-position: center;"></div>
+                <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/a/loginImage.jpg'); background-size: cover; background-position: center;"></div>
             </div>
         </div>
     </body>

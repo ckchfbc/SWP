@@ -99,11 +99,36 @@ public class AccountDAO {
         }
         return false;
     }
-
+    // Lấy bằng account google cho các phần login và signup
     public CustomerAccountModel getCustomerAccByEmail(GoogleAccount acc) {
         String sql = "select * from customers where email = ?";
         CustomerAccountModel cus_acc = null;
         String email = acc.getEmail();
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, email);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int customer_id = rs.getInt("customer_id");
+                int user_id = rs.getInt("user_id");
+                String name = rs.getString("name");
+                String picture = rs.getString("picture");
+                String phone_number = rs.getString("phone_number");
+                String cus_id_number = rs.getString("cus_id_number");
+                String address = rs.getString("address");
+                String preferred_contact_method = rs.getString("preferred_contact_method");
+                cus_acc = new CustomerAccountModel(customer_id, user_id, name, email, picture, phone_number, cus_id_number, address, preferred_contact_method);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return cus_acc;
+    }
+    // Lấy bằng mail
+    public CustomerAccountModel getCustomerAccByEmail(String email) {
+        String sql = "select * from customers where email = ?";
+        CustomerAccountModel cus_acc = null;
         try ( Connection conn = DBConnection.getConnection()) {
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, email);
@@ -210,7 +235,7 @@ public class AccountDAO {
             stmt.setString(2, hassPassword);
             stmt.setString(3, email);
 
-            int rowsAffected = stmt.executeUpdate(); 
+            int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
 
         } catch (SQLException e) {
@@ -239,5 +264,27 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public String getRole(String email) {
+        String sql = "select role from user_account where email = ?;";
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("role");
+                } else {
+                    return "";
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
