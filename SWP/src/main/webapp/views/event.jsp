@@ -78,8 +78,8 @@
                                         if (row.date_end >= today) {
                                             return '<a target="_blank" href="/EventController/Edit/' + row.event_id + '" class="btn btn-primary me-2">Edit</a>' +
                                                     (row.event_status ? '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-danger">Disable</a>' : '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-success">Active</a>');
-                                        }else{
-                                            
+                                        } else {
+
                                             return '<p class="text-secondary fw-bold fs-5">Expired</p>';
                                         }
                                     }
@@ -152,8 +152,4 @@
             </tbody>
         </table>       
     </body>
-</html>
-</tbody>
-</table>
-</body>
 </html>

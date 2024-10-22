@@ -5,8 +5,6 @@
 package Controller;
 
 import DAOs.EventDAO;
-import DB.DBConnection;
-import Encryption.MD5;
 import Models.EventModels;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -84,20 +82,22 @@ public class EventController extends HttpServlet {
         if (host.startsWith("/EventController/Status/")) {
             String[] s = host.split("/");
             String id = s[s.length - 1];
+
             EventDAO eventDao = new EventDAO();
             response.setContentType("text/html;charset=UTF-8");
+
             try ( PrintWriter out = response.getWriter()) {
-                boolean isUdapte = eventDao.changeStatus(id);
-                if (isUdapte) {
-                    out.println("<script>");
-                    out.println("window.close();");
-                    out.println("</script>");
+                boolean isUpdated = eventDao.changeStatus(id);
+                if (isUpdated) {
+                    out.println("<script>window.close();</script>");
+                } else {
+                    out.println("<script>alert('Status change failed!');</script>");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
+
     }
 
     /**
@@ -218,7 +218,7 @@ public class EventController extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND); // Trả về mã lỗi 404 nếu không tìm thấy sự kiện
                 response.getWriter().write("{\"error\": \"Event not found\"}"); // Trả về thông báo lỗi dạng JSON
             }
-        }        
+        }
     }
 
     /**

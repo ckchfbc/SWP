@@ -97,7 +97,7 @@
                 const dateEnd = document.getElementById('dateEnd').value;
                 const today = new Date().toISOString().split('T')[0]; // Ngày hiện tại theo định dạng yyyy-mm-dd                
                 const maxSizeInBytes = 16 * 1024 * 1024; // 16 M
-                
+
                 // Kiểm tra độ dài của event_name (không quá 255 ký tự)
                 if (eventName.length > 255) {
                     sendMessageError('Event Name cannot exceed 255 characters.');

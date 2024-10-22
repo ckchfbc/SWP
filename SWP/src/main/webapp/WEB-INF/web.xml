@@ -36,6 +36,10 @@
         <servlet-name>CarController</servlet-name>
         <servlet-class>Controller.CarController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EmployeeController</servlet-name>
+        <servlet-class>Controller.EmployeeController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -71,6 +75,10 @@
     <servlet-mapping>
         <servlet-name>CarController</servlet-name>
         <url-pattern>/CarController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeController</servlet-name>
+        <url-pattern>/EmployeeController/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

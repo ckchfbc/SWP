@@ -157,10 +157,14 @@
                             <h3>cusomers</h3>
                             <p>This is the cusomers section content.</p>
                         </div>
-                        <div class="tab-pane fade" id="v-pills-employees" role="tabpanel"
+                        <div class="tab-pane fade" id="v-pills-employees" role="tabpanel" 
                              aria-labelledby="v-pills-employees-tab">
-                            <h3>employees</h3>
-                            <p>This is the employees section content.</p>
+                            <a target="_blank" href="/EmployeeController/Create" class="btn btn-primary mb-3">Create New Employee</a>
+                            <button id="loadEmployeeButton" class="btn btn-outline-secondary mb-3">Load Employee Page</button>
+                            <div id="includeEmployeeContainer" class="w-100 container-fluid p-0 m-0"></div>
+                            <div id="mainEmployee">
+                                <%@include file="/views/employee.jsp" %> 
+                            </div>
                         </div>
                         <div class="tab-pane fade w-100" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab" id="eventContent">
                             <a target="_blank" href="/EventController/Create" class="btn btn-primary mb-3">Create New Event</a>
@@ -191,7 +195,7 @@
                         };
                         window.addEventListener('resize', toggleNav);
                         toggleNav();
-                        
+
                         // Load event page
                         var loadEventButton = document.getElementById('loadEventButton');
                         if (loadEventButton) {
@@ -200,13 +204,21 @@
                                 $('#mainEvent').hide();
                             });
                         }
-                        
+
                         // Load car page
                         var loadCarButton = document.getElementById('loadCarButton');
                         if (loadCarButton) {
                             loadCarButton.addEventListener('click', function () {
                                 $('#includeCarContainer').load('/views/car.jsp');
                                 $('#mainCar').hide();
+                            });
+                        }
+                        // Load employee page
+                        var loadEmployeeButton = document.getElementById('loadEmployeeButton');
+                        if (loadEmployeeButton) {
+                            loadEmployeeButton.addEventListener('click', function () {
+                                $('#includeEmployeeContainer').load('/views/employee.jsp');
+                                $('#mainEmployee').hide();
                             });
                         }
         </script>
