@@ -77,15 +77,18 @@
         </script>
         <!-- main đây -->
         <div class="container-fluid m-0 p-0">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center">
-                <a class="navbar-brand" href="#">ADMIN DASHBOARD</a>
-                <div class="nav-item justify-content-end">
-                    <button onclick="logOut()" class="btn btn-danger d-flex align-items-center w-100" id="logout-button">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </button>
-                </div>
-            </nav>
+            <div class="row">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center col-12">
+                    <a class="navbar-brand" href="#">ADMIN DASHBOARD</a>
+                    <div class="nav-item justify-content-end">
+                        <button onclick="logOut()" class="btn btn-danger d-flex align-items-center w-100" id="logout-button">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+
             <hr>
             <div class="row">
                 <!-- Nav (Vertical Tabs) -->
@@ -183,15 +186,37 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-                        const nav = document.getElementById('v-pills-tab');
-                        const toggleNav = () => {
-                            if (window.innerWidth < 1200) {
-                                nav.classList.remove('flex-column', 'vh-100');
-                                nav.classList.add('flex-row', 'w-100', 'justify-content-center');
-                            } else {
-                                nav.classList.remove('flex-row', 'w-100', 'justify-content-center');
-                                nav.classList.add('flex-column', 'vh-100');
+                            const nav = document.getElementById('v-pills-tab');
+                            const toggleNav = () => {
+                                if (window.innerWidth < 1200) {
+                                    nav.classList.remove('flex-column', 'vh-100');
+                                    nav.classList.add('flex-row', 'w-100', 'justify-content-center');
+                                } else {
+                                    nav.classList.remove('flex-row', 'w-100', 'justify-content-center');
+                                    nav.classList.add('flex-column', 'vh-100');
+                                }
+                            };
+                            window.addEventListener('resize', toggleNav);
+                            toggleNav();
+
+                            // Load event page
+                            var loadEventButton = document.getElementById('loadEventButton');
+                            if (loadEventButton) {
+                                loadEventButton.addEventListener('click', function () {
+                                    $('#includeEventContainer').load('/views/event.jsp');
+                                    $('#mainEvent').hide();
+                                });
                             }
+
+                            // Load car page
+                            var loadCarButton = document.getElementById('loadCarButton');
+                            if (loadCarButton) {
+                                loadCarButton.addEventListener('click', function () {
+                                    $('#includeCarContainer').load('/views/car.jsp');
+                                    $('#mainCar').hide();
+                                });
+                            }
+<<<<<<< HEAD
                         };
                         window.addEventListener('resize', toggleNav);
                         toggleNav();
@@ -221,6 +246,8 @@
                                 $('#mainEmployee').hide();
                             });
                         }
+=======
+>>>>>>> af5c3c7e19e3b9dde5acb021ea1ac040e251295b
         </script>
     </body>
 </html>

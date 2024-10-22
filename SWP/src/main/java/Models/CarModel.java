@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  * @author thaii
  */
 public class CarModel {
+
     private int car_id;
     private int brand_id;
     private int model_id;
@@ -21,6 +22,7 @@ public class CarModel {
     private int fuel_id;
     private boolean status;
     private String description;
+    private int quantity;
 
     public CarModel() {
     }
@@ -49,9 +51,29 @@ public class CarModel {
         this.status = status;
         this.description = description;
     }
-    
-    
-    
+
+    public CarModel(int car_id, int brand_id, int model_id, String car_name, String date_start, String color, BigDecimal price, int fuel_id, boolean status, String description, int quantity) {
+        this.car_id = car_id;
+        this.brand_id = brand_id;
+        this.model_id = model_id;
+        this.car_name = car_name;
+        this.date_start = date_start;
+        this.color = color;
+        this.price = price;
+        this.fuel_id = fuel_id;
+        this.status = status;
+        this.description = description;
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+            
     public int getCar_id() {
         return car_id;
     }
@@ -136,5 +158,5 @@ public class CarModel {
     public String toString() {
         return "CarModel{" + "car_id=" + car_id + ", brand_id=" + brand_id + ", model_id=" + model_id + ", car_name=" + car_name + ", date_start=" + date_start + ", color=" + color + ", price=" + price + ", fuel_id=" + fuel_id + ", status=" + status + ", description=" + description + '}';
     }
-    
+
 }

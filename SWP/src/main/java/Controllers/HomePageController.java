@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controllers;
 
 import DAOs.CarDAO;
 import Models.newCarModel;
@@ -81,7 +81,7 @@ public class HomePageController extends HttpServlet {
         if (host.equals("/HomePageController/ResetSuccess")) {
             request.getRequestDispatcher("/views/resetPWDSuccess.jsp").forward(request, response);
         }
-
+        
     }
 
     /**
@@ -101,10 +101,10 @@ public class HomePageController extends HttpServlet {
             if (request.getParameter("getNewCar").equals("true")) {
                 List<newCarModel> cars = new ArrayList<>();
                 try {
-                    cars = carDAO.getNewCars();                    
+                    cars = carDAO.getNewCars();
                 } catch (SQLException e) {
                     e.printStackTrace();
-                }               
+                }
 
                 // Chuyển đổi dữ liệu thành JSON
                 Gson gson = new Gson();

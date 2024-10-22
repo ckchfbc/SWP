@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controllers;
 
 import DAOs.BrandDAO;
 import DAOs.CarDAO;
 import DAOs.FuelDAO;
+import DAOs.InventoryDAO;
 import DAOs.ModelDAO;
 import DB.DBConnection;
 import Models.BrandModel;
@@ -119,7 +120,14 @@ public class CarController extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
 
+        //Views car information
+        if (host.startsWith("/CarController/View/")) {
+            String[] s = host.split("/");
+            String id = s[s.length - 1];
+//            request.setAttribute("car_id_infor", id);            
+            request.getRequestDispatcher("/views/carViews.jsp").forward(request, response);
         }
     }
 
@@ -214,6 +222,7 @@ public class CarController extends HttpServlet {
             int fuel_id = Integer.parseInt(request.getParameter("fuel_name"));
             int model_id = Integer.parseInt(request.getParameter("model_name"));
             CarModel car = new CarModel(brand_id, model_id, car_name, date_start, color, price, fuel_id, true, description);
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
 
             boolean isCreated = carDAO.createCar(car);
             if (isCreated) {
@@ -234,6 +243,12 @@ public class CarController extends HttpServlet {
                         }
                     }
 
+                    InventoryDAO inventoryDAO = new InventoryDAO();
+
+                    boolean isAddQuantity = inventoryDAO.addInventory(car_id, quantity);
+                    if (!isAddQuantity) {
+                        System.out.println("Lỗi addquantity");
+                    }
                 } catch (SQLException ex) {
                     System.out.println("ERROR: " + ex.getMessage());
                     ex.printStackTrace();
@@ -272,7 +287,7 @@ public class CarController extends HttpServlet {
                 Gson gson = new Gson();
                 String jsonResponse = gson.toJson(imageIdList);
                 // Gửi JSON phản hồi về client
-                response.getWriter().write(jsonResponse);               
+                response.getWriter().write(jsonResponse);
             }
         }
 
@@ -324,10 +339,18 @@ public class CarController extends HttpServlet {
             int fuel_id = Integer.parseInt(request.getParameter("fuel_name"));
             int model_id = Integer.parseInt(request.getParameter("model_name"));
             CarModel car = new CarModel(brand_id, model_id, car_name, date_start, color, price, fuel_id, true, description);
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
 
             boolean isEdited = carDAO.editCar(car, car_id);
             if (isEdited) {
                 response.setContentType("text/html;charset=UTF-8");
+                InventoryDAO inventoryDAO = new InventoryDAO();
+                try {
+                    boolean isUpdateInventory = inventoryDAO.editInventory(car_id, quantity);
+                    System.out.println(isUpdateInventory);
+                } catch (SQLException ex) {
+                    Logger.getLogger(CarController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 try ( PrintWriter out = response.getWriter()) {
                     out.println("<script>");
                     out.println("window.close();");
@@ -336,6 +359,99 @@ public class CarController extends HttpServlet {
             }
 
         }
+
+        if (request.getParameter("car_id_details") != null) {
+            int carId = Integer.parseInt(request.getParameter("car_id_details"));
+            CarModel car = null;
+            List<BrandModel> brands = new ArrayList<>();
+            List<ModelsCarModel> models = new ArrayList<>();
+            List<FuelModel> fuels = new ArrayList<>();
+
+            try {
+                car = carDAO.getCarById(carId);
+                brands = brandDAO.getAllBrands();
+                models = modelDAO.getAllModels();
+                fuels = fuelDAO.getAllFuels();
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("{\"error\": \"Internal server error\"}");
+                return;
+            }
+
+            // Tạo một Map để lưu trữ dữ liệu
+            Map<String, Object> jsonResponse = new HashMap<>();
+
+            if (car != null) {
+                // Thêm thông tin xe vào Map
+                Map<String, Object> carData = new HashMap<>();
+                carData.put("car_id", car.getCar_id());
+                carData.put("car_name", car.getCar_name());
+                carData.put("price", car.getPrice());
+                carData.put("description", car.getDescription());
+                carData.put("quantity", car.getQuantity());
+                carData.put("brand_id", car.getBrand_id());
+                carData.put("model_id", car.getModel_id());
+                carData.put("fuel_id", car.getFuel_id());
+
+                jsonResponse.put("car", carData);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                jsonResponse.put("error", "Car not found");
+            }
+
+            // Lưu danh sách thương hiệu vào Map
+            List<Map<String, Object>> brandList = new ArrayList<>();
+            for (BrandModel brand : brands) {
+                Map<String, Object> brandData = new HashMap<>();
+                brandData.put("brand_id", brand.getBrand_id());
+                brandData.put("brand_name", brand.getBrand_name());
+                brandList.add(brandData);
+            }
+            jsonResponse.put("brands", brandList);
+
+            // Lưu danh sách model vào Map
+            List<Map<String, Object>> modelList = new ArrayList<>();
+            for (ModelsCarModel model : models) {
+                Map<String, Object> modelData = new HashMap<>();
+                modelData.put("model_id", model.getModel_id());
+                modelData.put("model_name", model.getModel_name());
+                modelList.add(modelData);
+            }
+            jsonResponse.put("models", modelList);
+
+            // Lưu danh sách loại nhiên liệu vào Map
+            List<Map<String, Object>> fuelList = new ArrayList<>();
+            for (FuelModel fuel : fuels) {
+                Map<String, Object> fuelData = new HashMap<>();
+                fuelData.put("fuel_id", fuel.getFuel_id());
+                fuelData.put("fuel_name", fuel.getFuel_name());
+                fuelList.add(fuelData);
+            }
+            jsonResponse.put("fuels", fuelList);
+
+            // Gửi phản hồi JSON về client
+            response.setContentType("application/json");
+            response.getWriter().write(new Gson().toJson(jsonResponse));
+        }
+
+        if (request.getParameter("getRelatedCar") != null) {
+            int brand_id = Integer.parseInt(request.getParameter("getRelatedCar"));
+            List<CarModel> cars = new ArrayList<>();
+            try {
+                cars = carDAO.getRelatedCar(brand_id);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            // Chuyển đổi dữ liệu thành JSON
+            Gson gson = new Gson();
+            String jsonResponse = gson.toJson(cars);
+
+            // Gửi JSON phản hồi về client
+            response.getWriter().write(jsonResponse);
+        }
+
     }
 
     /**

@@ -22,7 +22,7 @@
         <style>
             .modal-body {
                 word-break: break-all;
-            }
+            }            
         </style>
     </head>
     <body>
@@ -85,7 +85,8 @@
                                 price: car.price,
                                 fuel_name: fuel_name, // Thay thế fuel_id bằng fuel_name
                                 status: car.status,
-                                description: car.description
+                                description: car.description,
+                                quantity: car.quantity
                             };
 
                             // Thêm car đã cập nhật vào danh sách carList
@@ -102,17 +103,18 @@
                                 {data: 'date_start'},
                                 {data: 'color'},
                                 {data: 'price'},
+                                {data: 'quantity'},
                                 {data: 'fuel_name'},
                                 {
                                     data: null,
                                     render: function (row) {
-                                        return '<button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#descriptionCarModal' + row.car_id + '">View Description</button>';
+                                        return '<button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#descriptionCarModal' + row.car_id + '">View</button>';
                                     }
                                 },
                                 {
                                     data: null,
                                     render: function (row) {
-                                        return '<a class="btn btn-link" target="_blank" href="/CarController/ViewImage/' + row.car_id + '">View & Edit Image</a>';
+                                        return '<a class="btn btn-link" target="_blank" href="/CarController/ViewImage/' + row.car_id + '">View</a>';
                                     }
                                 },
                                 {
@@ -159,17 +161,18 @@
         <table id="carsTable" class="table table-striped nowrap w-100 align-items-center" style="width: 100%;">
             <thead>
                 <tr>
-                    <th>Car ID</th>
-                    <th>Car Name</th>
+                    <th>ID</th>
+                    <th>Name</th>
                     <th>Brand</th>
                     <th>Model</th>
                     <th>Date Start</th>
                     <th>Color</th>
                     <th>Price</th>
+                    <th>Quantity</th>
                     <th>Fuel</th>
                     <th>Description</th>
                     <th>Image</th>
-                    <th>Acction</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="eventBody">

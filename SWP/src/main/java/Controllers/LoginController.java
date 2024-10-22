@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controllers;
 
 import DAOs.AccountDAO;
 import GoogleClass.GoogleLogin;
@@ -123,15 +123,22 @@ public class LoginController extends HttpServlet {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
+                    // Xóa cookie userEmail
                     if (cookie.getName().equals("userEmail")) {
                         cookie.setMaxAge(0); // Xóa cookie bằng cách đặt thời gian sống là 0
                         response.addCookie(cookie); // Thêm lại cookie đã xóa vào phản hồi
-                        break;
+                    }
+
+                    // Xóa cookie roleCookie
+                    if (cookie.getName().equals("roleCookie")) {
+                        cookie.setMaxAge(0); // Xóa cookie bằng cách đặt thời gian sống là 0
+                        response.addCookie(cookie); // Thêm lại cookie đã xóa vào phản hồi
                     }
                 }
             }
             response.sendRedirect("/"); // Chuyển hướng sau khi xóa cookie
         }
+
         // Đăng ký bình thường
         if (request.getParameter("signUpBtn") != null) {
             String name = request.getParameter("nameTxt");
@@ -141,8 +148,8 @@ public class LoginController extends HttpServlet {
             String currentDate = LocalDate.now().toString();
             String OTP = request.getParameter("OTPResult");
             String emailSendOTP = (String) request.getSession().getAttribute("emailSendOTP");
-            System.out.println("send otp: " + emailSendOTP);
-            System.out.println("email: " + email);
+//            System.out.println("send otp: " + emailSendOTP);
+//            System.out.println("email: " + email);
             if (!email.equals(emailSendOTP)) {
                 String message = "The email sent does not match the verified email.";
                 sendMessageError(request, response, message, "/HomePageController/SignUp");
@@ -184,10 +191,19 @@ public class LoginController extends HttpServlet {
                 if (!accDao.isAdmin(email)) {
                     if (accDao.loginAccount(email, password)) {
                         Cookie userCookie = new Cookie("userEmail", email);
+                        AccountDAO accDAO = new AccountDAO();
+                        String role = accDAO.getRole(email);
+                        Cookie roleCokie = new Cookie("role", role);
+                        //email
                         userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
                         userCookie.setHttpOnly(true); // Bảo mật
                         userCookie.setPath("/");
                         response.addCookie(userCookie); // Thêm cookie vào phản hồi                
+                        //role
+                        roleCokie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+                        roleCokie.setHttpOnly(true); // Bảo mật
+                        roleCokie.setPath("/");
+                        response.addCookie(roleCokie); // Thêm cookie vào phản hồi      
                         response.sendRedirect("/");
                     } else {
                         String message = "Incorrect Password or Email.";
