@@ -44,6 +44,10 @@
                     <label for="price" class="form-label">Price</label>
                     <input type="number" class="form-control" id="price" name="price" required>
                 </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                </div>
                 <div>
                     <label for="description" class="form-label">Description</label>
                     <div id="description"></div>
@@ -82,7 +86,7 @@
             var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
                 return new bootstrap.Popover(popoverTriggerEl);
             });
-            
+
             var toolbarOptions = [
                 ['bold', 'italic', 'underline', 'strike'], // toggled buttons
                 ['blockquote', 'code-block'],
@@ -141,7 +145,7 @@
                         // Lấy URL hiện tại
                         var urlPath = window.location.pathname; // Lấy đường dẫn URL
                         var parts = urlPath.split('/'); // Chia nhỏ đường dẫn thành mảng theo ký tự '/'
-                        
+
                         // Giả sử eventId nằm ở phần thứ 4 trong mảng (index 3), điều chỉnh nếu cần
                         var carId = parts[parts.length - 1]; // Lấy phần cuối cùng của đường dẫn (ID sự kiện)
                         $('#car_id').val(carId);
@@ -190,6 +194,7 @@
                 let car_name = document.getElementById("car_name").value;
                 let description = document.getElementById("car_description").value;
                 let color = document.getElementById("color").value;
+                let quantity = document.getElementById("quantity").value;
 
                 // Kiểm tra car_name không vượt quá 255 ký tự
                 if (car_name.length > 255) {
@@ -211,9 +216,18 @@
                     event.preventDefault();
                 }
 
-                // Kiểm tra price không vượt quá 12 ký tự
+                // Kiểm tra price không vượt quá 12 ký tự và lớn hơn 0
                 if (price.length > 12) {
-                    sendMessageError('Price cannot exceed 12 characters.');
+                    if (price < 0) {
+                        sendMessageError('Price cannot exceed 12 characters and greater tahn 0.');
+                        event.preventDefault();
+                    }
+
+                }
+
+                // Kiểm tra quantity lớn hơn 0
+                if (quantity < 0) {
+                    sendMessageError('Quantity greater than 0.');
                     event.preventDefault();
                 }
 

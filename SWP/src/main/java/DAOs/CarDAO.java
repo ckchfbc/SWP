@@ -24,7 +24,7 @@ import java.util.List;
 public class CarDAO {
 
     public static List<CarModel> getAllCars() throws SQLException {
-        String sql = "SELECT * FROM cars;";
+        String sql = "SELECT c.*, i.quantity FROM cars c LEFT JOIN inventory i ON c.car_id = i.car_id; ";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<CarModel> cars = new ArrayList<>();
@@ -43,6 +43,7 @@ public class CarDAO {
                 car.setFuel_id(rs.getInt("fuel_id"));
                 car.setStatus(rs.getBoolean("status"));
                 car.setDescription(rs.getString("description"));
+                car.setQuantity(rs.getInt("quantity"));
 
                 cars.add(car);
             }
@@ -53,7 +54,10 @@ public class CarDAO {
     }
 
     public CarModel getCarById(int car_id) throws SQLException {
-        String sql = "SELECT * FROM cars WHERE car_id = ?;";
+        String sql = "SELECT c.*, i.quantity\n"
+                + "FROM cars c\n"
+                + "LEFT JOIN inventory i ON c.car_id = i.car_id\n"
+                + "WHERE c.car_id = ?;";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         CarModel car = new CarModel();
@@ -72,7 +76,7 @@ public class CarDAO {
                 car.setFuel_id(rs.getInt("fuel_id"));
                 car.setStatus(rs.getBoolean("status"));
                 car.setDescription(rs.getString("description"));
-
+                car.setQuantity(rs.getInt("quantity"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -194,8 +198,10 @@ public class CarDAO {
                 + "        FROM car_image ci \n"
                 + "        WHERE ci.car_id = c.car_id \n"
                 + "        ORDER BY ci.car_image_id ASC \n"
-                + "        LIMIT 1) AS first_car_image_id\n"
+                + "        LIMIT 1) AS first_car_image_id,\n"
+                + "       i.quantity\n"
                 + "FROM cars c\n"
+                + "LEFT JOIN inventory i ON c.car_id = i.car_id\n"
                 + "WHERE c.status = 1\n"
                 + "  AND c.date_start <= CURDATE()\n"
                 + "ORDER BY c.date_start DESC, c.car_id DESC\n"
@@ -219,11 +225,48 @@ public class CarDAO {
                 car.setStatus(rs.getBoolean("status"));
                 car.setDescription(rs.getString("description"));
                 car.setFirst_car_image_id(rs.getInt("first_car_image_id"));
+                car.setQuantity(rs.getInt("quantity"));
                 newCars.add(car);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return newCars;
+    }
+
+    public static List<CarModel> getRelatedCar(int brand_id) throws SQLException {
+        String sql = "SELECT c.*, i.quantity\n"
+                + "FROM cars c\n"
+                + "LEFT JOIN inventory i ON c.car_id = i.car_id\n"
+                + "WHERE c.brand_id = ? AND c.status = true\n"
+                + "ORDER BY RAND()\n"
+                + "LIMIT 4;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<CarModel> cars = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, brand_id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                CarModel car = new CarModel();
+                car.setCar_id(rs.getInt("car_id"));
+                car.setBrand_id(rs.getInt("brand_id"));
+                car.setModel_id(rs.getInt("model_id"));
+                car.setCar_name(rs.getString("car_name"));
+                car.setDate_start(rs.getString("date_start"));
+                car.setColor(rs.getString("color"));
+                car.setPrice(rs.getBigDecimal("price"));
+                car.setFuel_id(rs.getInt("fuel_id"));
+                car.setStatus(rs.getBoolean("status"));
+                car.setDescription(rs.getString("description"));
+                car.setQuantity(rs.getInt("quantity"));
+
+                cars.add(car);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cars;
     }
 }

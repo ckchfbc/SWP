@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controllers;
 
 import DB.DBConnection;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class ImageController extends HttpServlet {
         // Các ảnh khác
         if (host.startsWith("/ImageController/a/")) {
             // Lấy đường dẫn hình ảnh từ URL sau /ImageController/
-            String imagePath = request.getPathInfo().replace("/a", "");
+            String imagePath = request.getPathInfo().replace("/a/", "/");
 
             // Lấy đường dẫn tuyệt đối của hình ảnh
             String fullImagePath = getServletContext().getRealPath("/images") + imagePath;

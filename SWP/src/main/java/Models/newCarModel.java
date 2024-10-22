@@ -23,11 +23,12 @@ public class newCarModel {
     private boolean status;
     private String description;
     private int first_car_image_id;
+    private int quantity;
 
     public newCarModel() {
     }
 
-    public newCarModel(int car_id, int brand_id, int model_id, String car_name, String date_start, String color, BigDecimal price, int fuel_id, boolean status, String description, int first_car_image_id) {
+    public newCarModel(int car_id, int brand_id, int model_id, String car_name, String date_start, String color, BigDecimal price, int fuel_id, boolean status, String description, int first_car_image_id, int quantity) {
         this.car_id = car_id;
         this.brand_id = brand_id;
         this.model_id = model_id;
@@ -39,7 +40,18 @@ public class newCarModel {
         this.status = status;
         this.description = description;
         this.first_car_image_id = first_car_image_id;
+        this.quantity = quantity;
     }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    
 
     public int getCar_id() {
         return car_id;
