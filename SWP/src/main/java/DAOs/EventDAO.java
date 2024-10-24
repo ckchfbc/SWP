@@ -179,4 +179,30 @@ public class EventDAO {
         }
         return false;
     }
+    
+    public static List<EventModels> getAllEventsAvailable() throws SQLException {
+        String sql = "SELECT * FROM events  WHERE event_status = true AND date_end > CURDATE(); ";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<EventModels> events = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                EventModels event = new EventModels();
+                event.setEvent_id(rs.getInt("event_id"));
+                event.setEvent_name(rs.getString("event_name"));
+                event.setEvent_details(rs.getString("event_details"));
+                event.setImage(null);
+                event.setDate_start(rs.getString("date_start"));
+                event.setDate_end(rs.getString("date_end"));
+                event.setEvent_status(rs.getBoolean("event_status"));
+
+                events.add(event);  // Thêm event vào List
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return events;
+    }
 }

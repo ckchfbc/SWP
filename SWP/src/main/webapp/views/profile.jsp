@@ -46,7 +46,7 @@
 
         </style>
     </head>
-    <body>
+    <body class="container-fluid">
         <!-- Navigation -->
         <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
@@ -81,7 +81,7 @@
                                 for (Cookie cookie : cookies) {
                                     if (cookie.getName().equals("userEmail")) {
                                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-%>
+                        %>
                         <input hidden id="user_email" type="text" value="<%= userEmail%>">
                         <%
                                     }
@@ -116,6 +116,8 @@
                 </div>
             </div>
         </nav>
+
+
         <div class="container-fluid w-100 pt-5 mt-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
@@ -191,12 +193,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="justify-content-end mt-4 row">
-                        <a target="_blank" href="/CustomerController/EditProfile" class="btn btn-primary btn-custom px-4 col-2">Edit</a>;
-                        <form action="/LoginController" method="POST" class="col-2">
-                            <button type="submit" class="btn btn-secondary btn-custom px-4" name="logOut">Log Out</button>
-                        </form>
+                    <div class="row justify-content-md-end mt-4 mb-4">
+                        <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-end">
+                            <a target="_blank" href="/CustomerController/EditProfile" class="btn btn-primary btn-custom me-2">Edit</a>
+                            <form action="/LoginController" method="POST">
+                                <button type="submit" class="btn btn-secondary btn-custom" name="logOut">Log Out</button>
+                            </form>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -232,7 +237,7 @@
                     success: function (user) {
                         // Điền các giá trị vào các input tương ứng
                         $('#name').val(user.name);
-
+                        console.log(user);
                         $('#email').val(user.email);
 
 

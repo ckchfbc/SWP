@@ -44,6 +44,10 @@
         <servlet-name>EmployeeController</servlet-name>
         <servlet-class>Controller.EmployeeController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderController</servlet-name>
+        <servlet-class>Controllers.OrderController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -81,13 +85,16 @@
         <url-pattern>/CarController/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-<<<<<<< HEAD
         <servlet-name>EmployeeController</servlet-name>
         <url-pattern>/EmployeeController/*</url-pattern>
-=======
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>CustomerController</servlet-name>
         <url-pattern>/CustomerController/*</url-pattern>
->>>>>>> af5c3c7e19e3b9dde5acb021ea1ac040e251295b
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderController</servlet-name>
+        <url-pattern>/OrderController/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

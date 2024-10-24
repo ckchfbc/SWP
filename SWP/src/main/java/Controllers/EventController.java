@@ -79,6 +79,9 @@ public class EventController extends HttpServlet {
         if (host.startsWith("/EventController/Edit")) {
             request.getRequestDispatcher("/views/editEvent.jsp").forward(request, response);
         }
+        if (host.startsWith("/EventController/Views")) {
+            request.getRequestDispatcher("/views/eventViews.jsp").forward(request, response);
+        }
         if (host.startsWith("/EventController/Status/")) {
             String[] s = host.split("/");
             String id = s[s.length - 1];
@@ -219,6 +222,29 @@ public class EventController extends HttpServlet {
                 response.getWriter().write("{\"error\": \"Event not found\"}"); // Trả về thông báo lỗi dạng JSON
             }
         }
+
+        // Lấy tham số kiểm tra nếu cần
+        String getEventList = request.getParameter("getEventList");
+
+        // Nếu fetchData có giá trị "true", lấy dữ liệu sự kiện
+        if ("true".equals(getEventList)) {
+            List<EventModels> events = new ArrayList<>();
+            try {
+                events = eventDAO.getAllEventsAvailable(); // Trả về danh sách sự kiện
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            // Thiết lập kiểu phản hồi là JSON
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Sử dụng Gson để chuyển danh sách thành JSON
+            Gson gson = new Gson();
+            String eventsJson = gson.toJson(events);
+            response.getWriter().write(eventsJson);
+        }
+
     }
 
     /**

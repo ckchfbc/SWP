@@ -200,7 +200,7 @@ public class AccountDAO {
     }
 
     public boolean loginAccount(String email, String password) {
-        String sql = "SELECT * FROM user_account where email=? and password = ?";
+        String sql = "SELECT * FROM user_account where email=? and password = ? and status = 1";
         MD5 md5 = new MD5();
         String hassPassword = md5.getMd5(password);
         try ( Connection conn = DBConnection.getConnection()) {

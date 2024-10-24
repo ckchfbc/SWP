@@ -76,7 +76,7 @@
                             <a class="nav-link" href="#">Product</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Event</a>
+                            <a class="nav-link" href="/HomePageController/Event">Event</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Brand</a>
@@ -147,10 +147,10 @@
             </div>
         </div>
 
-        <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white mt-5" style="height: 80vh; background-image: url('path/to/your/hero-image.jpg'); background-size: cover; background-position: center;">
-            <div class="container">
-                <h1 class="display-4">Find Your Perfect Vehicle Online</h1>
-                <p class="lead">The World's Largest Used Car Dealership</p>
+        <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white mt-5" style="height: 80vh; background-image: url('/ImageController/a/bghome.jpg'); background-size: cover; background-position: center;">
+            <div class="container ">
+                <h1 class="display-4 fw-bold">Find Your Perfect Vehicle Online</h1>
+                <p class="lead fw-bold">The World's Largest Used Car Dealership</p>
             </div>
         </section>
 
