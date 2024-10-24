@@ -86,7 +86,7 @@ public class CustomerController extends HttpServlet {
         CustomerDAO cusDao = new CustomerDAO();
 
         // Get infor cho profile
-        if (request.getParameter("getInforUser") != null) {
+        if (request.getParameter("getInforUser") != null) {            
             String userEmail = request.getParameter("getInforUser");
             try {
                 CustomerAccountModel cus = cusDao.getCustomerInfor(userEmail);

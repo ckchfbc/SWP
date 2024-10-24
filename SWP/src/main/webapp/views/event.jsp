@@ -93,7 +93,8 @@
                         $.each(events, function (index, event) {
                             var randomParam = new Date().getTime(); // Sử dụng Math.random()
                             // Create modal for images
-                            var imageModal = '<div class="modal fade" id="imageModal' + event.event_id + '" tabindex="-1" aria-labelledby="imageModalLabel' + event.event_id + '" aria-hidden="true">' +
+                            var imageModal =
+                                    '<div class="modal fade" id="imageModal' + event.event_id + '" tabindex="-1" aria-labelledby="imageModalLabel' + event.event_id + '" aria-hidden="true">' +
                                     '<div class="modal-dialog modal-lg">' +
                                     '<div class="modal-content">' +
                                     '<div class="modal-header">' +
@@ -101,11 +102,12 @@
                                     '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                                     '</div>' +
                                     '<div class="modal-body">' +
-                                    '<img src="/ImageController/b/' + event.event_id + '?t=' + randomParam + '" alt="' + event.event_name + '" class="img-fluid">' + // Thêm tham số ngẫu nhiên vào URL 
+                                    '<img src="/ImageController/b/' + event.event_id + '?t=' + randomParam + '" alt="' + event.event_name + '" class="img-fluid">' +
                                     '</div>' +
                                     '</div>' +
                                     '</div>' +
                                     '</div>';
+
 
                             // Create modal for details
                             var detailsModal = '<div class="modal fade" id="detailsModal' + event.event_id + '" tabindex="-1" aria-labelledby="detailsModalLabel' + event.event_id + '" aria-hidden="true">' +

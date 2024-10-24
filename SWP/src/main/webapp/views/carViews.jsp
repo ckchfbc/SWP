@@ -84,7 +84,6 @@
 
             #relatedCar .card-img-top {
                 height: 200px;
-                width: 150px;
                 object-fit: cover;
             }
             *{
@@ -95,27 +94,8 @@
         </style>
     </head>
     <body>
-        <!--         Left Navigation Bar 
-                <div class="nav-side nav-left">
-                    <h5 class="fw-bold mb-3">Upcoming Events</h5>
-                    <ul class="list-unstyled">
-                        <li>Car Show - 2024-10-20</li>
-                        <li>New Model Launch - 2024-11-05</li>
-                        <li>Sales Event - 2024-12-01</li>
-                    </ul>
-                </div>
-        
-                 Right Navigation Bar 
-                <div class="nav-side nav-right">
-                    <h5 class="fw-bold mb-3">Current Promotions</h5>
-                    <ul class="list-unstyled">
-                        <li>Discount on SUVs - 10%</li>
-                        <li>Free Servicing for 1 Year</li>
-                        <li>Extended Warranty Offer</li>
-                    </ul>
-                </div>-->
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0 shadow-sm rounded" style="z-index: 1;">
+        <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
                 <a class="navbar-brand" href="/"><h1>DriveAura</h1></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -127,7 +107,7 @@
                             <a class="nav-link" href="#">Product</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Event</a>
+                            <a class="nav-link" href="/HomePageController/Event">Event</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Brand</a>
@@ -157,7 +137,7 @@
                         %>
                         <!-- Hiển thị nút nếu có cookie userEmail -->
                         <form action="LoginController" method="post">
-                            <button class="btn btn-primary" type="submit" name="logOut">Log Out</button>
+                            <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
                         </form>
                         <%
                         } else {
@@ -177,6 +157,7 @@
                 </div>
             </div>
         </nav>
+                        
         <!-- Modal tìm kiếm -->
         <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -204,7 +185,6 @@
                     <div class="card p-4">
                         <div class="row">                     
 
-
                             <div class="col-md-5">
                                 <div id="carouselExampleIndicators" class="carousel slide carousel-dark" data-bs-ride="carousel">
                                     <div class="carousel-indicators" id="carousel-indicators">
@@ -228,6 +208,7 @@
                                 <p class="text-muted">Brand: <span id="brand_name"></span></p>
                                 <p class="text-muted">Model: <span id="model_name"></span></p>
                                 <p class="text-muted">Fuel Type: <span id="fuel_name"></span></p>
+                                <p class="text-muted">Color: <span id="color"></span></p>
                                 <h4 class="text-primary mb-4" id="price"></h4>
                                 <div id="description"></div>
                                 <div class="mb-4">
@@ -296,8 +277,7 @@
                             // Kiểm tra nếu dữ liệu xe được trả về
                             if (response.car) {
                                 const car = response.car;
-                                // Điền thông tin của xe vào các thẻ HTML tương ứng
-
+                                // Điền thông tin của xe vào các thẻ HTML tương ứng                                
                                 // Tên xe
                                 $('#car_name').text(car.car_name);
 
@@ -327,12 +307,12 @@
                                 });
                                 $('#fuel_name').text(fuelName);
 
+                                //Color
+                                $('#color').text(car.color);
+
                                 // Giá xe
                                 $('#price').text('$' + car.price);
 
-                                //Buy btn
-                                var buyBtn = '<a href="/CarController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4">Buy</a>';
-                                $('#buy').append(buyBtn);
 
                                 // Mô tả xe
                                 var desc = document.getElementById("description");
@@ -341,8 +321,16 @@
                                 // Tình trạng kho (In Stock hoặc Out of Stock)
                                 if (car.quantity > 0) {
                                     $('#stock_status').text('In Stock').removeClass('bg-danger').addClass('bg-success');
+                                    //Buy btn
+                                    var buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4">Buy</a>';
+                                    $('#buy').append(buyBtn);
+
                                 } else {
                                     $('#stock_status').text('Out of Stock').removeClass('bg-success').addClass('bg-danger');
+                                    //Buy btn
+                                    var buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4 disabled">Buy</a>';
+                                    $('#buy').append(buyBtn);
+
                                 }
                             } else {
                                 console.error("Car data is not available in the response");
@@ -406,9 +394,9 @@
                                 } else {
                                     inStock = '<span class="badge bg-danger me-2">Out of Stock</span>';
                                 }
-                                var carCard = '<div class="col-md-3 mb-4"><a class="text-decoration-none text-dark" href="/CarController/View/' + car.car_id + '">' +
+                                var carCard = '<div class="col-lg-3 mb-4"><a class="text-decoration-none text-dark" href="/CarController/View/' + car.car_id + '">' +
                                         '<div class="card pb-3">' +
-                                        '<img src="/ImageController/c/' + car.first_car_image_id + '" class="card-img-top zoom-img" alt="' + car.car_name + '" style="height: 250px;">' +
+                                        '<img src="/ImageController/c/' + car.car_id + '" class="card-img-top zoom-img" alt="' + car.car_name + '" style="height: 250px;">' +
                                         '<div class="card-body">' +
                                         '<h5 class="card-title">' + car.car_name + '</h5>' +
                                         '<p class="card-text">' + car.price + ' VND ' + inStock + '</p>' +

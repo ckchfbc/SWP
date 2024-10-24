@@ -127,10 +127,44 @@ public class ImageController extends HttpServlet {
         // Image của car
         if(host.startsWith("/ImageController/c/")) {
             try ( Connection conn = DBConnection.getConnection()) {
-                int eventId = Integer.parseInt(request.getPathInfo().replace("/c/", ""));
+                int carImgId = Integer.parseInt(request.getPathInfo().replace("/c/", ""));
                 String sql = "SELECT picture FROM car_image WHERE car_image_id = ?";
                 PreparedStatement statement = conn.prepareStatement(sql);
-                statement.setInt(1, eventId);
+                statement.setInt(1, carImgId);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    // Lấy dữ liệu ảnh dạng binary
+                    InputStream inputStream = resultSet.getBinaryStream("picture");
+                    OutputStream outputStream = response.getOutputStream();
+
+                    // Thiết lập loại nội dung là hình ảnh
+                    response.setContentType("image/jpeg");
+
+                    byte[] buffer = new byte[4096];
+                    int bytesRead = -1;
+
+                    // Ghi dữ liệu ảnh từ database ra client
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+
+                    inputStream.close();
+                    outputStream.close();
+                }
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                response.getWriter().print("Error: " + ex.getMessage());
+            }
+        }
+        
+        //1  Image của car
+        if(host.startsWith("/ImageController/co/")) {
+            try ( Connection conn = DBConnection.getConnection()) {
+                int carId = Integer.parseInt(request.getPathInfo().replace("/co/", ""));
+                String sql = "SELECT picture, car_image_id FROM car_image WHERE car_id = ? ORDER BY RAND() LIMIT 1;";
+                PreparedStatement statement = conn.prepareStatement(sql);
+                statement.setInt(1, carId);
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     // Lấy dữ liệu ảnh dạng binary

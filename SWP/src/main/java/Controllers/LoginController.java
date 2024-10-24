@@ -69,12 +69,7 @@ public class LoginController extends HttpServlet {
                     if (accDAO.addNewAccountGoogle(acc)) {
                         if (accDAO.addNewCustomerAccountGoogle(acc)) {
                             String email = acc.getEmail();
-                            Cookie userCookie = new Cookie("userEmail", email);
-                            userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                            userCookie.setHttpOnly(true); // Bảo mật
-                            userCookie.setPath("/");
-                            response.addCookie(userCookie); // Thêm cookie vào phản hồi                
-                            response.sendRedirect("/");
+                            setCookieLogin(request, response, email);
                         }
                     }
 
@@ -96,12 +91,7 @@ public class LoginController extends HttpServlet {
                 sendMessageError(request, response, message, "/HomePageController/Login");
             } else {
                 String email = acc.getEmail();
-                Cookie userCookie = new Cookie("userEmail", email);
-                userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                userCookie.setHttpOnly(true); // Bảo mật
-                userCookie.setPath("/");
-                response.addCookie(userCookie); // Thêm cookie vào phản hồi                
-                response.sendRedirect("/");
+               setCookieLogin(request, response, email);
             }
         }
 
@@ -130,7 +120,7 @@ public class LoginController extends HttpServlet {
                     }
 
                     // Xóa cookie roleCookie
-                    if (cookie.getName().equals("roleCookie")) {
+                    if (cookie.getName().equals("role")) {
                         cookie.setMaxAge(0); // Xóa cookie bằng cách đặt thời gian sống là 0
                         response.addCookie(cookie); // Thêm lại cookie đã xóa vào phản hồi
                     }
@@ -164,12 +154,7 @@ public class LoginController extends HttpServlet {
                     } else {
                         if (accDao.addNewAccount(email, name, password)) {
                             if (accDao.addNewCustomerAccount(email, name)) {
-                                Cookie userCookie = new Cookie("userEmail", email);
-                                userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                                userCookie.setHttpOnly(true); // Bảo mật
-                                userCookie.setPath("/");
-                                response.addCookie(userCookie); // Thêm cookie vào phản hồi                
-                                response.sendRedirect("/");
+                                setCookieLogin(request, response, email);
                             }
                         }
                     }
@@ -190,21 +175,7 @@ public class LoginController extends HttpServlet {
             } else {
                 if (!accDao.isAdmin(email)) {
                     if (accDao.loginAccount(email, password)) {
-                        Cookie userCookie = new Cookie("userEmail", email);
-                        AccountDAO accDAO = new AccountDAO();
-                        String role = accDAO.getRole(email);
-                        Cookie roleCokie = new Cookie("role", role);
-                        //email
-                        userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                        userCookie.setHttpOnly(true); // Bảo mật
-                        userCookie.setPath("/");
-                        response.addCookie(userCookie); // Thêm cookie vào phản hồi                
-                        //role
-                        roleCokie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                        roleCokie.setHttpOnly(true); // Bảo mật
-                        roleCokie.setPath("/");
-                        response.addCookie(roleCokie); // Thêm cookie vào phản hồi      
-                        response.sendRedirect("/");
+                        setCookieLogin(request, response, email);
                     } else {
                         String message = "Incorrect Password or Email.";
                         sendMessageError(request, response, message, "/HomePageController/Login");
@@ -243,6 +214,24 @@ public class LoginController extends HttpServlet {
             }
         }
 
+    }
+
+    public void setCookieLogin(HttpServletRequest request, HttpServletResponse response, String email) throws IOException {
+        Cookie userCookie = new Cookie("userEmail", email);
+        AccountDAO accDAO = new AccountDAO();
+        String role = accDAO.getRole(email);
+        Cookie roleCokie = new Cookie("role", role);
+        //email
+        userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+        userCookie.setHttpOnly(true); // Bảo mật
+        userCookie.setPath("/");
+        response.addCookie(userCookie); // Thêm cookie vào phản hồi                
+        //role
+        roleCokie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+        roleCokie.setHttpOnly(true); // Bảo mật
+        roleCokie.setPath("/");
+        response.addCookie(roleCokie); // Thêm cookie vào phản hồi      
+        response.sendRedirect("/");
     }
 
     public void sendMessageError(HttpServletRequest request, HttpServletResponse response, String message, String redirect) throws IOException {

@@ -216,38 +216,20 @@
                                     $('#mainCar').hide();
                                 });
                             }
-<<<<<<< HEAD
-                        };
-                        window.addEventListener('resize', toggleNav);
-                        toggleNav();
+                            ;
+                            window.addEventListener('resize', toggleNav);
+                            toggleNav();
 
-                        // Load event page
-                        var loadEventButton = document.getElementById('loadEventButton');
-                        if (loadEventButton) {
-                            loadEventButton.addEventListener('click', function () {
-                                $('#includeEventContainer').load('/views/event.jsp');
-                                $('#mainEvent').hide();
-                            });
-                        }
+                            
+                            // Load employee page
+                            var loadEmployeeButton = document.getElementById('loadEmployeeButton');
+                            if (loadEmployeeButton) {
+                                loadEmployeeButton.addEventListener('click', function () {
+                                    $('#includeEmployeeContainer').load('/views/employee.jsp');
+                                    $('#mainEmployee').hide();
+                                });
+                            }
 
-                        // Load car page
-                        var loadCarButton = document.getElementById('loadCarButton');
-                        if (loadCarButton) {
-                            loadCarButton.addEventListener('click', function () {
-                                $('#includeCarContainer').load('/views/car.jsp');
-                                $('#mainCar').hide();
-                            });
-                        }
-                        // Load employee page
-                        var loadEmployeeButton = document.getElementById('loadEmployeeButton');
-                        if (loadEmployeeButton) {
-                            loadEmployeeButton.addEventListener('click', function () {
-                                $('#includeEmployeeContainer').load('/views/employee.jsp');
-                                $('#mainEmployee').hide();
-                            });
-                        }
-=======
->>>>>>> af5c3c7e19e3b9dde5acb021ea1ac040e251295b
         </script>
     </body>
 </html>

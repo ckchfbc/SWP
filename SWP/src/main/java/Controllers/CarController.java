@@ -389,6 +389,7 @@ public class CarController extends HttpServlet {
                 carData.put("car_name", car.getCar_name());
                 carData.put("price", car.getPrice());
                 carData.put("description", car.getDescription());
+                carData.put("color", car.getColor());
                 carData.put("quantity", car.getQuantity());
                 carData.put("brand_id", car.getBrand_id());
                 carData.put("model_id", car.getModel_id());

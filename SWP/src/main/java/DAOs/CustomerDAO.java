@@ -52,7 +52,7 @@ public class CustomerDAO {
         String sql3 = "UPDATE customers SET name = ?, email = ?, phone_number = ? WHERE customer_id = ?; ";
         String sql4 = "UPDATE customers SET name = ?, email = ?, address = ? WHERE customer_id = ?; ";
         PreparedStatement stmt = null;
-        System.out.println(name + " " + email + " " + address + " " + phone.length() + " " + cus_id);
+//        System.out.println(name + " " + email + " " + address + " " + phone.length() + " " + cus_id);
         //Everything ko null
         if (address != null && phone != null) {
             try ( Connection conn = DBConnection.getConnection()) {
@@ -115,4 +115,5 @@ public class CustomerDAO {
         
         return false;
     }
+        
 }
