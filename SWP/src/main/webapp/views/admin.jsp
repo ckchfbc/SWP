@@ -135,6 +135,14 @@
                                 <span>Events</span>
                             </a>
                         </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link d-flex align-items-center text-white" id="v-pills-orders-tab"
+                               data-bs-toggle="pill" href="#v-pills-orders" role="tab" aria-controls="v-pills-orders"
+                               aria-selected="false">
+                                <i class="fa-solid fa-clipboard"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
@@ -175,6 +183,14 @@
                             <div id="includeEventContainer" class="w-100 container-fluid p-0 m-0"></div>
                             <div id="mainEvent">
                                 <%@include file="/views/event.jsp" %> 
+                            </div>
+                        </div>
+                        <div class="tab-pane fade w-100" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab" id="orderContent">
+                            <a target="_blank" href="/OrderController/Create" class="btn btn-primary mb-3">Create New Order</a>
+                            <button id="loadOrderButton" class="btn btn-outline-secondary mb-3">Load Order Page</button>
+                            <div id="includeOrderContainer" class="w-100 container-fluid p-0 m-0"></div>
+                            <div id="mainOrder">
+                                <%@include file="/views/orderAdmin.jsp" %> 
                             </div>
                         </div>
                     </div>
@@ -220,13 +236,22 @@
                             window.addEventListener('resize', toggleNav);
                             toggleNav();
 
-                            
+
                             // Load employee page
                             var loadEmployeeButton = document.getElementById('loadEmployeeButton');
                             if (loadEmployeeButton) {
                                 loadEmployeeButton.addEventListener('click', function () {
                                     $('#includeEmployeeContainer').load('/views/employee.jsp');
                                     $('#mainEmployee').hide();
+                                });
+                            }
+                            
+                            // Load employee page
+                            var loadOrderButton = document.getElementById('loadOrderButton');
+                            if (loadOrderButton) {
+                                loadOrderButton.addEventListener('click', function () {
+                                    $('#includeOrderContainer').load('/views/orderAdmin.jsp');
+                                    $('#mainOrder').hide();
                                 });
                             }
 

@@ -5,12 +5,15 @@
 package DAOs;
 
 import DB.DBConnection;
+import Models.OrderModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -63,7 +66,7 @@ public class OrderDAO {
                 // Execute the insert
                 int rowsInserted = stmtInsert.executeUpdate();
                 boolean isCreate = rowsInserted > 0;
-                
+
                 // Cập nhật thông tin khách hàng
                 try ( PreparedStatement stmt2 = conn.prepareStatement(updateCustomerSql)) {
                     stmt2.setString(1, customer_address);
@@ -77,5 +80,95 @@ public class OrderDAO {
                 }
             }
         }
+    }
+
+    public static List<OrderModel> getAllOrders() throws SQLException {
+        String sql = "SELECT * FROM orders;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<OrderModel> orders = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                OrderModel order = new OrderModel();
+                order.setOrder_id(rs.getInt("order_id"));
+                order.setCustomer_id(rs.getInt("customer_id"));
+                order.setEmployee_id(rs.getInt("employee_id"));
+                order.setCar_id(rs.getInt("car_id"));
+                order.setCreate_date(rs.getString("create_date"));
+                order.setPayment_method(rs.getString("payment_method"));
+                order.setTotal_amount(rs.getBigDecimal("total_amount"));
+                order.setDeposit_status(rs.getBoolean("deposit_status"));
+                order.setOrder_status(rs.getBoolean("order_status"));
+                order.setDate_start(rs.getString("date_start"));
+                order.setDate_end(rs.getString("date_end"));
+
+                orders.add(order);  // Thêm event vào List
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public OrderModel getOrderById(int orderId) throws SQLException {
+        String sql = "SELECT * FROM orders where order_id = ?;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        OrderModel order = new OrderModel();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, orderId);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                order.setOrder_id(rs.getInt("order_id"));
+                order.setCustomer_id(rs.getInt("customer_id"));
+                order.setEmployee_id(rs.getInt("employee_id"));
+                order.setCar_id(rs.getInt("car_id"));
+                order.setCreate_date(rs.getString("create_date"));
+                order.setPayment_method(rs.getString("payment_method"));
+                order.setTotal_amount(rs.getBigDecimal("total_amount"));
+                order.setDeposit_status(rs.getBoolean("deposit_status"));
+                order.setOrder_status(rs.getBoolean("order_status"));
+                order.setDate_start(rs.getString("date_start"));
+                order.setDate_end(rs.getString("date_end"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return order;
+    }
+
+    public boolean changeDepositStatus(String id) throws SQLException {
+        OrderModel event = getOrderById(Integer.parseInt(id));
+        String sql = "UPDATE orders SET deposit_status = ? WHERE order_id = ?;";
+        PreparedStatement stmt = null;
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setBoolean(1, !event.isDeposit_status());
+            stmt.setInt(2, event.getOrder_id());
+            int row = stmt.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean changeOrderStatus(String id) throws SQLException {
+        OrderModel event = getOrderById(Integer.parseInt(id));
+        String sql = "UPDATE orders SET order_status = ? WHERE order_id = ?;";
+        PreparedStatement stmt = null;
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setBoolean(1, !event.isOrder_status());
+            stmt.setInt(2, event.getOrder_id());
+            int row = stmt.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
