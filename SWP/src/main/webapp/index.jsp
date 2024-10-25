@@ -62,7 +62,22 @@
         </style>
     </head>
     <body>        
-
+        <%
+            Cookie[] cookies = request.getCookies();
+            boolean isAdmin = false;
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        isAdmin = true;
+                        break;
+                    }
+                }
+            }
+            if (isAdmin) {
+                response.sendRedirect("/AdminController/Dashboard");
+                return; // Ensure to return after redirect
+            }
+        %>
         <!-- Navigation -->
         <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
@@ -88,7 +103,6 @@
 
                         <%
                             // Lấy danh sách cookies từ request
-                            Cookie[] cookies = request.getCookies();
                             String userEmail = null;
 
                             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
@@ -273,13 +287,5 @@
                 <%@include file="/views/footer.jsp" %>
             </div>
         </footer>
-    </body>
-    <%
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("admin")) {
-                response.sendRedirect("/AdminController/Dashboard");
-                break;
-            }
-        }
-    %>
+    </body>    
 </html>

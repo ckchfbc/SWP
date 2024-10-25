@@ -84,7 +84,11 @@
                                     <i class="fa-solid fa-eye p-0 m-0" id="icon"></i>
                                 </button>
                             </div>
-                            <span id="passwordError" class="text-danger mb-3"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
+                            <div class="form-check mb-3">
+                                <input required type="checkbox" class="form-check-input" id="terms">
+                                <label class="form-check-label" for="terms">I agree to the <a href="#">terms & policy</a></label>
+                            </div>
+                            <span id="passwordError" class="text-danger mb-4"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
                             <button type="submit" class="btn btn-dark w-100 mb-3" name="loginBtn">Login</button>
                             <div class="text-center">Or</div>
                             <a class="btn btn-outline-dark w-100 mt-3" href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/LoginController/Login&response_type=code&client_id=660845253786-djntvvn4rk8lnt6vmrbop3blvttdmrnm.apps.googleusercontent.com&approval_prompt=force&state=login">
@@ -118,15 +122,14 @@
                 // Regular expression kiểm tra định dạng email
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
-                    emailError.textContent = "Email không hợp lệ.";
-                    console.log("Email không hợp lệ");
+                    emailError.textContent = "Invalid email.";
                     return false; // Dừng form submit
                 }
 
                 // Regular expression kiểm tra mật khẩu
                 var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
                 if (!passwordRegex.test(password)) {
-                    passwordError.textContent = "Mật khẩu phải có từ 6-32 ký tự, ít nhất 1 chữ in hoa, 1 số và 1 ký tự đặc biệt.";
+                    passwordError.textContent = "Password must be 6-32 characters, at least 1 uppercase letter, 1 number and 1 special character.";
                     console.log("Password không hợp lệ");
                     return false; // Dừng form submit
                 }
