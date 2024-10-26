@@ -48,6 +48,10 @@
         <servlet-name>OrderController</servlet-name>
         <servlet-class>Controllers.OrderController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminCustomerContronller</servlet-name>
+        <servlet-class>Controllers.AdminCustomerContronller</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -95,6 +99,10 @@
     <servlet-mapping>
         <servlet-name>OrderController</servlet-name>
         <url-pattern>/OrderController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminCustomerContronller</servlet-name>
+        <url-pattern>/AdminCustomerContronller/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -165,8 +165,11 @@
                         </div>
                         <div class="tab-pane fade" id="v-pills-cusomers" role="tabpanel"
                              aria-labelledby="v-pills-cusomers-tab">
-                            <h3>cusomers</h3>
-                            <p>This is the cusomers section content.</p>
+                            <button id="loadCustomerButton" class="btn btn-outline-secondary mb-3">Load Customer Page</button>
+                            <div id="includeCustomerContainer" class="w-100 container-fluid p-0 m-0"></div>
+                            <div id="mainCustomer">
+                                <%@include file="/views/customer.jsp" %> 
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="v-pills-employees" role="tabpanel" 
                              aria-labelledby="v-pills-employees-tab">
@@ -245,7 +248,7 @@
                                     $('#mainEmployee').hide();
                                 });
                             }
-                            
+
                             // Load employee page
                             var loadOrderButton = document.getElementById('loadOrderButton');
                             if (loadOrderButton) {
@@ -254,7 +257,14 @@
                                     $('#mainOrder').hide();
                                 });
                             }
-
+                            // Load Customer page
+                            var loadCustomerButton = document.getElementById('loadCustomerButton');
+                            if (loadCustomerButton) {
+                                loadCustomerButton.addEventListener('click', function () {
+                                    $('#includeCustomerContainer').load('/views/customer.jsp');
+                                    $('#mainCustomer').hide();
+                                });
+                            }
         </script>
     </body>
 </html>

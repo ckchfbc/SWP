@@ -6,10 +6,12 @@ package DAOs;
 
 import DB.DBConnection;
 import Models.CustomerAccountModel;
+import Models.CustomerModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -112,8 +114,65 @@ public class CustomerDAO {
                 e.printStackTrace();
             }
         }
-        
+
         return false;
     }
-        
+
+    public List<CustomerModel> getAllCustomer() {
+        String sql = "select c.customer_id, c.user_id, c.name, c.email, c.phone_number, c.cus_id_number, c.address, ua.status  from customers c join user_account ua on c.user_id = ua.user_id;	";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<CustomerModel> customers = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                CustomerModel customer = new CustomerModel();
+                customer.setCustomer_id(rs.getInt("customer_id"));
+                customer.setUser_id(rs.getInt("user_id"));
+                customer.setName(rs.getString("name"));
+                customer.setEmail(rs.getString("email"));
+                if (rs.getString("phone_number") == null) {
+                    customer.setPhone_number("haven't enter data");
+                } else {
+                    customer.setPhone_number(rs.getString("phone_number"));
+                }
+                if (rs.getString("cus_id_number") == null) {
+                    customer.setCus_id_number("haven't enter data");
+                } else {
+                    customer.setCus_id_number(rs.getString("cus_id_number"));
+                }
+                if (rs.getString("address") == null) {
+                    customer.setAddress("haven't enter data");
+                } else {
+                    customer.setAddress(rs.getString("address"));
+                }
+                customer.setStatus(rs.getBoolean("status"));
+                customers.add(customer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public boolean changeStatus(String customerID) throws SQLException {
+        int id = Integer.parseInt(customerID);
+
+        String sql = "UPDATE user_account AS ua "
+                + "JOIN customers AS c ON ua.user_id = c.user_id "
+                + "SET ua.status = NOT ua.status "
+                + // Toggle the status directly in SQL
+                "WHERE c.customer_id = ?;";
+
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            int row = stmt.executeUpdate();
+            return row > 0;
+        } catch (SQLException e) {
+            // Log and rethrow if necessary
+            throw e;
+        }
+    }
+
 }
