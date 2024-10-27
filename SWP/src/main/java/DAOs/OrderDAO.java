@@ -53,7 +53,6 @@ public class OrderDAO {
                 int employee_id = -1;
                 if (rs.next()) {
                     employee_id = rs.getInt("employee_id");
-                    System.out.println(employee_id);
                 }
 
                 // Now use employee_id in your insert statement
@@ -168,6 +167,26 @@ public class OrderDAO {
             if (row > 0) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean isOrderByCarAndCusForReview(int carId, int cusId) throws SQLException {
+        String sql = "SELECT * FROM orders where car_id = ? and customer_id = ? and order_status = true;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        OrderModel order = new OrderModel();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, carId);
+            stmt.setInt(2, cusId);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+               return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
         return false;
     }

@@ -52,6 +52,10 @@
         <servlet-name>AdminCustomerContronller</servlet-name>
         <servlet-class>Controllers.AdminCustomerContronller</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReviewController</servlet-name>
+        <servlet-class>Controllers.ReviewController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -103,6 +107,10 @@
     <servlet-mapping>
         <servlet-name>AdminCustomerContronller</servlet-name>
         <url-pattern>/AdminCustomerContronller/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewController</servlet-name>
+        <url-pattern>/ReviewController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

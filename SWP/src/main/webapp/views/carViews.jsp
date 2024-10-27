@@ -12,7 +12,11 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>\
+        <!-- SweetAlert CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+        <!-- SweetAlert JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
         <title>View Car</title>
         <style>
             body {
@@ -91,6 +95,22 @@
                 padding: 0;
                 box-sizing: border-box;
             }
+            .star-rating {
+                display: flex;
+                flex-direction: row-reverse;
+                justify-content: center;
+            }
+            .star-rating input {
+                display: none;
+            }
+            .star-rating label {
+                font-size: 1.5rem;
+                color: #ddd;
+                cursor: pointer;
+            }
+            .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label {
+                color: #f39c12;
+            }
         </style>
     </head>
     <body>
@@ -121,13 +141,21 @@
                             // Lấy danh sách cookies từ request
                             Cookie[] cookies = request.getCookies();
                             String userEmail = null;
-
+                            String role = null;
                             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
                             if (cookies != null) {
                                 for (Cookie cookie : cookies) {
                                     if (cookie.getName().equals("userEmail")) {
-                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-                                        break;
+                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
+                        %>
+                        <input hidden value="<%= userEmail%>" id="userEmail">
+                        <%
+                            }
+                            if (cookie.getName().equals("role")) {
+                                role = cookie.getValue();
+                        %>
+                        <input hidden value="<%= role%>" id="userRole">
+                        <%
                                     }
                                 }
                             }
@@ -157,7 +185,7 @@
                 </div>
             </div>
         </nav>
-                        
+
         <!-- Modal tìm kiếm -->
         <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -222,16 +250,21 @@
                     </div>
 
                     <!-- Related Products Section -->
-                    <div class="mt-4 p-4">
-                        <h4 class="fw-bold mb-3">Related Products</h4>
-                        <div
-                            class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="relatedCar">
+                    <div class="mt-4 p-3">
+                        <h4 class="fw-bold mb-3 text-center">Related Products</h4>
+                        <div class="row m-0 p-0 justify-content-center" id="relatedCar">
                             <!-- Related Product 1 -->
 
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Review -->
+
+            <div class="container justify-content-center">                
+                <%@include file="/views/review.jsp" %>
+            </div>
+
             <!-- Footer -->
             <footer class="bg-dark text-white py-4">
                 <div class="container">
@@ -240,6 +273,7 @@
             </footer>
             <!-- Script -->
             <script>
+
                 $(document).ready(function () {
                     // Khi trang load, thực hiện AJAX để lấy thông tin xe
                     $.ajax({
@@ -260,6 +294,8 @@
                             // Gọi hàm fetchCarById để lấy thông tin chi tiết về xe
                             fetchCarById(carId);
                             getCarImageId(carId);
+                            checkCusHaveOrder(carId);
+                            fetchReviews(carId);
                         },
                         error: function (xhr, status, error) {
                             console.error("Có lỗi xảy ra khi lấy dữ liệu xe: " + error);
@@ -394,12 +430,13 @@
                                 } else {
                                     inStock = '<span class="badge bg-danger me-2">Out of Stock</span>';
                                 }
-                                var carCard = '<div class="col-lg-3 mb-4"><a class="text-decoration-none text-dark" href="/CarController/View/' + car.car_id + '">' +
+                                var carCard = '<div class="col-xl-3 col-md-5 mb-4"><a class="text-decoration-none text-dark" href="/CarController/View/' + car.car_id + '">' +
                                         '<div class="card pb-3">' +
                                         '<img src="/ImageController/c/' + car.car_id + '" class="card-img-top zoom-img" alt="' + car.car_name + '" style="height: 250px;">' +
                                         '<div class="card-body">' +
                                         '<h5 class="card-title">' + car.car_name + '</h5>' +
-                                        '<p class="card-text">' + car.price + ' VND ' + inStock + '</p>' +
+                                        '<p class="card-text">' + car.price + ' VND</p>' +
+                                        '<p class="card-text">' + inStock + '</p>' +
                                         '</div>' +
                                         '</div>' +
                                         '</a></div>';
@@ -411,6 +448,10 @@
                         }
                     });
                 }
+
+                // Khúc này về dưới là của review
+
+
             </script>
     </body>
 </html>
