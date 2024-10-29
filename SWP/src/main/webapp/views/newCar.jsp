@@ -39,12 +39,13 @@
                             }else{
                                 inStock = '<span class="badge bg-danger me-2">Out of Stock</span>';
                             }
-                            var carCard = '<div class="col-md-3 mb-4"><a class="text-decoration-none text-dark" href="/CarController/View/'+ car.car_id +'">' +
+                            var carCard = '<div class="col-xl-3 col-md-6 mb-4"><a class="text-decoration-none text-dark" href="/CarController/View/'+ car.car_id +'">' +
                                     '<div class="card pb-3">' +
                                     '<img src="/ImageController/c/' + car.first_car_image_id + '" class="card-img-top zoom-img" alt="' + car.car_name + '" style="height: 250px;">' +
                                     '<div class="card-body">' +
                                     '<h5 class="card-title">' + car.car_name + '</h5>' +
-                                    '<p class="card-text">' + car.price + ' VND ' + inStock + '</p>' +                                    
+                                    '<p class="card-text">' + car.price + ' VND</p>' +
+                                    '<p class="card-text">' + inStock + '</p>' +
                                     '</div>' +
                                     '</div>' +
                                     '</a></div>';
@@ -58,7 +59,7 @@
             });
         </script>
 
-        <div class="row" id="newCar">
+        <div class="row justify-content-center" id="newCar">
 
         </div>
     </body>

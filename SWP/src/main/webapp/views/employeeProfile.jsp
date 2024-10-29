@@ -1,6 +1,6 @@
 <%-- 
-    Document   : profile
-    Created on : 21 thg 10, 2024, 15:37:29
+    Document   : employeeProfile
+    Created on : 28 thg 10, 2024, 20:31:13
     Author     : thaii
 --%>
 
@@ -16,11 +16,14 @@
         <title>Profile User</title>
         <style>
             @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
+                font-family: 'Kirsty';
+                src: url('../fonts/KirstyRg-Regular.woff2') format('woff2'),
+                    url('../fonts/KirstyRg-Regular.woff') format('woff');
                 font-weight: normal;
                 font-style: normal;
+                font-display: swap;
             }
+
             .navbar-brand  {
                 font-family: 'Kirsty', sans-serif;
                 color: #050B20;
@@ -144,6 +147,7 @@
             </div>
         </div>
 
+
         <div class="container-fluid w-100 pt-5 mt-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
@@ -165,7 +169,7 @@
                                     <ul class="dropdown-menu"
                                         aria-labelledby="dropdownMenuButton">
                                         <li><a class="dropdown-item"
-                                               href="/CustomerController/Warranty">View List
+                                               href="/EmployeeController/Order">View List
                                                 Order</a></li>
                                         <li><a class="dropdown-item"
                                                href="#">Chat with
@@ -200,10 +204,10 @@
                                                 </div>
                                                 <div class="mb-3 col-sm-5"> 
                                                     <label
-                                                        class="form-label">Address</label>
-                                                    <input type="text" id="address"
+                                                        class="form-label">Employee Id</label>
+                                                    <input type="text" id="empId"
                                                            class="form-control"
-                                                           placeholder="Address">
+                                                           placeholder="Employee Id">
                                                 </div>
                                                 <div class="mb-3 col-sm-5">
                                                     <label
@@ -221,7 +225,6 @@
                     </div>
                     <div class="row justify-content-md-end mt-4 mb-4">
                         <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-end">
-                            <a target="_blank" href="/CustomerController/EditProfile" class="btn btn-primary btn-custom me-2">Edit</a>
                             <form action="/LoginController" method="POST">
                                 <button type="submit" class="btn btn-secondary btn-custom" name="logOut">Log Out</button>
                             </form>
@@ -230,16 +233,17 @@
 
                 </div>
             </div>
-        </div>        
+        </div>
+
         <script>
             $(document).ready(function () {
                 // Lấy userEmail từ cookie
                 var userEmail = document.getElementById('userEmail').value;
                 // Nếu tìm thấy userEmail, gửi AJAX request để lấy thông tin người dùng
                 $.ajax({
-                    url: '/CustomerController', // Đường dẫn đến API hoặc servlet xử lý theo email
+                    url: '/EmployeeController', // Đường dẫn đến API hoặc servlet xử lý theo email
                     type: 'POST', // Sử dụng phương thức GET
-                    data: {getInforUser: userEmail}, // Gửi email dưới dạng tham số
+                    data: {getInforEmployee: userEmail}, // Gửi email dưới dạng tham số
                     dataType: 'json', // Định dạng dữ liệu trả về là JSON
                     success: function (user) {
                         // Điền các giá trị vào các input tương ứng
@@ -247,24 +251,14 @@
                         console.log(user);
                         $('#email').val(user.email);
 
+                        var img = '<img src="/ImageController/a/avarta.png" alt="Profile Picture" class="profile-img mb-3">';
+                        $('#avarta').append(img);
 
-                        if (user.picture === undefined || user.picture === null || user.picture === '') {
-                            var img = '<img src="/ImageController/a/avarta.png" alt="Profile Picture" class="profile-img mb-3">';
-                            $('#avarta').append(img);
-                        } else {
-                            var img = '<img src="' + user.picture + '" alt="Profile Picture" class="profile-img mb-3">';
-                            $('#avarta').append(img);
-                        }
-
-                        if (user.phone_number !== undefined && user.phone_number !== null && user.phone_number !== '') {
-                            var phone = '********' + user.phone_number.slice(-2);
-                            $('#phone_number').val(phone);
-                        }
+                        var phone = '********' + user.phoneNumber.slice(-2);
+                        $('#phone_number').val(phone);
 
 
-                        if (user.address !== undefined && user.address !== null && user.address !== '') {
-                            $('#address').val(user.address);
-                        }
+                        $('#empId').val(user.employeeId);
                     },
                     error: function (xhr, status, error) {
                         console.error("Lỗi khi lấy thông tin người dùng:", error);

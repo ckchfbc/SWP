@@ -56,6 +56,10 @@
         <servlet-name>ReviewController</servlet-name>
         <servlet-class>Controllers.ReviewController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>WarrantyController</servlet-name>
+        <servlet-class>Controllers.WarrantyController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -111,6 +115,10 @@
     <servlet-mapping>
         <servlet-name>ReviewController</servlet-name>
         <url-pattern>/ReviewController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>WarrantyController</servlet-name>
+        <url-pattern>/WarrantyController/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -37,7 +37,6 @@ public class EventDAO {
             stmt.setBoolean(6, event.isEvent_status());
             int row = stmt.executeUpdate();
             if (row > 0) {
-                System.out.println("File uploaded and saved into database");
                 return true;
             }
 

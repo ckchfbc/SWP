@@ -75,12 +75,23 @@
                                 {
                                     data: null,
                                     render: function (row) {
-                                        if (row.date_end >= today) {
-                                            return '<a target="_blank" href="/EventController/Edit/' + row.event_id + '" class="btn btn-primary me-2">Edit</a>' +
-                                                    (row.event_status ? '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-danger">Disable</a>' : '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-success">Active</a>');
-                                        } else {
+                                        const today = new Date();
+                                        const dateStart = new Date(row.date_start);
+                                        const dateEnd = new Date(row.date_end);
 
-                                            return '<p class="text-secondary fw-bold fs-5">Expired</p>';
+                                        // Add 3 days to date_start
+                                        const dateStartPlus3 = new Date(dateStart);
+                                        dateStartPlus3.setDate(dateStartPlus3.getDate() + 3);
+
+                                        if (today > dateEnd) {
+                                            return '<p class="text-danger fw-bold fs-5">Expired</p>';
+                                        } else if (today >= dateStart && today <= dateStartPlus3) {
+                                            return '<a target="_blank" href="/EventController/Edit/' + row.event_id + '" class="btn btn-primary me-2">Edit</a>' +
+                                                    (row.event_status ?
+                                                            '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-danger">Disable</a>' :
+                                                            '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-success">Active</a>');
+                                        } else {
+                                            return '<p class="text-secondary fw-bold fs-5">Edit Unavailable</p>';
                                         }
                                     }
                                 }

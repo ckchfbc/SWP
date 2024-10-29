@@ -6,7 +6,6 @@ package Controllers;
 
 import DAOs.AccountDAO;
 import DAOs.ReviewDAO;
-import Models.AccountModel;
 import Models.CustomerAccountModel;
 import Models.ReviewModels;
 import com.google.gson.Gson;
@@ -85,7 +84,7 @@ public class ReviewController extends HttpServlet {
             String email = request.getParameter("userEmail");
             AccountDAO accDao = new AccountDAO();
             CustomerAccountModel acc = accDao.getCustomerAccByEmail(email);
-            int cusId = acc.getCustomer_id();
+            int cusId = acc.getCustomer_id();            
             ReviewDAO reviewDao = new ReviewDAO();
             boolean result = false;
 
@@ -96,7 +95,7 @@ public class ReviewController extends HttpServlet {
             }
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-
+System.out.println(result);
             // Create a Gson object to convert boolean to JSON
             Gson gson = new Gson();
             String jsonResponse = gson.toJson(result); // Convert boolean to JSON
@@ -130,7 +129,6 @@ public class ReviewController extends HttpServlet {
 
         if (request.getParameter("getReviews") != null && request.getParameter("getReviews").equals("true")) {
             int carId = Integer.parseInt(request.getParameter("carId"));
-            System.out.println("asdasd: "+carId);
             ReviewDAO reviewDao = new ReviewDAO();
             List<ReviewModels> reviews = new ArrayList<>();
 
