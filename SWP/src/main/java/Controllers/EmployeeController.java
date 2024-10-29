@@ -70,25 +70,29 @@ public class EmployeeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String host = request.getRequestURI();
-        System.out.println("Request URI: " + host);  // Debug: Check the request URI
+//        System.out.println("Request URI: " + host);  // Debug: Check the request URI
 
         if (host.equals("/EmployeeController/Create")) {
-            System.out.println("Navigating to createEvent.jsp");  // Debug
+//            System.out.println("Navigating to createEvent.jsp");  // Debug
             request.getRequestDispatcher("/views/createEmployee.jsp").forward(request, response);
+        } else if (host.equals("/EmployeeController/Order")) {
+            request.getRequestDispatcher("/views/orderEmployee.jsp").forward(request, response);
         } else if (host.startsWith("/EmployeeController/Edit")) {
-            System.out.println("Navigating to editEvent.jsp");  // Debug
+//            System.out.println("Navigating to editEvent.jsp");  // Debug
             request.getRequestDispatcher("/views/editEvent.jsp").forward(request, response);
+        } else if (host.equals("/EmployeeController/Profile")) {
+            request.getRequestDispatcher("/views/employeeProfile.jsp").forward(request, response);
         } else if (host.startsWith("/EmployeeController/Status/")) {
             String[] s = host.split("/");
             String id = s[s.length - 1];
-            System.out.println("Extracted Employee ID: " + id);  // Debugging: Confirm ID extraction
+//            System.out.println("Extracted Employee ID: " + id);  // Debugging: Confirm ID extraction
 
             EmployeeDAO employeeDAO = new EmployeeDAO();
             response.setContentType("text/html;charset=UTF-8");
 
             try ( PrintWriter out = response.getWriter()) {
                 boolean isUpdated = employeeDAO.changeStatus(id);
-                System.out.println("Status Change Result: " + isUpdated);  // Debug: Check update result
+//                System.out.println("Status Change Result: " + isUpdated);  // Debug: Check update result
 
                 if (isUpdated) {
                     out.println("<script>window.close();</script>");  // Close window on success
@@ -102,10 +106,8 @@ public class EmployeeController extends HttpServlet {
             } catch (Exception e) {
                 System.out.println("Unexpected Exception: " + e.getMessage());  // Debug unexpected errors
             }
-        } else {
-            System.out.println("No matching route found!");  // Debug
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
         }
+
     }
 
     /**
@@ -129,7 +131,7 @@ public class EmployeeController extends HttpServlet {
             String employeePassword = request.getParameter("employee_password");
             String employeePhone = request.getParameter("employee_phone");
 
-            boolean isCreated = employeeDAO.addNewEmployeeAccount(employeeName, employeeEmail, employeePassword, employeePhone);
+            boolean isCreated = employeeDAO.addNewEmployeeAccount(employeeEmail, employeeName, employeePassword, employeePhone);
 
             response.setContentType("text/html;charset=UTF-8");
             try ( PrintWriter out = response.getWriter()) {
@@ -175,6 +177,26 @@ public class EmployeeController extends HttpServlet {
             // Convert employee list to JSON using Gson
             Gson gson = new Gson();
             String employeesJson = gson.toJson(employees);
+            response.getWriter().write(employeesJson);
+        }
+
+        if (request.getParameter("getInforEmployee") != null) {
+            String empEmail = request.getParameter("getInforEmployee");
+            EmployeeDAO empDao = new EmployeeDAO();
+            EmployeeModels emp = null;
+            try {
+                emp = empDao.getEmployeeByEmail(empEmail);
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            // Set response type to JSON and encode in UTF-8
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Convert employee list to JSON using Gson
+            Gson gson = new Gson();
+            String employeesJson = gson.toJson(emp);
             response.getWriter().write(employeesJson);
         }
     }

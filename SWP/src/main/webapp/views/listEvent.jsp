@@ -32,6 +32,7 @@
         </style>
     </head>
     <body>
+        <!-- Navigation -->
         <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
                 <a class="navbar-brand" href="/"><h1>DriveAura</h1></a>
@@ -55,8 +56,9 @@
                         <!-- Nút logOut cho customer -->
 
                         <%
-                            // Lấy danh sách cookies từ request
                             Cookie[] cookies = request.getCookies();
+
+                            // Lấy danh sách cookies từ request
                             String userEmail = null;
                             String role = null;
 
@@ -65,23 +67,28 @@
                                 for (Cookie cookie : cookies) {
                                     if (cookie.getName().equals("userEmail")) {
                                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-%>
-                        <input hidden id="user_email" type="text" value="<%= userEmail%>">
-                        <%
                                     }
                                     if (cookie.getName().equals("role")) {
                                         role = cookie.getValue();
-
                                     }
                                 }
                             }
+
                             // Kiểm tra nếu cookie "userEmail" tồn tại
-                            if ((userEmail != null) && role.equals("customer")) {
+                            if ((userEmail != null) && (role.equals("customer"))) {
                         %>
-                        <!-- Hiển thị nút nếu có cookie userEmail -->
-                        <form action="LoginController" method="post">
-                            <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
-                        </form>
+                        <!-- Hiển thị nút nếu là customer -->
+                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
+                        <input hidden value="<%= userEmail%>" id="userEmail">    
+                        <input hidden id="role" value="<%= role%>">
+                        <%
+                        } else {
+                            if ((userEmail != null) && (role.equals("employee"))) {
+                        %>
+                        <!-- Hiển thị nút nếu là employee -->
+                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile"><i class="fa-solid fa-user"></i></a>
+                        <input hidden id="role" value="<%= role%>">
+                        <input hidden value="<%= userEmail%>" id="userEmail">  
                         <%
                         } else {
                         %>
@@ -90,6 +97,7 @@
                             <a class="nav-link" href="${host}/HomePageController/Login">Login</a>
                         </li>
                         <%
+                                }
                             }
                         %>
                         <!-- Nút tìm kiếm -->
@@ -101,6 +109,25 @@
             </div>
         </nav>
 
+        <!-- Modal tìm kiếm -->
+        <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchModalLabel">Tìm Kiếm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="searchForm">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
+                                <button class="btn btn-outline-secondary" type="submit">Tìm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="container mt-5 pt-5">
             <h1 class="text-center">Event List</h1>
@@ -144,7 +171,6 @@
                 // Hiển thị 2 sự kiện mỗi lần
                 for (let i = eventsDisplayed; i < eventsDisplayed + eventsPerPage && i < allEvents.length; i++) {
                     const event = allEvents[i];
-                    console.log(event);
                     const eventCard =
                             '<div class="col-6 mb-4">' + // Mỗi thẻ chiếm 6 cột (tức là 2 thẻ trên một hàng)
                             '<div class="card">' +

@@ -198,4 +198,27 @@ public class EmployeeDAO {
         }
         return false;
     }
+
+    public EmployeeModels getEmployeeByEmail(String email) throws SQLException {
+        String sql = "SELECT e.*, ua.status FROM employees e join user_account ua on e.user_id = ua.user_id where e.email =?;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        EmployeeModels employee = new EmployeeModels();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                employee.setEmployeeId(rs.getInt("employee_id"));
+                employee.setUserId(rs.getInt("user_id"));
+                employee.setName(rs.getString("name"));
+                employee.setEmail(rs.getString("email"));
+                employee.setPhoneNumber(rs.getString("phone_number"));
+                employee.setStatus(rs.getBoolean("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return employee;
+    }
 }

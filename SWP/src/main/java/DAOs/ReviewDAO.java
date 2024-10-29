@@ -23,6 +23,7 @@ public class ReviewDAO {
         OrderDAO orderDao = new OrderDAO();
         boolean isCusHaveOrder = orderDao.isOrderByCarAndCusForReview(carId, cusId);
         boolean isHaveReview = checkHaveReview(carId, cusId);
+        System.out.println(isCusHaveOrder);
         if (!isCusHaveOrder) {
             return true;
         }

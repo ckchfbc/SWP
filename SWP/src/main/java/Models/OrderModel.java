@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  * @author thaii
  */
 public class OrderModel {
+
     private int order_id;
     private int customer_id;
     private int employee_id;
@@ -22,8 +23,26 @@ public class OrderModel {
     private boolean order_status;
     private String date_start;
     private String date_end;
+    private boolean has_warranty;
+    private int warranty_id;
 
     public OrderModel() {
+    }
+
+    public OrderModel(int order_id, int customer_id, int employee_id, int car_id, String create_date, String payment_method, BigDecimal total_amount, boolean deposit_status, boolean order_status, String date_start, String date_end, boolean has_warranty, int warranty_id) {
+        this.order_id = order_id;
+        this.customer_id = customer_id;
+        this.employee_id = employee_id;
+        this.car_id = car_id;
+        this.create_date = create_date;
+        this.payment_method = payment_method;
+        this.total_amount = total_amount;
+        this.deposit_status = deposit_status;
+        this.order_status = order_status;
+        this.date_start = date_start;
+        this.date_end = date_end;
+        this.has_warranty = has_warranty;
+        this.warranty_id = warranty_id;
     }
 
     public OrderModel(int order_id, int customer_id, int employee_id, int car_id, String create_date, String payment_method, BigDecimal total_amount, boolean deposit_status, boolean order_status, String date_start, String date_end) {
@@ -128,9 +147,25 @@ public class OrderModel {
         this.date_end = date_end;
     }
 
+    public boolean isHas_warranty() {
+        return has_warranty;
+    }
+
+    public void setHas_warranty(boolean has_warranty) {
+        this.has_warranty = has_warranty;
+    }
+
+    public int getWarranty_id() {
+        return warranty_id;
+    }
+
+    public void setWarranty_id(int warranty_id) {
+        this.warranty_id = warranty_id;
+    }
+
     @Override
     public String toString() {
         return "OrderModel{" + "order_id=" + order_id + ", customer_id=" + customer_id + ", employee_id=" + employee_id + ", car_id=" + car_id + ", create_date=" + create_date + ", payment_method=" + payment_method + ", total_amount=" + total_amount + ", deposit_status=" + deposit_status + ", order_status=" + order_status + ", date_start=" + date_start + ", date_end=" + date_end + '}';
     }
-        
+
 }

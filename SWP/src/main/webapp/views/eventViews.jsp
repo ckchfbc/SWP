@@ -59,30 +59,40 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Zalo</a>
                         </li>                        
-                        <!-- Nút logOut cho customer -->
-
                         <%
-                            // Lấy danh sách cookies từ request
                             Cookie[] cookies = request.getCookies();
+
+                            // Lấy danh sách cookies từ request
                             String userEmail = null;
+                            String role = null;
 
                             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
                             if (cookies != null) {
                                 for (Cookie cookie : cookies) {
                                     if (cookie.getName().equals("userEmail")) {
                                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-                                        break;
+                                    }
+                                    if (cookie.getName().equals("role")) {
+                                        role = cookie.getValue();
                                     }
                                 }
                             }
 
                             // Kiểm tra nếu cookie "userEmail" tồn tại
-                            if (userEmail != null) {
+                            if ((userEmail != null) && (role.equals("customer"))) {
                         %>
-                        <!-- Hiển thị nút nếu có cookie userEmail -->
-                        <form action="LoginController" method="post">
-                            <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
-                        </form>
+                        <!-- Hiển thị nút nếu là customer -->
+                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
+                        <input hidden value="<%= userEmail%>" id="userEmail">    
+                        <input hidden id="role" value="<%= role%>">
+                        <%
+                        } else {
+                            if ((userEmail != null) && (role.equals("employee"))) {
+                        %>
+                        <!-- Hiển thị nút nếu là employee -->
+                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile"><i class="fa-solid fa-user"></i></a>
+                        <input hidden id="role" value="<%= role%>">
+                        <input hidden value="<%= userEmail%>" id="userEmail">  
                         <%
                         } else {
                         %>
@@ -91,6 +101,7 @@
                             <a class="nav-link" href="${host}/HomePageController/Login">Login</a>
                         </li>
                         <%
+                                }
                             }
                         %>
                         <!-- Nút tìm kiếm -->
@@ -101,6 +112,26 @@
                 </div>
             </div>
         </nav>
+
+        <!-- Modal tìm kiếm -->
+        <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchModalLabel">Tìm Kiếm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="searchForm">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
+                                <button class="btn btn-outline-secondary" type="submit">Tìm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Show sự kiện infor -->
         <div class="container mt-5 pt-5">
@@ -116,6 +147,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- Footer -->
         <footer class="bg-dark text-white py-4">

@@ -5,6 +5,7 @@
 package DAOs;
 
 import DB.DBConnection;
+import Models.EmployeeModels;
 import Models.OrderModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -182,12 +183,61 @@ public class OrderDAO {
             stmt.setInt(2, cusId);
             rs = stmt.executeQuery();
             while (rs.next()) {
-               return true;
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
         return false;
+    }
+
+    public static List<OrderModel> getAllOrdersForEmployee(String email) throws SQLException {
+        EmployeeDAO empDao = new EmployeeDAO();
+        EmployeeModels emp = empDao.getEmployeeByEmail(email);
+        String sql = "SELECT \n"
+                + "    o.*, \n"
+                + "    w.warranty_id,\n"
+                + "    CASE \n"
+                + "        WHEN w.order_id IS NOT NULL THEN true \n"
+                + "        ELSE false \n"
+                + "    END AS has_warranty\n"
+                + "FROM \n"
+                + "    orders o\n"
+                + "LEFT JOIN \n"
+                + "    warranty w \n"
+                + "ON \n"
+                + "    o.order_id = w.order_id\n"
+                + "WHERE \n"
+                + "    o.employee_id = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<OrderModel> orders = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, emp.getEmployeeId());
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                OrderModel order = new OrderModel();
+                order.setOrder_id(rs.getInt("order_id"));
+                order.setCustomer_id(rs.getInt("customer_id"));
+                order.setEmployee_id(rs.getInt("employee_id"));
+                order.setCar_id(rs.getInt("car_id"));
+                order.setCreate_date(rs.getString("create_date"));
+                order.setPayment_method(rs.getString("payment_method"));
+                order.setTotal_amount(rs.getBigDecimal("total_amount"));
+                order.setDeposit_status(rs.getBoolean("deposit_status"));
+                order.setOrder_status(rs.getBoolean("order_status"));
+                order.setDate_start(rs.getString("date_start"));
+                order.setDate_end(rs.getString("date_end"));
+                order.setHas_warranty(rs.getBoolean("has_warranty"));
+                order.setWarranty_id(rs.getInt("warranty_id"));
+
+                orders.add(order);  // Thêm event vào List
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orders;
     }
 }

@@ -69,6 +69,9 @@ public class CustomerController extends HttpServlet {
         if (host.equals("/CustomerController/EditProfile")) {
             request.getRequestDispatcher("/views/editProfile.jsp").forward(request, response);
         }
+        if (host.equals("/CustomerController/Warranty")) {
+            request.getRequestDispatcher("/views/customerWarranty.jsp").forward(request, response);
+        }
     }
 
     /**

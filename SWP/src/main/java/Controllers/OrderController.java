@@ -164,6 +164,27 @@ public class OrderController extends HttpServlet {
                 response.getWriter().write(eventsJson);
             }
         }
+
+        // Lấy cho thằng employee
+        if (request.getParameter("fetchDataForEmployee") != null) {
+            if (request.getParameter("fetchDataForEmployee").equals("true")) {
+                String email = request.getParameter("userEmail");
+                List<OrderModel> orders = new ArrayList<>();
+                try {
+                    orders = orderDao.getAllOrdersForEmployee(email);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                // Thiết lập kiểu phản hồi là JSON
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+
+                // Sử dụng Gson để chuyển danh sách thành JSON
+                Gson gson = new Gson();
+                String eventsJson = gson.toJson(orders);
+                response.getWriter().write(eventsJson);
+            }
+        }
     }
 
     /**

@@ -32,7 +32,7 @@
         <script>
             $("#reviewForm").on("submit", function (event) {
                 event.preventDefault(); // Prevent form's default submission behavior
-
+                const role = $('#role').val();
                 const rating = $('input[name="rating"]:checked').val();
                 const reviewText = $("#review_text").val();
                 const userEmail = $("#userEmail").val();
@@ -40,10 +40,7 @@
                 const parts = urlPath.split('/');
                 const carId = parts[parts.length - 1];
                 const reviewDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-
-                // Debugging: Check values before sending
-                console.log("Data to send:", {carId, rating, review_text: reviewText, createReview: 'true', userEmail});
-
+               
                 $.ajax({
                     url: '/ReviewController',
                     type: 'POST',
@@ -73,7 +70,7 @@
                                 icon: "error",
                                 button: "OK"
                             });
-                        }
+                        }                        
                         fetchReviews(carId);
                     },
                     error: function (xhr, status, error) {
@@ -95,15 +92,13 @@
                     success: function (reviews) {
                         if (reviews.length === 0) {
                             $('#paginationControls').hide();
-                            $('#reviewsContainer').append('<h5 class="text-center">No Review</h5>')
+                            $('#reviewsContainer').append('<h5 class="text-center">No Review</h5>');
                         } else {
                             allReviews = reviews;
                             currentPage = 1;
                             updateReviewsDisplay();
                             updatePaginationControls();
                         }
-
-
                     },
                     error: function (xhr, status, error) {
                         console.error("Error fetching reviews: " + error);
@@ -189,7 +184,7 @@
             }
 
             function checkCusHaveOrder(carId) {
-                var userRole = document.getElementById('userRole').value;
+                var userRole = document.getElementById('role').value;
                 var userEmail = document.getElementById('userEmail').value;
                 $.ajax({
                     url: "/ReviewController", // URL của Servlet

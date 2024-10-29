@@ -81,7 +81,7 @@ public class HomePageController extends HttpServlet {
         if (host.equals("/HomePageController/ResetSuccess")) {
             request.getRequestDispatcher("/views/resetPWDSuccess.jsp").forward(request, response);
         }
-        
+
         if (host.equals("/HomePageController/Event")) {
             request.getRequestDispatcher("/views/listEvent.jsp").forward(request, response);
         }
@@ -109,6 +109,24 @@ public class HomePageController extends HttpServlet {
                     e.printStackTrace();
                 }
 
+                // Chuyển đổi dữ liệu thành JSON
+                Gson gson = new Gson();
+                String jsonResponse = gson.toJson(cars);
+
+                // Gửi JSON phản hồi về client
+                response.getWriter().write(jsonResponse);
+            }
+        }
+
+        // Get best sell
+        if (request.getParameter("getBestSellingCars") != null) {
+            if (request.getParameter("getBestSellingCars").equals("true")) {
+                List<newCarModel> cars = new ArrayList<>();
+                try {
+                    cars = carDAO.getBestSellingCars();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 // Chuyển đổi dữ liệu thành JSON
                 Gson gson = new Gson();
                 String jsonResponse = gson.toJson(cars);

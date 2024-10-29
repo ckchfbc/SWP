@@ -269,4 +269,59 @@ public class CarDAO {
         }
         return cars;
     }
+
+    // Get best sell car
+    public static List<newCarModel> getBestSellingCars() throws SQLException {
+        String sql = "SELECT \n"
+                + "    c.*,  \n"
+                + "    MAX(i.quantity) AS quantity, \n"
+                + "    COUNT(o.car_id) AS total_orders, \n"
+                + "    (\n"
+                + "        SELECT car_image_id \n"
+                + "        FROM car_image ci \n"
+                + "        WHERE ci.car_id = c.car_id \n"
+                + "        ORDER BY ci.car_image_id ASC \n"
+                + "        LIMIT 1\n"
+                + "    ) AS first_car_image_id \n"
+                + "FROM \n"
+                + "    cars c \n"
+                + "LEFT JOIN \n"
+                + "    inventory i ON c.car_id = i.car_id \n"
+                + "LEFT JOIN \n"
+                + "    orders o ON c.car_id = o.car_id \n"
+                + "WHERE \n"
+                + "    c.status = 1 \n"
+                + "    AND c.date_start <= CURDATE() \n"
+                + "GROUP BY \n"
+                + "    c.car_id \n"
+                + "ORDER BY \n"
+                + "    total_orders DESC \n"
+                + "LIMIT 12;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<newCarModel> newCars = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                newCarModel car = new newCarModel();
+                car.setCar_id(rs.getInt("car_id"));
+                car.setBrand_id(rs.getInt("brand_id"));
+                car.setModel_id(rs.getInt("model_id"));
+                car.setCar_name(rs.getString("car_name"));
+                car.setDate_start(rs.getString("date_start"));
+                car.setColor(rs.getString("color"));
+                car.setPrice(rs.getBigDecimal("price"));
+                car.setFuel_id(rs.getInt("fuel_id"));
+                car.setStatus(rs.getBoolean("status"));
+                car.setDescription(rs.getString("description"));
+                car.setFirst_car_image_id(rs.getInt("first_car_image_id"));
+                car.setQuantity(rs.getInt("quantity"));
+                newCars.add(car);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newCars;
+    }
 }

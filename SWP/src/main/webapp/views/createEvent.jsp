@@ -96,7 +96,7 @@
                 const dateStart = document.getElementById('dateStart').value;
                 const dateEnd = document.getElementById('dateEnd').value;
                 const today = new Date().toISOString().split('T')[0]; // Ngày hiện tại theo định dạng yyyy-mm-dd                
-                const maxSizeInBytes = 16 * 1024 * 1024; // 16 M
+                const maxSizeInBytes = 16 * 1024 * 1024; // 16 M                
 
                 // Kiểm tra độ dài của event_name (không quá 255 ký tự)
                 if (eventName.length > 255) {
@@ -107,7 +107,7 @@
 
                 // Kiểm tra độ dài của event_details (tùy chỉnh theo giới hạn, ở đây là 5000000 ký tự và lớn hơn 300 ký tự)
                 if (eventDetails.length > 5000000 || eventDetails.length < 300) {
-                    sendMessageError('Event Details cannot exceed 5000000 characters.');
+                    sendMessageError('Event Details cannot exceed 5000000 or les than 300 characters.');
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
                 }
@@ -123,6 +123,7 @@
                 if (eventImage.size > maxSizeInBytes) {
                     sendMessageError("File must not exceed 16 MB.");
                     event.preventDefault();
+                    return;
                 }
 
                 // Kiểm tra ngày (dateStart không nhỏ hơn ngày hiện tại và dateEnd không nhỏ hơn dateStart)
@@ -137,6 +138,20 @@
                     event.preventDefault(); // Ngăn không cho submit form
                     return;
                 }
+
+                // Check if dateEnd is exactly one week (7 days) after dateStart
+                const oneWeekAfterStart = new Date(dateStart);
+                oneWeekAfterStart.setDate(oneWeekAfterStart.getDate() + 6);
+
+                const formattedOneWeekAfterStart = oneWeekAfterStart.toISOString().split('T')[0];
+                ;
+
+                if (dateEnd < formattedOneWeekAfterStart) {
+                    sendMessageError('The End Date must be at least one week after the Start Date.');
+                    event.preventDefault(); // Prevent form submission
+                    return;
+                }
+
             });
 
             function hideAlert() {

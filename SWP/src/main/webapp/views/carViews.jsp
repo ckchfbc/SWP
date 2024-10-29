@@ -12,7 +12,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>\
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <!-- SweetAlert CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
         <!-- SweetAlert JS -->
@@ -138,35 +138,39 @@
                         <!-- Nút logOut cho customer -->
 
                         <%
-                            // Lấy danh sách cookies từ request
                             Cookie[] cookies = request.getCookies();
+
+                            // Lấy danh sách cookies từ request
                             String userEmail = null;
                             String role = null;
+
                             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
                             if (cookies != null) {
                                 for (Cookie cookie : cookies) {
                                     if (cookie.getName().equals("userEmail")) {
-                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
-                        %>
-                        <input hidden value="<%= userEmail%>" id="userEmail">
-                        <%
-                            }
-                            if (cookie.getName().equals("role")) {
-                                role = cookie.getValue();
-                        %>
-                        <input hidden value="<%= role%>" id="userRole">
-                        <%
+                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
+                                    }
+                                    if (cookie.getName().equals("role")) {
+                                        role = cookie.getValue();
                                     }
                                 }
                             }
 
                             // Kiểm tra nếu cookie "userEmail" tồn tại
-                            if (userEmail != null) {
+                            if ((userEmail != null) && (role.equals("customer"))) {
                         %>
-                        <!-- Hiển thị nút nếu có cookie userEmail -->
-                        <form action="LoginController" method="post">
-                            <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
-                        </form>
+                        <!-- Hiển thị nút nếu là customer -->
+                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
+                        <input hidden value="<%= userEmail%>" id="userEmail">    
+                        <input hidden id="role" value="<%= role%>">
+                        <%
+                        } else {
+                            if ((userEmail != null) && (role.equals("employee"))) {
+                        %>
+                        <!-- Hiển thị nút nếu là employee -->
+                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile"><i class="fa-solid fa-user"></i></a>
+                        <input hidden id="role" value="<%= role%>">
+                        <input hidden value="<%= userEmail%>" id="userEmail">  
                         <%
                         } else {
                         %>
@@ -175,6 +179,7 @@
                             <a class="nav-link" href="${host}/HomePageController/Login">Login</a>
                         </li>
                         <%
+                                }
                             }
                         %>
                         <!-- Nút tìm kiếm -->

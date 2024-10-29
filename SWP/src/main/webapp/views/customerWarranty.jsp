@@ -1,84 +1,57 @@
 <%-- 
-    Document   : homepage2
-    Created on : 27 thg 9, 2024, 16:14:14
+    Document   : customerWarranty
+    Created on : 29 thg 10, 2024, 21:25:19
     Author     : thaii
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <%
-            //Thử control + f5 để refresh cache, hoặc gõ '${host}/../..' vào cái link
-            String host = request.getRequestURI();
-        %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!-- AE copy từ đây tới title nếu tạo jsp mới thêm các thể khác thì thêm trên <title> -->
+        <title>Customer Warranty</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
-        <title >DriveAura</title>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <style>
-            *{
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            .card {
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                overflow: hidden;
-            }
-
-            .card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            }
-
-            .card-img-top {
-                height: 200px;
-                width: 150px;
-                object-fit: cover;
-            }
-
-            a{
-                text-decoration: none;
-            }
-
             @font-face {
                 font-family: 'Kirsty'; /* Your font name */
                 src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
                 font-weight: normal;
                 font-style: normal;
             }
-
             .navbar-brand  {
                 font-family: 'Kirsty', sans-serif;
                 color: #050B20;
             }
         </style>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+            rel="stylesheet">
+        <link
+            href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"
+            rel="stylesheet">
+        <link
+            href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css"
+            rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
-    <body>        
-        <%
-            Cookie[] cookies = request.getCookies();
-            boolean isAdmin = false;
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("admin")) {
-                        isAdmin = true;
-                        break;
-                    }
-                }
-            }
-            if (isAdmin) {
-                response.sendRedirect("/AdminController/Dashboard");
-                return; // Ensure to return after redirect
-            }
-        %>
+    <body>
+        <!-- JavaScript Links -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script
+        src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+        <script
+        src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+        <script
+        src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+        <script
+        src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
         <!-- Navigation -->
         <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
@@ -103,6 +76,8 @@
                         <!-- Nút logOut cho customer -->
 
                         <%
+                            Cookie[] cookies = request.getCookies();
+
                             // Lấy danh sách cookies từ request
                             String userEmail = null;
                             String role = null;
@@ -125,6 +100,7 @@
                         <!-- Hiển thị nút nếu là customer -->
                         <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
                         <input hidden value="<%= userEmail%>" id="userEmail">    
+                        <input hidden id="role" value="<%= role%>">
                         <%
                         } else {
                             if ((userEmail != null) && (role.equals("employee"))) {
@@ -132,6 +108,7 @@
                         <!-- Hiển thị nút nếu là employee -->
                         <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile"><i class="fa-solid fa-user"></i></a>
                         <input hidden id="role" value="<%= role%>">
+                        <input hidden value="<%= userEmail%>" id="userEmail">  
                         <%
                         } else {
                         %>
@@ -172,62 +149,95 @@
             </div>
         </div>
 
-        <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white mt-5" style="height: 80vh; background-image: url('/ImageController/a/bghome.jpg'); background-size: cover; background-position: center;">
-            <div class="container ">
-                <h1 class="display-4 fw-bold">Find Your Perfect Vehicle Online</h1>
-                <p class="lead fw-bold">The World's Largest Used Car Dealership</p>
-            </div>
-        </section>
+        <!-- Order Table -->
+        <script>
+            function formatDate(dateString) {
+                // Tách chuỗi ngày thành các phần
+                const parts = dateString.split('-');
+                // Đảm bảo rằng chúng ta có 3 phần
+                if (parts.length === 3) {
+                    const year = parts[0];
+                    const month = parts[1];
+                    const day = parts[2];
+                    // Trả về định dạng dd-mm-yyyy
+                    return day + '-' + month + '-' + year;
+                }
+                return dateString; // Trả về giá trị gốc nếu không phải định dạng đúng
+            }
+            $(document).ready(function () {
+                const today = new Date();
+                const todayFormatted = today.getFullYear() + '-' +
+                        String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(today.getDate()).padStart(2, '0'); // Định dạng 'yyyy-mm-dd'
+                const userEmail = $('#userEmail').val();
+                $.ajax({
+                    url: "/WarrantyController", // URL của Servlet
+                    type: "POST", // Phương thức HTTP POST
+                    data: {fetchWarrantyForCustomer: "true", userEmail: userEmail},
+                    dataType: "json", // Định dạng dữ liệu trả về là JSON
+                    success: function (warranties) {
+                        // Initialize DataTables after receiving data
+                        var table = $('#warrantyTable').DataTable({
+                            responsive: true,
+                            data: warranties,
+                            columns: [
+                                {data: 'warranty_id'},
+                                {data: 'order_id'},
+                                {
+                                    data: 'warranty_details',
+                                    render: function (data, type, row) {
+                                        return '<button class="btn btn-primary btn-sm" onclick="showDetailsModal(\'' + data + '\')">View Details</button>';
+                                    }
+                                },
+                                {data: 'warranty_expiry'}
+                            ]
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Có lỗi xảy ra: " + error);
+                    }
+                });
+            });
 
-        <!-- Best Seller Cars -->
-        <section class="container my-5">
-            <h2 class="text-center mb-4">The Best Seller Cars</h2>
-            <%@include file="/views/bestSellCar.jsp" %>
-        </section>
 
+            // Function to show the modal with warranty details
+            function showDetailsModal(details) {
+                $('#warrantyDetailsModalBody').text(details);
+                $('#warrantyDetailsModal').modal('show');
+            }
+        </script>
 
-
-
-        <!-- Why Choose Us -->
-        <section class="bg-dark text-white py-5">
-            <div class="container">
-                <h2 class="text-center mb-5">Why Choose Us?</h2>
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-dollar-sign text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Special Financing Offers</h5>
-                        <p>Our stress-free finance department can help you save money.</p>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-shield text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Trusted Car Dealership</h5>
-                        <p>We provide transparent and reliable services.</p>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-tag text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Transparent Pricing</h5>
-                        <p>No hidden fees or surprises.</p>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-screwdriver-wrench text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Expert Car Service</h5>
-                        <p>Our certified experts keep your car in top condition.</p>
+        <!-- Table Structure -->
+        <div class="container mt-5 pt-5">
+            <table id="warrantyTable" class="table table-striped nowrap w-100" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Warranty Id</th>
+                        <th>Order Id</th>
+                        <th>Warranty Details</th>
+                        <th>Warranty Expiry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dữ liệu sẽ được chèn vào đây -->                
+                </tbody>
+            </table>
+            <!-- Warranty Details Modal -->
+            <div class="modal fade" id="warrantyDetailsModal" tabindex="-1" aria-labelledby="warrantyDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="warrantyDetailsModalLabel">Warranty Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="warrantyDetailsModalBody">
+                            <!-- Warranty details will be displayed here -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- New Car Section -->
-        <section class="container my-5" id="newCarContainer">
-            <h2 class="text-center mb-5">The New Cars</h2>
-            <%@include file="/views/newCar.jsp" %>
-        </section>
-
-        <!-- Footer -->
-        <footer class="bg-dark text-white py-4">
-            <div class="container">
-                <%@include file="/views/footer.jsp" %>
-            </div>
-        </footer>
-    </body>    
+    </body>
 </html>
