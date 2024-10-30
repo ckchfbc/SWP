@@ -152,25 +152,104 @@
             </div>
         </nav>
 
-        <!-- Modal tìm kiếm -->
-        <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <!-- Search Modal -->
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="searchModalLabel">Tìm Kiếm</h5>
+                        <h5 class="modal-title" id="searchModalLabel">Search Cars</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="searchForm">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
-                                <button class="btn btn-outline-secondary" type="submit">Tìm</button>
+                            <div class="input-group mb-3">
+                                <input 
+                                    type="text" 
+                                    id="searchInput" 
+                                    name="search" 
+                                    class="form-control" 
+                                    placeholder="Enter car name..." 
+                                    aria-label="Search" 
+                                    required>
+                                <button class="btn btn-outline-secondary" type="submit">Search</button>
                             </div>
                         </form>
+                        <div id="loadingIndicator" class="text-center" style="display:none;">Searching...</div>
+                        <div id="searchResults" class="mt-4"></div> <!-- Search results will appear here -->
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- jQuery CDN -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Handle form submission
+                $('#searchForm').on('submit', function (event) {
+                    event.preventDefault(); // Prevent page reload
+
+                    const searchTerm = $('#searchInput').val().trim(); // Get search input
+                    if (!searchTerm) {
+                        showErrorMessage('Please enter a search term.');
+                        return;
+                    }
+
+                    updateUIBeforeSearch(); // Show loader and clear results
+
+                    // Send AJAX request to the servlet
+                    $.ajax({
+                        url: '/SearchController',
+                        method: 'POST',
+                        data: {search: searchTerm},
+                        dataType: 'html', // Expect HTML response from the server
+                        success: function (response) {
+                            showLoadingIndicator(false); // Hide loader once response is received
+
+                            // Insert the HTML response directly into the search results container
+                            $('#searchResults').html(response);
+
+                            // Smooth scroll to search results
+                            $('html, body').animate({
+                                scrollTop: $('#searchResults').offset().top
+                            }, 'slow');
+                        },
+                        error: function (xhr, status, error) {
+                            const errorMessage = xhr.responseText || error || 'Unknown error';
+                            console.error(`Error occurred: ${status} - ${errorMessage}`);
+                            showErrorMessage(`An error occurred: ${errorMessage}`);
+                            showLoadingIndicator(false); // Hide loader on error
+                        }
+                    });
+                });
+
+                // UI update before starting a new search
+                function updateUIBeforeSearch() {
+                    showLoadingIndicator(true);
+                    clearSearchResults();
+                }
+
+                // Show or hide the loading indicator
+                function showLoadingIndicator(show) {
+                    $('#loadingIndicator').toggle(show);
+                    $('#searchForm button[type="submit"]').prop('disabled', show);
+                }
+
+                // Clear previous search results
+                function clearSearchResults() {
+                    $('#searchResults').empty();
+                }
+
+                // Show error messages to the user
+                function showErrorMessage(message) {
+                    $('#searchResults').html(`
+                        <div class="alert alert-danger text-center" role="alert">
+            ${message}
+                        </div>
+                    `);
+                }
+            });
+        </script>
 
         <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white mt-5" style="height: 80vh; background-image: url('/ImageController/a/bghome.jpg'); background-size: cover; background-position: center;">
             <div class="container ">
