@@ -4,7 +4,9 @@
  */
 package Controllers;
 
+import DAOs.EmployeeDAO;
 import DAOs.OrderDAO;
+import Models.EmployeeModels;
 import Models.OrderModel;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -128,6 +130,7 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
         // khai báo all
         OrderDAO orderDao = new OrderDAO();
+
         if (request.getParameter("createOrder") != null) {
             int car_id = Integer.parseInt(request.getParameter("car_id"));
             int customer_id = Integer.parseInt(request.getParameter("customer_id"));
@@ -136,9 +139,11 @@ public class OrderController extends HttpServlet {
             String customer_address = request.getParameter("customer_address");
             int car_price = Integer.parseInt(request.getParameter("car_price"));
             BigDecimal price = BigDecimal.valueOf(car_price);
+            BigDecimal vat = price.multiply(BigDecimal.valueOf(0.10)); // Calculate 10% VAT
+            BigDecimal total = price.add(vat); // Add VAT to the original price
 
             try {
-                orderDao.createOrder(car_id, customer_id, customer_cccd, customer_phone, customer_address, price);
+                orderDao.createOrder(car_id, customer_id, customer_cccd, customer_phone, customer_address, total);
             } catch (SQLException ex) {
                 Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -184,6 +189,97 @@ public class OrderController extends HttpServlet {
                 String eventsJson = gson.toJson(orders);
                 response.getWriter().write(eventsJson);
             }
+        }
+
+        // Lấy cho thằng employee
+        if (request.getParameter("fetchDataForCustomer") != null) {
+            if (request.getParameter("fetchDataForCustomer").equals("true")) {
+                String email = request.getParameter("userEmail");
+                List<OrderModel> orders = new ArrayList<>();
+                try {
+                    orders = orderDao.getAllOrdersForCustomer(email);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                // Thiết lập kiểu phản hồi là JSON
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+
+                // Sử dụng Gson để chuyển danh sách thành JSON
+                Gson gson = new Gson();
+                String eventsJson = gson.toJson(orders);
+                response.getWriter().write(eventsJson);
+            }
+        }
+
+        // Check Have 5 Not Done Order
+        if (request.getParameter("checkHaveFiveNotDoneOrder") != null && request.getParameter("checkHaveFiveNotDoneOrder").equals("true")) {
+            int customer_id = Integer.parseInt(request.getParameter("customer_id"));
+            boolean result = orderDao.checkHaveFiveNotDoneOrder(customer_id);
+
+            // Thiết lập kiểu phản hồi là JSON
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Sử dụng Gson để chuyển danh sách thành JSON
+            Gson gson = new Gson();
+            String eventsJson = gson.toJson(result);
+            response.getWriter().write(eventsJson);
+        }
+
+        // Lấy full orderId cho feeadback
+        if (request.getParameter("getOrderIds") != null && request.getParameter("getOrderIds").equals("true")) {
+            String userEmail = request.getParameter("userEmail");
+            List<Integer> listOrderId = new ArrayList<>();
+            try {
+                listOrderId = orderDao.getOrderIds(userEmail);
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            // Thiết lập kiểu phản hồi là JSON
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Sử dụng Gson để chuyển danh sách thành JSON
+            Gson gson = new Gson();
+            String eventsJson = gson.toJson(listOrderId);
+            response.getWriter().write(eventsJson);
+        }
+
+        //Create Order Employee
+        if (request.getParameter("createOrderEmp") != null && request.getParameter("createOrderEmp").equals("true")) {
+            int cusId = Integer.parseInt(request.getParameter("customer_id"));
+            int carId = Integer.parseInt(request.getParameter("car_id"));
+            BigDecimal price = BigDecimal.valueOf(Integer.parseInt(request.getParameter("car_price")));
+            BigDecimal vat = price.multiply(BigDecimal.valueOf(0.10));
+            BigDecimal total = price.add(vat);
+            String cccd = request.getParameter("cusCCCD");
+            String userEmail = request.getParameter("userEmail");
+            EmployeeDAO empDao = new EmployeeDAO();
+            EmployeeModels emp = new EmployeeModels();
+            
+            try {
+                emp = empDao.getEmployeeByEmail(userEmail);
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int emp_id = emp.getEmployeeId();
+            boolean isCreate = false;
+            
+            try {
+                isCreate = orderDao.createOrderByEmp(carId, cusId, cccd, total, emp_id);
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Sử dụng Gson để chuyển danh sách thành JSON
+            Gson gson = new Gson();
+            String eventsJson = gson.toJson(isCreate);
+            response.getWriter().write(eventsJson);
         }
     }
 

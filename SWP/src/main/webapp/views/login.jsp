@@ -74,12 +74,12 @@
                         <form onsubmit="return validateForm()" action="/LoginController" method="post">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address</label>
-                                <input required type="email" class="form-control" id="email" name="emailTxt" placeholder="Enter your email">
+                                <input type="email" class="form-control" id="email" name="emailTxt" placeholder="Enter your email">
                                 <span id="emailError" class="text-danger"></span> <!-- Thêm thẻ này để hiển thị lỗi -->
                             </div>    
                             <label for="password" class="form-label">Password</label>
                             <div class="mb-3 d-flex">
-                                <input required type="password" class="form-control" id="password" name="pwdTxt" placeholder="Enter your password">
+                                <input type="password" class="form-control" id="password" name="pwdTxt" placeholder="Enter your password">
                                 <button type="button" class="form-control btn btn-outline-dark" id="showPassword" onclick="togglePassword()" style="width: 50px;">
                                     <i class="fa-solid fa-eye p-0 m-0" id="icon"></i>
                                 </button>

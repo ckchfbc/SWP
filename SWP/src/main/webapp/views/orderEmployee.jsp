@@ -44,8 +44,6 @@
         <!-- JavaScript Links -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-        <script
         src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
         <script
         src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
@@ -55,251 +53,121 @@
         src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
 
 
-        <!-- Navigation -->
-        <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
-            <div class="container">
-                <a class="navbar-brand" href="/"><h1>DriveAura</h1></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/HomePageController/Event">Event</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Brand</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Zalo</a>
-                        </li>                        
-                        <!-- Nút logOut cho customer -->
+        <!-- navBar -->
+        <%@include file="navbar.jsp" %>
 
-                        <%
-                            // Lấy danh sách cookies từ request
-                            String userEmail = null;
-                            String role = null;
-
-                            Cookie[] cookies = request.getCookies();
-                            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
-                            if (cookies != null) {
-                                for (Cookie cookie : cookies) {
-                                    if (cookie.getName().equals("userEmail")) {
-                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-                                    }
-                                    if (cookie.getName().equals("role")) {
-                                        role = cookie.getValue();
-                                    }
-                                }
-                            }
-
-                            // Kiểm tra nếu cookie "userEmail" tồn tại
-                            if ((userEmail != null) && (role.equals("customer"))) {
-                        %>
-                        <!-- Hiển thị nút nếu là customer -->
-                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
-                            <%
-                            } else {
-                                if ((userEmail != null) && (role.equals("employee"))) {
-                            %>
-                        <!-- Hiển thị nút nếu là employee -->
-                        <input hidden value="<%= userEmail%>" id="userEmail">
-                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile"><i class="fa-solid fa-user"></i></a>
-                            <%
-                            } else {
-                            %>
-                        <!-- Hiển thị thông báo nếu không có cookie -->
-                        <li class="nav-item">                            
-                            <a class="nav-link" href="${host}/HomePageController/Login">Login</a>
-                        </li>
-                        <%
-                                }
-                            }
-                        %>
-                        <!-- Nút tìm kiếm -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Modal tìm kiếm -->
-        <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="searchModalLabel">Tìm Kiếm</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="searchForm">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
-                                <button class="btn btn-outline-secondary" type="submit">Tìm</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-
-    <!-- Order Table -->
-    <script>
-        function formatDate(dateString) {
-            // Tách chuỗi ngày thành các phần
-            const parts = dateString.split('-');
-            // Đảm bảo rằng chúng ta có 3 phần
-            if (parts.length === 3) {
-                const year = parts[0];
-                const month = parts[1];
-                const day = parts[2];
-                // Trả về định dạng dd-mm-yyyy
-                return day + '-' + month + '-' + year;
+        <!-- Order Table -->
+        <script>
+            function formatDate(dateString) {
+                // Tách chuỗi ngày thành các phần
+                const parts = dateString.split('-');
+                // Đảm bảo rằng chúng ta có 3 phần
+                if (parts.length === 3) {
+                    const year = parts[0];
+                    const month = parts[1];
+                    const day = parts[2];
+                    // Trả về định dạng dd-mm-yyyy
+                    return day + '-' + month + '-' + year;
+                }
+                return dateString; // Trả về giá trị gốc nếu không phải định dạng đúng
             }
-            return dateString; // Trả về giá trị gốc nếu không phải định dạng đúng
-        }
-        $(document).ready(function () {
-            const today = new Date();
-            const todayFormatted = today.getFullYear() + '-' +
-                    String(today.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(today.getDate()).padStart(2, '0'); // Định dạng 'yyyy-mm-dd'
-            const userEmail = $('#userEmail').val();
-            $.ajax({
-                url: "/OrderController", // URL của Servlet
-                type: "POST", // Phương thức HTTP POST
-                data: {fetchDataForEmployee: "true", userEmail: userEmail},
-                dataType: "json", // Định dạng dữ liệu trả về là JSON
-                success: function (orders) {
-                    // Initialize DataTables after receiving data
-                    var table = $('#ordersTable').DataTable({
-                        responsive: true,
-                        data: orders,
-                        columns: [
-                            {data: 'order_id'},
-                            {data: 'customer_id'},
-                            {data: 'employee_id'},
-                            {data: 'car_id'},
-                            {data: 'create_date'},
-                            {data: 'payment_method'},
-                            {data: 'date_start'},
-                            {data: 'date_end'},
-                            {data: 'total_amount'},
-                            {data: 'deposit_status'},
-                            {
-                                data: null,
-                                render: function (row) {
-                                    let html = '';
+            $(document).ready(function () {
+                const today = new Date();
+                const todayFormatted = today.getFullYear() + '-' +
+                        String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(today.getDate()).padStart(2, '0'); // Định dạng 'yyyy-mm-dd'
+                const userEmail = $('#userEmail').val();
+                $.ajax({
+                    url: "/OrderController", // URL của Servlet
+                    type: "POST", // Phương thức HTTP POST
+                    data: {fetchDataForEmployee: "true", userEmail: userEmail},
+                    dataType: "json", // Định dạng dữ liệu trả về là JSON
+                    success: function (orders) {
+                        // Initialize DataTables after receiving data
+                        var table = $('#ordersTable').DataTable({
+                            responsive: true,
+                            data: orders,
+                            columns: [
+                                {data: 'order_id'},
+                                {data: 'customer_id'},
+                                {data: 'employee_id'},
+                                {data: 'car_id'},
+                                {data: 'create_date'},
+                                {data: 'payment_method'},
+                                {data: 'date_start'},
+                                {data: 'date_end'},
+                                {data: 'total_amount'},
+                                {data: 'deposit_status'},
+                                {
+                                    data: null,
+                                    render: function (row) {
+                                        let html = '';
 
-                                    if (row.date_end < todayFormatted && (!row.order_status || !row.deposit_status)) {
-                                        html += '<p class="text-danger fw-bold m-0 p-0 fs-5">Expired</p>';
+                                        if (row.date_end < todayFormatted && (!row.order_status || !row.deposit_status)) {
+                                            html += '<p class="text-danger fw-bold m-0 p-0 fs-5">Expired</p>';
+                                            return html;
+                                        }
+
+                                        if (row.order_status && row.deposit_status) {
+                                            html += '<p class="text-success fw-bold m-0 p-0 fs-5">Done</p>';
+                                        } else {
+                                            html += '<p class="text-secondary fw-bold m-0 p-0 fs-5">Not Done</p>';
+                                        }
+
                                         return html;
                                     }
+                                },
+                                {
+                                    data: null,
+                                    render: function (row) {
+                                        let html = '';
 
-                                    if (row.order_status && row.deposit_status) {
-                                        html += '<p class="text-success fw-bold m-0 p-0 fs-5">Done</p>';
-                                    } else {
-                                        html += '<p class="text-secondary fw-bold m-0 p-0 fs-5">Not Done</p>';
-                                    }
-
-                                    return html;
-                                }
-                            },
-                            {
-                                data: null,
-                                render: function (row) {
-                                    let html = '';
-
-                                    if (row.has_warranty === false && (row.order_status && row.deposit_status)) {
-                                        html += '<a target="_blank" href="/WarrantyController/Create/' + row.order_id + '" class="btn btn-primary me-2">Create Warranty</a>';
-                                    } else {
-                                        if (row.has_warranty === true && (row.order_status && row.deposit_status)) {
-                                            html += '<a target="_blank" href="/WarrantyController/Edit/' + row.warranty_id + '" class="btn btn-primary me-2">Edit Warranty</a>';
+                                        if (row.has_warranty === false && (row.order_status && row.deposit_status)) {
+                                            html += '<a target="_blank" href="/WarrantyController/Create/' + row.order_id + '" class="btn btn-primary me-2">Create Warranty</a>';
                                         } else {
-                                            html += '<p class="text-danger fw-bold m-0 p-0 fs-5">No Warranty</p>';
+                                            if (row.has_warranty === true && (row.order_status && row.deposit_status)) {
+                                                html += '<a target="_blank" href="/WarrantyController/Edit/' + row.warranty_id + '" class="btn btn-primary me-2">Edit Warranty</a>';
+                                            } else {
+                                                html += '<p class="text-danger fw-bold m-0 p-0 fs-5">No Warranty</p>';
+                                            }
                                         }
+                                        return html;
                                     }
-                                    return html;
                                 }
-                            }
-                        ]
-                    });
+                            ]
+                        });
 
-                },
-                error: function (xhr, status, error) {
-                    console.error("Có lỗi xảy ra: " + error);
-                }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Có lỗi xảy ra: " + error);
+                    }
+                });
             });
-        });
+        </script>
 
-        // Hàm xác nhận Deposit
-        function showConfirmationDeposit(url) {
-            Swal.fire({
-                title: 'Confirm order has been deposited',
-                text: "Are you sure you want to confirm? Once changed, it cannot be edited.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Agree',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Chuyển hướng đến URL nếu người dùng đồng ý
-                    window.open(url, '_blank');
-                }
-            });
-            return false; // Ngăn href thực hiện mặc định
-        }
-
-        // Hàm xác nhận Order
-        function showConfirmationOrder(url) {
-            Swal.fire({
-                title: 'Confirm order has been done',
-                text: "Are you sure you want to confirm? Once changed, it cannot be edited.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Agree',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Chuyển hướng đến URL nếu người dùng đồng ý
-                    window.open(url, '_blank');
-                }
-            });
-            return false; // Ngăn href thực hiện mặc định
-        }
-    </script>
-
-    <!-- Table Structure -->
-    <div class="container mt-5 pt-5">
-        <table id="ordersTable" class="table table-striped nowrap w-100" style="width: 100%;">
-            <thead>
-                <tr>
-                    <th>OrderID</th>
-                    <th>CusID</th>
-                    <th>EmpID</th>
-                    <th>CarID</th>
-                    <th>Create Date</th>
-                    <th>Pay Method</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Total</th>
-                    <th>Deposit</th>
-                    <th>Status</th>
-                    <th>Warranty</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Dữ liệu sẽ được chèn vào đây -->                
-            </tbody>
-        </table>
-    </div>
+        <!-- Table Structure -->
+        <div class="container mt-5 pt-5">
+            <a class="btn btn-primary mb-3" href="/EmployeeController/CreateOrder" target="_blank">Create Order</a>
+            <table id="ordersTable" class="table table-striped nowrap w-100" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>OrderID</th>
+                        <th>CusID</th>
+                        <th>EmpID</th>
+                        <th>CarID</th>
+                        <th>Create Date</th>
+                        <th>Pay Method</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Total</th>
+                        <th>Deposit</th>
+                        <th>Status</th>
+                        <th>Warranty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dữ liệu sẽ được chèn vào đây -->                
+                </tbody>
+            </table>
+        </div>
 </html>

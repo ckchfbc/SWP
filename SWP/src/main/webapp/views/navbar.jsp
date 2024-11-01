@@ -1,84 +1,17 @@
 <%-- 
-    Document   : homepage2
-    Created on : 27 thg 9, 2024, 16:14:14
+    Document   : navbar
+    Created on : 1 thg 11, 2024, 14:03:03
     Author     : thaii
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <%
-            //Thử control + f5 để refresh cache, hoặc gõ '${host}/../..' vào cái link
-            String host = request.getRequestURI();
-        %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!-- AE copy từ đây tới title nếu tạo jsp mới thêm các thể khác thì thêm trên <title> -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
-        <title >DriveAura</title>
-        <style>
-            *{
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            .card {
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                overflow: hidden;
-            }
-
-            .card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            }
-
-            .card-img-top {
-                height: 200px;
-                width: 150px;
-                object-fit: cover;
-            }
-
-            a{
-                text-decoration: none;
-            }
-
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-
-            .navbar-brand  {
-                font-family: 'Kirsty', sans-serif;
-                color: #050B20;
-            }
-        </style>
+        <title>JSP Page</title>
     </head>
-    <body>        
-        <%
-            Cookie[] cookies = request.getCookies();
-            boolean isAdmin = false;
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("admin")) {
-                        isAdmin = true;
-                        break;
-                    }
-                }
-            }
-            if (isAdmin) {
-                response.sendRedirect("/AdminController/Dashboard");
-                return; // Ensure to return after redirect
-            }
-        %>
+    <body>
         <!-- Navigation -->
         <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
             <div class="container">
@@ -104,6 +37,7 @@
 
                         <%
                             // Lấy danh sách cookies từ request
+                            Cookie[] cookies = request.getCookies();
                             String userEmail = null;
                             String role = null;
 
@@ -127,7 +61,9 @@
                             <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile" title="Profile">
                                 <i class="fa-solid fa-user"></i>
                             </a>
-                        </li>                        <input hidden value="<%= userEmail%>" id="userEmail">    
+                        </li>                        
+                        <input hidden value="<%= userEmail %>" id="userEmail">    
+                        <input hidden id="role" value="<%= role%>">
                         <%
                         } else {
                             if ((userEmail != null) && (role.equals("employee"))) {
@@ -137,7 +73,9 @@
                             <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile" title="Profile">
                                 <i class="fa-solid fa-user"></i>
                             </a>
-                        </li>                        <input hidden id="role" value="<%= role%>">
+                        </li>                        
+                        <input hidden id="role" value="<%= role %>">
+                        <input hidden value="<%= userEmail %>" id="userEmail">
                         <%
                         } else {
                         %>
@@ -186,9 +124,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- jQuery CDN -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function () {
                 // Handle form submission
@@ -256,63 +191,4 @@
                 }
             });
         </script>
-
-        <section class="d-flex justify-content-center align-items-center text-center bg-dark text-white mt-5" style="height: 80vh; background-image: url('/ImageController/a/bghome.jpg'); background-size: cover; background-position: center;">
-            <div class="container ">
-                <h1 class="display-4 fw-bold">Find Your Perfect Vehicle Online</h1>
-                <p class="lead fw-bold">The World's Largest Used Car Dealership</p>
-            </div>
-        </section>
-
-        <!-- Best Seller Cars -->
-        <section class="container my-5">
-            <h2 class="text-center mb-4">The Best Seller Cars</h2>
-            <%@include file="/views/bestSellCar.jsp" %>
-        </section>
-
-
-
-
-        <!-- Why Choose Us -->
-        <section class="bg-dark text-white py-5">
-            <div class="container">
-                <h2 class="text-center mb-5">Why Choose Us?</h2>
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-dollar-sign text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Special Financing Offers</h5>
-                        <p>Our stress-free finance department can help you save money.</p>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-shield text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Trusted Car Dealership</h5>
-                        <p>We provide transparent and reliable services.</p>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-tag text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Transparent Pricing</h5>
-                        <p>No hidden fees or surprises.</p>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-2"><i class="fa-solid fa-screwdriver-wrench text-white" style="font-size: 2rem;"></i></div>
-                        <h5>Expert Car Service</h5>
-                        <p>Our certified experts keep your car in top condition.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- New Car Section -->
-        <section class="container my-5" id="newCarContainer">
-            <h2 class="text-center mb-5">The New Cars</h2>
-            <%@include file="/views/newCar.jsp" %>
-        </section>
-
-        <!-- Footer -->
-        <footer class="bg-dark text-white py-4">
-            <div class="container">
-                <%@include file="/views/footer.jsp" %>
-            </div>
-        </footer>
-    </body>    
 </html>

@@ -18,6 +18,11 @@
         <!-- Toastr JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+        <!-- SweetAlert2 CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <!-- SweetAlert2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
         <title>Create Order</title>
         <style>
             .order-summary {
@@ -49,7 +54,7 @@
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("userEmail")) {
                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
-        %>
+%>
         <input hidden value="<%= userEmail%>" id="userEmail">
         <%
                     }
@@ -154,7 +159,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <img src="qr-code.png" alt="QR Code for Payment" class="img-fluid rounded">
+                        <img src="/ImageController/a/vcb.jpg" alt="QR Code for Payment" class="img-fluid rounded">
                         <p class="mt-3"><strong>Scan the QR code to complete the payment</strong></p>
                     </div>
                 </div>
@@ -271,37 +276,60 @@
 
             function createOrder() {
                 if (!validateInputs()) {
-                    return; // Nếu validate thất bại, dừng lại không tiếp tục AJAX
+                    return; // Stop if validation fails
                 }
+
                 var car_id = document.getElementById("car_id").value;
                 var customer_id = document.getElementById("customer_id").value;
                 var customer_cccd = document.getElementById("customerID").value;
                 var customer_phone = document.getElementById("customerPhone").value;
                 var customer_address = document.getElementById("customerAddress").value;
-                var car_price = $("#carPrice").text(); // Lấy nội dung văn bản
+                var car_price = parseFloat($("#carPrice").text());
 
-                $.ajax({
-                    url: "/OrderController", // Đường dẫn đến CustomerController
-                    type: "POST", // Phương thức HTTP GET
-                    data: {createOrder: 'true', car_id: car_id, customer_id: customer_id, customer_cccd: customer_cccd, customer_phone: customer_phone, customer_address: customer_address, car_price: car_price},
-                    success: function (response) {
-                        $("body").css("pointer-events", "none");
+                checkHaveFiveNotDoneOrder(customer_id)
+                        .then(banCreateOrder => {
+                            if (banCreateOrder) {
+                                // Stop function execution if there are too many orders
+                                return;
+                            }
 
-                        toastr.success('Đơn hàng của bạn đã được tạo thành công.', 'Thành công!', {
-                            timeOut: 3000 // Tự động tắt sau 3 giây
+                            // Proceed with order creation if check passes
+                            $.ajax({
+                                url: "/OrderController",
+                                type: "POST",
+                                data: {
+                                    createOrder: 'true',
+                                    car_id: car_id,
+                                    customer_id: customer_id,
+                                    customer_cccd: customer_cccd,
+                                    customer_phone: customer_phone,
+                                    customer_address: customer_address,
+                                    car_price: car_price
+                                },
+                                success: function (response) {
+                                    $("body").css("pointer-events", "none");
+
+                                    toastr.success('Your order has been successfully created.', 'Success!', {
+                                        timeOut: 3000 // Auto-close after 3 seconds
+                                    });
+
+                                    setTimeout(function () {
+                                        $("body").css("pointer-events", "auto"); // Re-enable interactions
+                                        window.close(); // Close the page
+                                    }, 3000);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error creating order: " + error);
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
                         });
-
-                        // Khôi phục lại khả năng tương tác sau 3 giây
-                        setTimeout(function () {
-                            $("body").css("pointer-events", "auto"); // Bật lại khả năng tương tác
-                            window.close(); // Tắt trang
-                        }, 3000);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Có lỗi xảy ra khi lấy dữ liệu khách hàng: " + error);
-                    }
-                });
             }
+
+
+
             function hideAlert() {
                 var alertElement = document.getElementById('alertError');
                 alertElement.classList.add('d-none');
@@ -340,6 +368,33 @@
                 alertText.innerHTML = mess;
             }
 
+            function checkHaveFiveNotDoneOrder(customer_id) {
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: "/OrderController",
+                        type: "POST",
+                        data: {checkHaveFiveNotDoneOrder: 'true', customer_id: customer_id},
+                        success: function (response) {
+                            if (response === true) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Too many orders',
+                                    text: 'You need to pay or wait until the unfinished orders expire before placing another order. You can also go to the store to buy directly.',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    resolve(true); // Resolve with true if there are too many orders
+                                });
+                            } else {
+                                resolve(false); // Resolve with false if the user can create a new order
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching customer data: " + error);
+                            reject(error); // Reject the promise if there's an error
+                        }
+                    });
+                });
+            }
         </script>
     </body>
 </html>

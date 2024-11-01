@@ -65,7 +65,10 @@ public class ReviewController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String host = request.getRequestURI();
+        if (host.equals("/ReviewController/Views")) {
+            request.getRequestDispatcher("/views/reviewEmployee.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -84,7 +87,7 @@ public class ReviewController extends HttpServlet {
             String email = request.getParameter("userEmail");
             AccountDAO accDao = new AccountDAO();
             CustomerAccountModel acc = accDao.getCustomerAccByEmail(email);
-            int cusId = acc.getCustomer_id();            
+            int cusId = acc.getCustomer_id();
             ReviewDAO reviewDao = new ReviewDAO();
             boolean result = false;
 
@@ -95,14 +98,13 @@ public class ReviewController extends HttpServlet {
             }
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-System.out.println(result);
             // Create a Gson object to convert boolean to JSON
             Gson gson = new Gson();
             String jsonResponse = gson.toJson(result); // Convert boolean to JSON
 
             response.getWriter().write(jsonResponse); // Write response to output        
         }
-        
+
         if (request.getParameter("createReview") != null && request.getParameter("createReview").equals("true")) {
             int carId = Integer.parseInt(request.getParameter("carId"));
             int rating = Integer.parseInt(request.getParameter("rating"));
@@ -113,7 +115,6 @@ System.out.println(result);
             CustomerAccountModel cus = accDao.getCustomerAccByEmail(userEmail);
 
             int cusId = cus.getCustomer_id();
-            System.out.println(carId + " " + rating + " " + review_text + " " + cusId);
             ReviewDAO reviewDao = new ReviewDAO();
             boolean isCreate = reviewDao.createReview(cusId, carId, rating, review_text);
 
@@ -145,6 +146,46 @@ System.out.println(result);
             // Sử dụng Gson để chuyển danh sách thành JSON
             Gson gson = new Gson();
             String reviewsJson = gson.toJson(reviews);
+            response.getWriter().write(reviewsJson);
+        }
+
+        // Lấy all review cho Employee
+        if (request.getParameter("fetchReviewForEmployee") != null && request.getParameter("fetchReviewForEmployee").equals("true")) {
+            List<ReviewModels> reviews = new ArrayList<>();
+            ReviewDAO reviewDao = new ReviewDAO();
+            try {
+                reviews = reviewDao.getAllReview();
+            } catch (SQLException ex) {
+                Logger.getLogger(ReviewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            // Thiết lập kiểu phản hồi là JSON
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Sử dụng Gson để chuyển danh sách thành JSON
+            Gson gson = new Gson();
+            String reviewsJson = gson.toJson(reviews);
+            response.getWriter().write(reviewsJson);
+        }
+
+        if (request.getParameter("changeReviewStatus") != null && request.getParameter("changeReviewStatus").equals("true")) {
+            int id = Integer.parseInt(request.getParameter("review_id"));
+            ReviewDAO reviewDao = new ReviewDAO();
+            boolean isChange = false;
+            try {
+                isChange = reviewDao.changeStatus(id);
+            } catch (SQLException ex) {
+                Logger.getLogger(ReviewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            // Thiết lập kiểu phản hồi là JSON
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Sử dụng Gson để chuyển danh sách thành JSON
+            Gson gson = new Gson();
+            String reviewsJson = gson.toJson(isChange);
             response.getWriter().write(reviewsJson);
         }
     }

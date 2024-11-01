@@ -4,9 +4,12 @@
  */
 package Controller;
 
+import Controllers.FeedBackController;
 import DAOs.EmployeeDAO;
+import DAOs.FeedbackDAO;
 import Models.EmployeeModels;
 import Models.EventModels;
+import Models.FeedbackModel;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -75,8 +78,12 @@ public class EmployeeController extends HttpServlet {
         if (host.equals("/EmployeeController/Create")) {
 //            System.out.println("Navigating to createEvent.jsp");  // Debug
             request.getRequestDispatcher("/views/createEmployee.jsp").forward(request, response);
+        } else if (host.equals("/EmployeeController/CreateOrder")) {
+            request.getRequestDispatcher("/views/createOrderEmployee.jsp").forward(request, response);
         } else if (host.equals("/EmployeeController/Order")) {
             request.getRequestDispatcher("/views/orderEmployee.jsp").forward(request, response);
+        } else if (host.equals("/EmployeeController/Feedback")) {
+            request.getRequestDispatcher("/views/employeeFeedback.jsp").forward(request, response);
         } else if (host.startsWith("/EmployeeController/Edit")) {
 //            System.out.println("Navigating to editEvent.jsp");  // Debug
             request.getRequestDispatcher("/views/editEvent.jsp").forward(request, response);
@@ -197,6 +204,36 @@ public class EmployeeController extends HttpServlet {
             // Convert employee list to JSON using Gson
             Gson gson = new Gson();
             String employeesJson = gson.toJson(emp);
+            response.getWriter().write(employeesJson);
+        }
+        
+        // lấy data cho cus
+        if (request.getParameter("fetchFeedbackForEmployee") != null && request.getParameter("fetchFeedbackForEmployee").equals("true")) {
+            String userEmail = request.getParameter("userEmail");
+           EmployeeDAO empDao = new EmployeeDAO();
+           EmployeeModels emp = new EmployeeModels();
+            try {
+                emp = empDao.getEmployeeByEmail(userEmail);
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int emp_id = emp.getEmployeeId();
+
+            List<FeedbackModel> fbs = new ArrayList();
+            FeedbackDAO feedbackDao = new FeedbackDAO();
+            try {
+                fbs = feedbackDao.getAllReviewForCustomer(emp_id);
+            } catch (SQLException ex) {
+                Logger.getLogger(FeedBackController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            // Set response type to JSON and encode in UTF-8
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Convert employee list to JSON using Gson
+            Gson gson = new Gson();
+            String employeesJson = gson.toJson(fbs);
             response.getWriter().write(employeesJson);
         }
     }

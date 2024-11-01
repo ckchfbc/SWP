@@ -64,6 +64,10 @@
         <servlet-name>SearchController</servlet-name>
         <servlet-class>Controllers.SearchController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>WishlistController</servlet-name>
+        <servlet-class>Controllers.WishlistController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -118,7 +122,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ReviewController</servlet-name>
-        <url-pattern>/ReviewController</url-pattern>
+        <url-pattern>/ReviewController/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>WarrantyController</servlet-name>
@@ -127,6 +131,10 @@
     <servlet-mapping>
         <servlet-name>SearchController</servlet-name>
         <url-pattern>/SearchController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>WishlistController</servlet-name>
+        <url-pattern>/WishlistController/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -172,8 +172,9 @@
                                                href="/EmployeeController/Order">View List
                                                 Order</a></li>
                                         <li><a class="dropdown-item"
-                                               href="#">Chat with
-                                                Employee</a></li>
+                                               href="/ReviewController/Views">List review</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="/EmployeeController/Feedback">List feedback</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -186,7 +187,7 @@
                                             <div class="row justify-content-evenly">
                                                 <div
                                                     class="alert alert-warning mt-3">
-                                                    * Address, ID number and Phone Number not necessary when you do not buy a car.<br>                                                    
+                                                    * Contact Admin to edit personal information.<br>                                                    
                                                 </div>
                                                 <div class="mb-3 col-sm-5">
                                                     <label

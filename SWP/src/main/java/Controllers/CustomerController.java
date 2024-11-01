@@ -6,7 +6,12 @@ package Controllers;
 
 import DAOs.AccountDAO;
 import DAOs.CustomerDAO;
+import DAOs.WishlistDAO;
+import Models.CarModel;
 import Models.CustomerAccountModel;
+import Models.CustomerModel;
+import Models.WishlistModel;
+import Models.newCarModel;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +20,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,6 +79,15 @@ public class CustomerController extends HttpServlet {
         if (host.equals("/CustomerController/Warranty")) {
             request.getRequestDispatcher("/views/customerWarranty.jsp").forward(request, response);
         }
+        if (host.equals("/CustomerController/Order")) {
+            request.getRequestDispatcher("/views/orderCustomer.jsp").forward(request, response);
+        }
+        if (host.equals("/CustomerController/Feedback")) {
+            request.getRequestDispatcher("/views/customerFeedback.jsp").forward(request, response);
+        }
+        if (host.equals("/CustomerController/Wishlist")) {
+            request.getRequestDispatcher("/views/wishlist.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -89,7 +105,7 @@ public class CustomerController extends HttpServlet {
         CustomerDAO cusDao = new CustomerDAO();
 
         // Get infor cho profile
-        if (request.getParameter("getInforUser") != null) {            
+        if (request.getParameter("getInforUser") != null) {
             String userEmail = request.getParameter("getInforUser");
             try {
                 CustomerAccountModel cus = cusDao.getCustomerInfor(userEmail);
@@ -162,7 +178,49 @@ public class CustomerController extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(CustomerController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
 
+        //get cus for emp order
+        if (request.getParameter("getCustomerInfo") != null) {
+            int id = Integer.parseInt(request.getParameter("getCustomerInfo"));
+            CustomerModel cus = cusDao.getCutomerById(id);
+
+            // Set response type to JSON and encode in UTF-8
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Convert employee list to JSON using Gson
+            Gson gson = new Gson();
+            String employeesJson = gson.toJson(cus);
+            response.getWriter().write(employeesJson);
+        }
+        
+        //get cus for emp order
+        if (request.getParameter("getWishlistCars") != null && request.getParameter("getWishlistCars").equals("true")) {
+            String email = request.getParameter("userEmail");
+            CustomerAccountModel cus = new CustomerAccountModel();
+            try {
+                cus = cusDao.getCustomerInfor(email);
+            } catch (SQLException ex) {
+                Logger.getLogger(CustomerController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            WishlistDAO wishDao = new WishlistDAO();
+            List<newCarModel> wishlists = new ArrayList<>();
+            try {
+                wishlists = wishDao.getAllWishlist(cus.getCustomer_id());
+            } catch (SQLException ex) {
+                Logger.getLogger(CustomerController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            // Set response type to JSON and encode in UTF-8
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // Convert employee list to JSON using Gson
+            Gson gson = new Gson();
+            String employeesJson = gson.toJson(wishlists);
+            response.getWriter().write(employeesJson);
         }
     }
 
