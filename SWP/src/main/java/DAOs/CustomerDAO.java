@@ -175,4 +175,45 @@ public class CustomerDAO {
         }
     }
 
+    public CustomerModel getCutomerById(int id) {
+        String sql = "SELECT * \n"
+                + "FROM customers c\n"
+                + "JOIN user_account u ON c.user_id = u.user_id\n"
+                + "WHERE c.customer_id = ? AND u.status = true;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        CustomerModel customer = new CustomerModel();
+
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                customer.setCustomer_id(rs.getInt("customer_id"));
+                customer.setUser_id(rs.getInt("user_id"));
+                customer.setName(rs.getString("name"));
+                customer.setEmail(rs.getString("email"));
+                if (rs.getString("phone_number") == null) {
+                    customer.setPhone_number("haven't enter data");
+                } else {
+                    customer.setPhone_number(rs.getString("phone_number"));
+                }
+                if (rs.getString("cus_id_number") == null) {
+                    customer.setCus_id_number("haven't enter data");
+                } else {
+                    customer.setCus_id_number(rs.getString("cus_id_number"));
+                }
+                if (rs.getString("address") == null) {
+                    customer.setAddress("haven't enter data");
+                } else {
+                    customer.setAddress(rs.getString("address"));
+                }
+                customer.setStatus(rs.getBoolean("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
 }

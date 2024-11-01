@@ -294,7 +294,6 @@ public class CarController extends HttpServlet {
         // Update car img
         if (request.getParameter("updateCarImgBtn") != null) {
             String imgId = request.getParameter("imageId");
-            System.out.println(imgId);
             Part filePart = request.getPart("image");
             boolean isUpdated = carDAO.updateCarImage(filePart, Integer.parseInt(imgId));
             if (isUpdated) {
@@ -347,7 +346,6 @@ public class CarController extends HttpServlet {
                 InventoryDAO inventoryDAO = new InventoryDAO();
                 try {
                     boolean isUpdateInventory = inventoryDAO.editInventory(car_id, quantity);
-                    System.out.println(isUpdateInventory);
                 } catch (SQLException ex) {
                     Logger.getLogger(CarController.class.getName()).log(Level.SEVERE, null, ex);
                 }

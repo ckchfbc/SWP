@@ -1,6 +1,6 @@
 <%-- 
-    Document   : customerWarranty
-    Created on : 29 thg 10, 2024, 21:25:19
+    Document   : customerFeeaback
+    Created on : 31 thg 10, 2024, 03:00:21
     Author     : thaii
 --%>
 
@@ -9,11 +9,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Customer Warranty</title>
+        <title>Customer Feedback</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
         <style>
             @font-face {
                 font-family: 'Kirsty'; /* Your font name */
@@ -21,6 +21,7 @@
                 font-weight: normal;
                 font-style: normal;
             }
+
             .navbar-brand  {
                 font-family: 'Kirsty', sans-serif;
                 color: #050B20;
@@ -40,7 +41,7 @@
     </head>
     <body>
         <!-- JavaScript Links -->
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>       
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script
         src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
         <script
@@ -52,8 +53,8 @@
 
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
-
-        <!-- Warranty Table -->
+        
+        <!-- Order Table -->
         <script>
             function formatDate(dateString) {
                 // Tách chuỗi ngày thành các phần
@@ -69,80 +70,63 @@
                 return dateString; // Trả về giá trị gốc nếu không phải định dạng đúng
             }
             $(document).ready(function () {
-                const today = new Date();
-                const todayFormatted = today.getFullYear() + '-' +
-                        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-                        String(today.getDate()).padStart(2, '0'); // Định dạng 'yyyy-mm-dd'
                 const userEmail = $('#userEmail').val();
                 $.ajax({
-                    url: "/WarrantyController", // URL của Servlet
+                    url: "/FeedBackController", // URL của Servlet
                     type: "POST", // Phương thức HTTP POST
-                    data: {fetchWarrantyForCustomer: "true", userEmail: userEmail},
+                    data: {fetchDataForCustomer: "true", userEmail: userEmail},
                     dataType: "json", // Định dạng dữ liệu trả về là JSON
-                    success: function (warranties) {
+                    success: function (fbs) {
                         // Initialize DataTables after receiving data
-                        var table = $('#warrantyTable').DataTable({
+                        var table = $('#feedbackTable').DataTable({
                             responsive: true,
-                            data: warranties,
+                            data: fbs,
                             columns: [
-                                {data: 'warranty_id'},
+                                {data: 'feedback_id'},
                                 {data: 'order_id'},
+                                {data: 'customer_id'},
+                                {data: 'feedback_content'},
                                 {
-                                    data: 'warranty_details',
-                                    render: function (data, type, row) {
-                                        return '<button class="btn btn-primary btn-sm" onclick="showDetailsModal(\'' + data + '\')">View Details</button>';
+                                    data: 'date_create',
+                                    render: function (data) {
+                                        return formatDate(data);
                                     }
                                 },
-                                {data: 'warranty_expiry'}
+                                {
+                                    data: 'feedback_status',
+                                    render: function (data) {
+                                        return data ? '<p class="text-success fw-bold m-0 p-0 fs-5">Done</p>' : '<p class="text-secondary fw-bold m-0 p-0 fs-5">On going</p>';
+                                    }
+                                }
                             ]
                         });
+
                     },
                     error: function (xhr, status, error) {
                         console.error("Có lỗi xảy ra: " + error);
                     }
                 });
             });
-
-
-            // Function to show the modal with warranty details
-            function showDetailsModal(details) {
-                $('#warrantyDetailsModalBody').text(details);
-                $('#warrantyDetailsModal').modal('show');
-            }
         </script>
 
         <!-- Table Structure -->
         <div class="container mt-5 pt-5">
-            <table id="warrantyTable" class="table table-striped nowrap w-100" style="width: 100%;">
+            <a class="btn btn-primary mb-3" href="/FeedBackController/Create" target="_blank">Create Feedback</a>
+            <table id="feedbackTable" class="table table-striped nowrap w-100" style="width: 100%;">
                 <thead>
                     <tr>
-                        <th>Warranty Id</th>
+                        <th>Feedback Id</th>
                         <th>Order Id</th>
-                        <th>Warranty Details</th>
-                        <th>Warranty Expiry</th>
+                        <th>Customer Id</th>
+                        <th>Feedback Content</th>
+                        <th>Date Create</th>
+                        <th>Feedback Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Dữ liệu sẽ được chèn vào đây -->                
                 </tbody>
             </table>
-            <!-- Warranty Details Modal -->
-            <div class="modal fade" id="warrantyDetailsModal" tabindex="-1" aria-labelledby="warrantyDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="warrantyDetailsModalLabel">Warranty Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" id="warrantyDetailsModalBody">
-                            <!-- Warranty details will be displayed here -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </body>
 </html>

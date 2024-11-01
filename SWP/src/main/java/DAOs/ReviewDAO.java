@@ -23,7 +23,6 @@ public class ReviewDAO {
         OrderDAO orderDao = new OrderDAO();
         boolean isCusHaveOrder = orderDao.isOrderByCarAndCusForReview(carId, cusId);
         boolean isHaveReview = checkHaveReview(carId, cusId);
-        System.out.println(isCusHaveOrder);
         if (!isCusHaveOrder) {
             return true;
         }
@@ -86,12 +85,91 @@ public class ReviewDAO {
                 review.setReview_date(rs.getString("review_date"));
                 review.setReview_status(rs.getBoolean("review_status"));
                 review.setCustomer_name(rs.getString("name"));
-                
+
                 reviews.add(review);  // Thêm event vào List
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return reviews;
+    }
+
+    public static List<ReviewModels> getAllReview() throws SQLException {
+        String sql = "SELECT * FROM reviews;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<ReviewModels> reviews = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                ReviewModels review = new ReviewModels();
+                review.setReview_id(rs.getInt("review_id"));
+                review.setCustomer_id(rs.getInt("customer_id"));
+                review.setCar_id(rs.getInt("car_id"));
+                review.setRating(rs.getInt("rating"));
+                review.setReview_text(rs.getString("review_text"));
+                review.setReview_date(rs.getString("review_date"));
+                review.setReview_status(rs.getBoolean("review_status"));
+
+                reviews.add(review);  // Thêm event vào List
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
+
+    public static ReviewModels getReviewById(int review_id) throws SQLException {
+        String sql = "SELECT * FROM reviews WHERE review_id = ?;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        ReviewModels review = new ReviewModels();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, review_id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                review.setReview_id(rs.getInt("review_id"));
+                review.setCustomer_id(rs.getInt("customer_id"));
+                review.setCar_id(rs.getInt("car_id"));
+                review.setRating(rs.getInt("rating"));
+                review.setReview_text(rs.getString("review_text"));
+                review.setReview_date(rs.getString("review_date"));
+                review.setReview_status(rs.getBoolean("review_status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return review;
+    }
+
+    public boolean changeStatus(int id) throws SQLException {
+        String sql = "UPDATE reviews SET review_status = ? WHERE review_id = ?;";
+        PreparedStatement stmt = null;
+        ReviewDAO reviewDao = new ReviewDAO();
+        ReviewModels review = reviewDao.getReviewById(id);
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            if (review.isReview_status() != true) {
+                stmt.setBoolean(1, !review.isReview_status());
+                stmt.setInt(2, review.getReview_id());
+                int row = stmt.executeUpdate();
+                if (row > 0) {
+                    return true;
+                }
+            } else {
+                stmt.setBoolean(1, !review.isReview_status());
+                stmt.setInt(2, review.getReview_id());
+                int row = stmt.executeUpdate();
+                if (row > 0) {
+                    return true;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

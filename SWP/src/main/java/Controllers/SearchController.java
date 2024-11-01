@@ -105,7 +105,7 @@ public class SearchController extends HttpServlet {
                     .append("<p class=\"card-text\">Price: ")
                     .append(formattedPrice)
                     .append(" VND</p>")
-                    .append("<a href=\"/ProductController/View/")
+                    .append("<a href=\"/CarController/View/")
                     .append(carId)
                     .append("\" class=\"btn btn-primary\">View Details</a>")
                     .append("</div>")

@@ -40,7 +40,7 @@
                 const parts = urlPath.split('/');
                 const carId = parts[parts.length - 1];
                 const reviewDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-               
+
                 $.ajax({
                     url: '/ReviewController',
                     type: 'POST',
@@ -70,7 +70,7 @@
                                 icon: "error",
                                 button: "OK"
                             });
-                        }                        
+                        }
                         fetchReviews(carId);
                     },
                     error: function (xhr, status, error) {
@@ -116,12 +116,17 @@
                 // Loop through the reviews for the current page
                 for (let i = start; i < end; i++) {
                     const review = allReviews[i];
+
+                    // Check if the rating is 3 or below
+                    const responseMessage = review.rating <= 3 ? "We're sorry to hear about your experience. We appreciate your <a href='/FeedBackController/Create' target='_blank'>feedback</a>!" : "";
+
                     const reviewElement =
                             '<div class="card mb-3">' +
                             '<div class="card-body">' +
                             '<h5 class="card-title">' + review.customer_name + '</h5>' +
                             '<h6 class="card-subtitle mb-2 text-muted">Rating: ' + getStarsHTML(review.rating) + '</h6>' +
                             '<p class="card-text">' + review.review_text + '</p>' +
+                            (responseMessage ? '<p class="alert alert-info">' + responseMessage + '</p>' : '') +
                             '<p class="text-muted"><small>Reviewed on: ' + formatDate(review.review_date) + '</small></p>' +
                             '</div>' +
                             '</div>';

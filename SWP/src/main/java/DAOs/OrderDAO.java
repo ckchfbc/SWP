@@ -5,6 +5,7 @@
 package DAOs;
 
 import DB.DBConnection;
+import Models.CustomerAccountModel;
 import Models.EmployeeModels;
 import Models.OrderModel;
 import java.math.BigDecimal;
@@ -239,5 +240,112 @@ public class OrderDAO {
             e.printStackTrace();
         }
         return orders;
+    }
+
+    public static List<OrderModel> getAllOrdersForCustomer(String email) throws SQLException {
+        CustomerDAO cusDao = new CustomerDAO();
+        CustomerAccountModel cus = cusDao.getCustomerInfor(email);
+        int cus_id = cus.getCustomer_id();
+        String sql = "select * from orders where customer_id = ?;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<OrderModel> orders = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, cus_id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                OrderModel order = new OrderModel();
+                order.setOrder_id(rs.getInt("order_id"));
+                order.setCustomer_id(rs.getInt("customer_id"));
+                order.setEmployee_id(rs.getInt("employee_id"));
+                order.setCar_id(rs.getInt("car_id"));
+                order.setCreate_date(rs.getString("create_date"));
+                order.setPayment_method(rs.getString("payment_method"));
+                order.setTotal_amount(rs.getBigDecimal("total_amount"));
+                order.setDeposit_status(rs.getBoolean("deposit_status"));
+                order.setOrder_status(rs.getBoolean("order_status"));
+                order.setDate_start(rs.getString("date_start"));
+                order.setDate_end(rs.getString("date_end"));
+
+                orders.add(order);  // Thêm event vào List
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public boolean checkHaveFiveNotDoneOrder(int cus_id) {
+        String sql = "SELECT COUNT(*) as number FROM orders WHERE customer_id = ? AND (deposit_status = false OR (order_status = false AND date_end > CURRENT_DATE));";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, cus_id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                int number = rs.getInt("number");
+                return number >= 5;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static List<Integer> getOrderIds(String email) throws SQLException {
+        CustomerDAO cusDao = new CustomerDAO();
+        CustomerAccountModel cus = cusDao.getCustomerInfor(email);
+        int cus_id = cus.getCustomer_id();
+        String sql = "SELECT order_id FROM orders WHERE customer_id = ? AND order_status = true AND deposit_status = true;";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Integer> listOrderId = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, cus_id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                listOrderId.add(rs.getInt("order_id"));  // Thêm event vào List
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listOrderId;
+    }
+
+    public boolean createOrderByEmp(int car_id, int customer_id, String customer_cccd, BigDecimal car_price, int emp_id) throws SQLException {
+        String insertOrderSql = "INSERT INTO orders (customer_id, employee_id, car_id, create_date, payment_method, total_amount, deposit_status, order_status, date_start, date_end) "
+                + "VALUES (?, ?, ?, NOW(), 'online_transfer', ?, false, false, CURRENT_DATE(), DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY));";
+
+        String updateCustomerSql = "UPDATE customers SET cus_id_number = ? WHERE customer_id = ?;";
+
+        try ( Connection conn = DBConnection.getConnection()) {           
+            // Thực hiện thêm đơn hàng
+            try ( PreparedStatement stmt = conn.prepareStatement(insertOrderSql)) {
+               
+                // Now use employee_id in your insert statement
+                PreparedStatement stmtInsert = conn.prepareStatement(insertOrderSql);
+                stmtInsert.setInt(1, customer_id);
+                stmtInsert.setInt(2, emp_id);
+                stmtInsert.setInt(3, car_id);
+                stmtInsert.setBigDecimal(4, car_price);
+
+                // Execute the insert
+                int rowsInserted = stmtInsert.executeUpdate();
+                boolean isCreate = rowsInserted > 0;
+
+                // Cập nhật thông tin khách hàng
+                try ( PreparedStatement stmt2 = conn.prepareStatement(updateCustomerSql)) {
+                    stmt2.setString(1, customer_cccd);
+                    stmt2.setInt(2, customer_id);
+                    int row1 = stmt2.executeUpdate();
+                    boolean isEdit = row1 > 0; // Kiểm tra xem có cập nhật thành công hay không
+
+                    return isCreate && isEdit; // Trả về true nếu cả hai đều thành công
+                }
+            }
+        }
     }
 }

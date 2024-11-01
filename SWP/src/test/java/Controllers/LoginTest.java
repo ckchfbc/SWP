@@ -4,20 +4,16 @@
  */
 package Controllers;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -37,7 +33,6 @@ public class LoginTest {
         options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
 
-        wait = new WebDriverWait(driver, 10); // Đợi tối đa 10 giây cho đến khi element xuất hiện 
         driver.get("http://localhost:8080/HomePageController/Login");
     }
 
@@ -144,8 +139,8 @@ public class LoginTest {
         }
         driver.findElement(By.name("loginBtn")).click();
 
-        WebElement checkboxError = driver.findElement(By.id("password"));
-        Assert.assertTrue(checkboxError.isDisplayed());
+        WebElement passwordError = driver.findElement(By.id("passwordError"));
+        Assert.assertEquals(passwordError.getText(), "Password must be 6-32 characters, at least 1 uppercase letter, 1 number and 1 special character.");
     }
 
     // Test case mới: Email null
@@ -162,8 +157,12 @@ public class LoginTest {
         }
         driver.findElement(By.name("loginBtn")).click();
 
-        WebElement checkboxError = driver.findElement(By.id("email"));
-        Assert.assertTrue(checkboxError.isDisplayed());
+        WebElement emailError = driver.findElement(By.id("emailError"));
+        String actualError = emailError.getText();
+        String expectedError = "Invalid email.";
+
+        // Thêm thông báo tùy chỉnh nếu test fail
+        Assert.assertEquals(actualError, expectedError);
     }
 
     // Test case mới: Email và mật khẩu đúng nhưng checkbox chưa chọn

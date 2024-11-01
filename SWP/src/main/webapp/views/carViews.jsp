@@ -13,6 +13,11 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <!-- Toastr CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+        <!-- Toastr JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
         <!-- SweetAlert CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
         <!-- SweetAlert JS -->
@@ -114,102 +119,8 @@
         </style>
     </head>
     <body>
-        <!-- Navigation -->
-        <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
-            <div class="container">
-                <a class="navbar-brand" href="/"><h1>DriveAura</h1></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/HomePageController/Event">Event</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Brand</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Zalo</a>
-                        </li>                        
-                        <!-- Nút logOut cho customer -->
-
-                        <%
-                            Cookie[] cookies = request.getCookies();
-
-                            // Lấy danh sách cookies từ request
-                            String userEmail = null;
-                            String role = null;
-
-                            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
-                            if (cookies != null) {
-                                for (Cookie cookie : cookies) {
-                                    if (cookie.getName().equals("userEmail")) {
-                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-                                    }
-                                    if (cookie.getName().equals("role")) {
-                                        role = cookie.getValue();
-                                    }
-                                }
-                            }
-
-                            // Kiểm tra nếu cookie "userEmail" tồn tại
-                            if ((userEmail != null) && (role.equals("customer"))) {
-                        %>
-                        <!-- Hiển thị nút nếu là customer -->
-                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
-                        <input hidden value="<%= userEmail%>" id="userEmail">    
-                        <input hidden id="role" value="<%= role%>">
-                        <%
-                        } else {
-                            if ((userEmail != null) && (role.equals("employee"))) {
-                        %>
-                        <!-- Hiển thị nút nếu là employee -->
-                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile"><i class="fa-solid fa-user"></i></a>
-                        <input hidden id="role" value="<%= role%>">
-                        <input hidden value="<%= userEmail%>" id="userEmail">  
-                        <%
-                        } else {
-                        %>
-                        <!-- Hiển thị thông báo nếu không có cookie -->
-                        <li class="nav-item">                            
-                            <a class="nav-link" href="${host}/HomePageController/Login">Login</a>
-                        </li>
-                        <%
-                                }
-                            }
-                        %>
-                        <!-- Nút tìm kiếm -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Modal tìm kiếm -->
-        <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="searchModalLabel">Tìm Kiếm</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="searchForm">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
-                                <button class="btn btn-outline-secondary" type="submit">Tìm</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- navBar -->
+        <%@include file="navbar.jsp" %>
 
         <!-- Xem thông tin -->
         <div class="container-fluid p-0 pt-5 mt-5">
@@ -247,8 +158,9 @@
                                 <div class="mb-4">
                                     <span class="badge bg-success me-2" id="stock_status">In Stock</span>                                    
                                 </div>
-                                <div id="buy">
-
+                                <div id="buy" class="mb-3">
+                                </div>
+                                <div id="wishlist">
                                 </div>
                             </div>
                         </div>
@@ -371,8 +283,10 @@
                                     //Buy btn
                                     var buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4 disabled">Buy</a>';
                                     $('#buy').append(buyBtn);
-
                                 }
+
+                                $('#wishlist').append('<button id="add-to-wishlist" class="btn btn-info rounded-pill text-white" data-car-id="' + car.car_id + '">Add to Wishlist</button>');
+
                             } else {
                                 console.error("Car data is not available in the response");
                             }
@@ -454,9 +368,26 @@
                     });
                 }
 
-                // Khúc này về dưới là của review
-
-
+                $(document).on('click', '#add-to-wishlist', function () {
+                    const carId = $(this).data('car-id'); // Lấy car_id từ thuộc tính data
+                    var userEmail = $('#userEmail').val();
+                    // Gửi yêu cầu thêm vào wishlist đến server
+                    $.ajax({
+                        url: '/WishlistController',
+                        method: 'POST',
+                        data: {car_id: carId, userEmail: userEmail, addWish: 'true'},
+                        success: function (response) {
+                            if (response === true) {
+                                toastr.success('Car added to wishlist successfully!');
+                            } else {
+                                toastr.error('Unable to add vehicle to wishlist. Or car is already in wishlist.');
+                            }
+                        },
+                        error: function () {
+                            toastr.error('An error occurred. Please try again.');
+                        }
+                    });
+                });
             </script>
     </body>
 </html>
