@@ -175,6 +175,8 @@
                                                href="/ReviewController/Views">List review</a></li>
                                         <li><a class="dropdown-item"
                                                href="/EmployeeController/Feedback">List feedback</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="/EmployeeController/Appointment">List appointment</a></li>
                                     </ul>
                                 </div>
                             </div>

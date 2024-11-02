@@ -68,6 +68,10 @@
         <servlet-name>WishlistController</servlet-name>
         <servlet-class>Controllers.WishlistController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AppointmentController</servlet-name>
+        <servlet-class>Controllers.AppointmentController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -135,6 +139,10 @@
     <servlet-mapping>
         <servlet-name>WishlistController</servlet-name>
         <url-pattern>/WishlistController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AppointmentController</servlet-name>
+        <url-pattern>/AppointmentController/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

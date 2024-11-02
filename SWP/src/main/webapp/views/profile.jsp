@@ -80,6 +80,8 @@
                                                href="/CustomerController/Feedback">FeedBack</a></li>
                                         <li><a class="dropdown-item"
                                                href="/CustomerController/Wishlist">Wishlist</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="/CustomerController/Appointment">View Appointment</a></li>
                                     </ul>
                                 </div>
                             </div>

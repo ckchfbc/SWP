@@ -28,7 +28,7 @@
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("userEmail")) {
                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
-        %>
+%>
         <input hidden value="<%= userEmail%>" id="userEmail">
         <%
                     }
@@ -83,9 +83,34 @@
 
             $('#feedbackForm').on('submit', function (event) {
                 event.preventDefault(); // Prevent the default form submission
+
                 const orderId = $('#orderId').val();
                 const feedbackContent = document.getElementById("feedbackContent").value;
                 var userEmail = document.getElementById('userEmail').value;
+
+                // Validation for feedback content length
+                if (feedbackContent.length < 100) {
+                    Swal.fire({
+                        title: 'Validation Error',
+                        text: 'Feedback must be at least 100 characters long.',
+                        icon: 'warning',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // Prevent form submission
+                }
+
+                if (feedbackContent.length > 5000) {
+                    Swal.fire({
+                        title: 'Validation Error',
+                        text: 'Feedback cannot exceed 5000 characters.',
+                        icon: 'warning',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // Prevent form submission
+                }
+
                 // Submit feedback via Ajax
                 $.ajax({
                     url: '/FeedBackController', // Change this to your actual controller URL
@@ -107,7 +132,7 @@
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    window.close(); // Đóng cửa sổ khi người dùng nhấn OK
+                                    window.close(); // Close the window when the user clicks OK
                                 }
                             });
                         } else {

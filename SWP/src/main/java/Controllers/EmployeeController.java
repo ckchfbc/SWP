@@ -80,6 +80,8 @@ public class EmployeeController extends HttpServlet {
             request.getRequestDispatcher("/views/createEmployee.jsp").forward(request, response);
         } else if (host.equals("/EmployeeController/CreateOrder")) {
             request.getRequestDispatcher("/views/createOrderEmployee.jsp").forward(request, response);
+        } else if (host.equals("/EmployeeController/Appointment")) {
+            request.getRequestDispatcher("/views/appointmentEmployee.jsp").forward(request, response);
         } else if (host.equals("/EmployeeController/Order")) {
             request.getRequestDispatcher("/views/orderEmployee.jsp").forward(request, response);
         } else if (host.equals("/EmployeeController/Feedback")) {
