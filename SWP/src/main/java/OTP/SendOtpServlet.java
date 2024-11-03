@@ -4,6 +4,9 @@
  */
 package OTP;
 
+import DAOs.AccountDAO;
+import Models.CustomerModel;
+import com.google.gson.Gson;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
@@ -79,20 +82,35 @@ public class SendOtpServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String emailSendOTP = request.getParameter("email");
+        AccountDAO accDao = new AccountDAO();
+        boolean isHave = accDao.checkAccountExsit(emailSendOTP);
+        boolean rs = false;
         // Tạo mã OTP ngẫu nhiên
         int otp = new Random().nextInt(999999);
-
-        // Gửi mã OTP đến email
-        if (sendEmail(emailSendOTP, otp)) {
-            // Lưu mã OTP vào session để xác minh sau này
-            request.getSession().setAttribute("otp", otp);
-            request.getSession().setAttribute("emailSendOTP", emailSendOTP);
-            response.setStatus(HttpServletResponse.SC_OK);
+        
+        if (isHave == true) {
+            // Gửi mã OTP đến email
+            if (sendEmail(emailSendOTP, otp)) {
+                // Lưu mã OTP vào session để xác minh sau này
+                request.getSession().setAttribute("otp", otp);
+                request.getSession().setAttribute("emailSendOTP", emailSendOTP);
+                response.setStatus(HttpServletResponse.SC_OK);
+                rs = true;
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().println("Gửi email không thành công. Vui lòng thử lại.");
+            }
         } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Gửi email không thành công. Vui lòng thử lại.");
+            rs = false;
         }
+        // Set response type to JSON and encode in UTF-8
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
+        // Convert employee list to JSON using Gson
+        Gson gson = new Gson();
+        String otpJson = gson.toJson(rs);
+        response.getWriter().write(otpJson);
     }
 
     /**

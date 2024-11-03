@@ -1,6 +1,6 @@
 <%-- 
     Document   : resetPWD
-    Created on : 5 thg 10, 2024, 00:38:46
+    Created on : 5 October, 2024, 00:38:46
     Author     : thaii
 --%>
 
@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!-- AE copy từ đây tới title nếu tạo jsp mới thêm các thể khác thì thêm trên <title> -->
+        <!-- Copy this from here to title when creating a new JSP, add other elements above <title> if needed -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
@@ -19,7 +19,8 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
         <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
-        <title>ResetPass</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <title>Reset Password</title>
         <%
             String host = request.getRequestURI();
         %>
@@ -37,10 +38,10 @@
             }
 
             a:hover {
-                color: inherit; /* Giữ nguyên màu */
+                color: inherit; /* Preserve color */
             }
 
-            .btn-dark{
+            .btn-dark {
                 background-color: #050B20;
             }
         </style>
@@ -48,56 +49,71 @@
     <body>
         <script>
             function validateForm() {
-                var OTPResult = document.getElementById('verificationResult').value; // Lấy giá trị của input hidden
-                if (OTPResult !== 'Success') { // Kiểm tra nếu giá trị không phải 'Success'                 
+                var OTPResult = document.getElementById('verificationResult').value; // Get the value of the hidden input
+                if (OTPResult !== 'Success') { // Check if the value is not 'Success'
                     var alertOTP = document.getElementById("alertOTP");
 
-                    // Kiểm tra nếu thẻ không null và thao tác với class
                     if (alertOTP) {
-                        alertOTP.classList.remove('d-none'); // Xóa class d-none để hiển thị thông báo
-                        alertOTP.classList.add('d-block'); // Thêm class d-block để hiển thị block
+                        alertOTP.classList.remove('d-none'); // Display OTP message
+                        alertOTP.classList.add('d-block');
                     }
-
-                    return false; // Dừng thực hiện
-                } else {
-                    // Thực hiện hành động khác nếu OTPResult là 'Success'
-                    if (alertOTP) {
-                        alertOTP.classList.remove('d-block'); // Xóa class d-block nếu có
-                        alertOTP.classList.add('d-none'); // Thêm class d-none để ẩn thông báo
-                    }
-                    console.log("OTP xác nhận thành công.");
+                    return false; // Prevent form submission
                 }
 
-                console.log("Start validation form")
+                console.log("Start validation form");
                 var email = document.getElementById("email").value;
                 var password = document.getElementById("password").value;
+                var confirmPassword = document.getElementById("confirmPassword").value;
                 var emailError = document.getElementById("emailError");
                 var passwordError = document.getElementById("passwordError");
+                var confirmError = document.getElementById("confirmError");
 
-                // Reset thông báo lỗi
+                // Reset error messages
                 emailError.textContent = "";
                 passwordError.textContent = "";
+                confirmError.textContent = "";
 
-                // Regular expression kiểm tra định dạng email
+                // Validate email format
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
-                    emailError.textContent = "Email không hợp lệ.";
-                    console.log("Email không hợp lệ");
-                    return false; // Dừng form submit
+                    emailError.textContent = "Invalid email.";
+                    event.preventDefault();
+                    return false; // Prevent form submission
                 }
 
-                // Regular expression kiểm tra mật khẩu
+                // Validate password
                 var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
                 if (!passwordRegex.test(password)) {
-                    passwordError.textContent = "Mật khẩu phải có từ 6-32 ký tự, ít nhất 1 chữ in hoa, 1 số và 1 ký tự đặc biệt.";
-                    console.log("Password không hợp lệ");
-                    return false; // Dừng form submit
+                    passwordError.textContent = "Password must be 6-32 characters, with at least 1 uppercase letter, 1 number, and 1 special character.";
+                    event.preventDefault();
+                    return false; // Prevent form submission
                 }
 
-                console.log("Form validation passed"); // Form hợp lệ
-                document.getElementById("alertOTP").innerHTML = "";
-                return true;
+                // Check password match
+                if (password !== confirmPassword) {
+                    confirmError.textContent = "Passwords do not match.";
+                    event.preventDefault();
+                    return false; // Prevent form submission
+                }
+
+                return true; // Allow submission if valid
             }
+
+            function checkPasswordsMatch() {
+                var password = document.getElementById('password').value;
+                var confirmPassword = document.getElementById('confirmPassword').value;
+                var confirmError = document.getElementById('confirmError');
+                var resetBtn = document.querySelector("button[name='resetPWDBtn']");
+
+                if (password !== confirmPassword) {
+                    confirmError.textContent = "Passwords do not match.";
+                    resetBtn.disabled = true; // Disable button when passwords do not match
+                } else {
+                    confirmError.textContent = ""; // Clear error message if passwords match
+                    resetBtn.disabled = false; // Enable button if passwords match
+                }
+            }
+
             function togglePassword() {
                 var passwordField = document.getElementById("password");
                 var icon = document.getElementById("icon");
@@ -120,12 +136,30 @@
                     url: "/SendOtpServlet",
                     data: {email: email},
                     success: function (response) {
-                        $('#otpInput').show();
-                        $('#sendOtpButton').hide();
-                        $('#notificationOtp').hide();
+                        if (response === true) {
+                            $('#otpInput').show();
+                            $('#sendOtpButton').hide();
+                            $('#notificationOtp').hide();
+                            $('#otpSend').removeClass('mb-3');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'OTP has been sent successfully!'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An error occurred or the email is not registered!'
+                            });
+                        }
                     },
                     error: function (xhr, status, error) {
-                        alert("Lỗi: " + error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: "An error occurred: " + error
+                        });
                     }
                 });
             }
@@ -136,114 +170,124 @@
                     type: "POST",
                     url: "/VerifyOtpServlet",
                     data: {otp: otp},
-                    success: function () {
-                        $('#verificationResult').val('Success');
-                        $('#otpInput').hide();
-                        $('#OTPSuccess').css('display', 'block');
+                    success: function (response) {
+                        if (response === true) {
+                            $('#verificationResult').val('Success');
+                            $('#otpInput').hide();
+                            $('#OTPSuccess').css('display', 'block');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Verification Successful',
+                                text: 'Your OTP has been verified successfully!',
+                            });
+                        } else {
+                            $('#otpInput').hide();
+                            $('#sendOtpButton').show();
+                            $('#notificationOtp').show();
+                            $('#otpSend').addClass('mb-3');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Verification Failed',
+                                text: 'OTP is incorrect or has expired. Please try again.',
+                            });
+                        }
                     },
                     error: function (xhr, status, error) {
-                        alert("Lỗi: " + error);
+                        alert("Error: " + error);
                     }
                 });
             }
 
             function disableButtonWithCountdown() {
                 var sendOtpButton = document.getElementById("sendOtpButton");
+                var otpSend = document.getElementById("otpSend");
+                var alertOTP = document.getElementById("alertOTP");
                 var countdown = 60;
 
-                // Vô hiệu hóa nút
+                // Disable button
                 sendOtpButton.disabled = true;
 
-                // Cập nhật nội dung nút với thời gian đếm ngược
-                sendOtpButton.innerText = "Chờ " + countdown + " giây";
+                // Update button text with countdown
+                sendOtpButton.innerText = "Wait " + countdown + " seconds";
 
-                // Tạo bộ đếm ngược
+                // Create countdown
                 var interval = setInterval(function () {
                     countdown--;
-                    sendOtpButton.innerText = "Chờ " + countdown + " giây";
+                    sendOtpButton.innerText = "Wait " + countdown + " seconds";
 
-                    // Khi hết 60 giây, kích hoạt lại nút
+                    // Check if otpSend does not have mb-3 class then stop the countdown
+                    if (!otpSend.classList.contains('mb-3') || !alertOTP.classList.contains('d-none')) {
+                        clearInterval(interval);
+                        sendOtpButton.disabled = false;
+                        sendOtpButton.innerText = "Send OTP";
+                        return; // Exit the function
+                    }
+
+                    // When 60 seconds is up, enable the button again
                     if (countdown <= 0) {
                         clearInterval(interval);
                         sendOtpButton.disabled = false;
                         sendOtpButton.innerText = "Send OTP";
                     }
-                }, 1000); // Cập nhật mỗi giây
+                }, 1000); // Update every second
             }
+
             function checkPasswords() {
                 var password = document.getElementById('password').value;
                 var confirmPassword = document.getElementById('confirmPassword').value;
                 var confirmError = document.getElementById('confirmError');
 
                 if (password !== confirmPassword) {
-                    confirmError.textContent = "Mật khẩu không khớp.";
+                    confirmError.textContent = "Passwords do not match.";
+                    return false;
                 } else {
-                    confirmError.textContent = ""; // Xóa thông báo lỗi nếu mật khẩu khớp
+                    confirmError.textContent = "";
+                    return true;
                 }
             }
-            function showNoti() {
-                document.getElementById('notificationOtp').removeAttribute('hidden');
-            }
-
-            function offNoti() {
-                document.getElementById('notificationOtp').hidden;
-            }
-        </script>       
-
-        <div class="container-fluid vh-100 m-0 p-0">
-            <div class="row h-100">
-                <div class="col-lg-6 d-flex justify-content-center align-items-center">
-                    <div class="w-100" style="max-width: 400px;">
-                        <a class="logo text-decoration-none" href="/"><h1 class="mb-5">DriveAura</h1></a>   
-                        <div class="alert alert-warning d-none" id="alertOTP">Please verify OTP.</div>
-                        <c:if test="${not empty message}">
-                            <div class="alert alert-warning">${message}</div>
-                        </c:if>
-                        <h2 class="mb-3">Reset Password</h2>
-                        <form onsubmit="return validateForm()" action="/ResetPasswordController" method="POST">
-                            <div class="form-group mb-3">
-                                <label for="email" class="form-label">Email address</label>
-                                <input name="emailTxt" required type="email" class="form-control" id="email" placeholder="Enter your email">
-                                <span id="emailError" class="text-danger"></span> <!-- Thêm thẻ này để hiển thị lỗi -->
+        </script>
+        <div class="container-fluid" style="background-color: white;">
+            <div class="container pt-4 pb-4">
+                <div class="text-center" style="font-size: 35px;">
+                    <a class="logo" href="home">StudyMate</a>
+                </div>
+                <div class="pt-4 pb-4 text-center fs-5 fw-bolder">Reset Your Password</div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-6 col-sm-6 p-3 border rounded-3 shadow-sm p-4">
+                        <form id="resetForm" action="resetPWD" method="POST" onsubmit="return validateForm();">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                                <p id="emailError" class="text-danger"></p>
                             </div>
-                            <label for="password" class="form-label">Password</label>
-                            <div class="mb-3 d-flex form-group">
-                                <input required type="password" class="form-control" id="password" name="pwdTxt" placeholder="Enter your password">
-                                <button type="button" class="form-control btn btn-outline-dark" id="showPassword" onclick="togglePassword()" style="width: 50px;">
-                                    <i class="fa-solid fa-eye p-0 m-0" id="icon"></i>                                    
-                                </button>                               
+                            <div id="otpSend" class="mb-3">
+                                <button type="button" onclick="sendOtp(); disableButtonWithCountdown();" id="sendOtpButton" class="btn btn-dark form-control">Send OTP</button>
                             </div>
-                            <span id="passwordError" class="text-danger mb-3"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
-
-                            <div class="form-group mb-3">
-                                <label for="confirmPassword">Xác nhận mật khẩu:</label>
-                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required oninput="checkPasswords()">
-                                <small id="confirmError" class="text-danger"></small>
-                            </div>
-
-                            <!-- Bắt đầu phần OTP -->
-                            <div class="d-flex mb-3 align-items-center">
-                                <button type="button" class="btn btn-outline-primary me-3" id="sendOtpButton" onclick="showNoti();
-                                        sendOtp();
-                                        disableButtonWithCountdown()">Send OTP</button>
-                                <p class="text-danger" hidden id="notificationOtp">Please wait a few seconds.</p>
-                            </div>
-                            <div id="otpInput" style="display: none;" class="mb-3">
-                                <label for="otp" class="form-label">Enter your code</label>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="otp" name="otp">
+                            <div id="notificationOtp" class="text-muted text-center mb-3">You will receive an OTP via email.</div>
+                            <input type="hidden" id="verificationResult" name="verificationResult" value="">
+                            <div id="otpInput" class="mb-3" style="display: none;">
+                                <input type="text" class="form-control mb-2" id="otp" placeholder="OTP" aria-describedby="verifyBtn">
+                                <div class="input-group-append">
+                                    <button class="btn btn-dark form-control" id="verifyBtn" onclick="verifyOtp();" type="button">Verify OTP</button>
                                 </div>
-                                <button type="button" class="btn btn-success" onclick="verifyOtp()">Verification</button>
                             </div>
-                            <p style="display: none;" class="text-success mb-3 fw-bold" id="OTPSuccess">OTP authentication successful!</p>
-                            <input hidden id="verificationResult" class="mt-3" name="OTPResult" value=""/>
-                            <!-- Kết thúc phần OTP -->
-
-                            <button type="submit" class="btn btn-dark" name="resetPWDBtn">Đặt lại mật khẩu</button>
+                            <div id="alertOTP" class="text-danger d-none text-center mb-2" role="alert">Please verify your OTP.</div>
+                            <div id="OTPSuccess" class="alert alert-success mb-2" style="display:none;" role="alert">OTP verification successful!</div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" onchange="checkPasswords()" required>
+                                <i class="far fa-eye" id="icon" style="cursor: pointer; position: absolute; margin-left: -30px; margin-top: 10px;" onclick="togglePassword()"></i>
+                                <p id="passwordError" class="text-danger"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" onchange="checkPasswords()" required>
+                                <p id="confirmError" class="text-danger"></p>
+                            </div>
+                            <button type="submit" name="resetPWDBtn" class="btn btn-dark form-control">Reset Password</button>
                         </form>
                     </div>
                 </div>
-                <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/a/loginImage.jpg'); background-size: cover; background-position: center;"></div>
             </div>
         </div>
     </body>

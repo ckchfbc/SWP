@@ -4,6 +4,7 @@
  */
 package OTP;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -73,14 +74,18 @@ public class VerifyOtpServlet extends HttpServlet {
             throws ServletException, IOException {
         String enteredOtp = request.getParameter("otp");
         String sessionOtp = String.valueOf(request.getSession().getAttribute("otp"));
-
+        boolean rs = false;
         // Kiểm tra mã OTP
-        if (enteredOtp.equals(sessionOtp)) {
-            response.getWriter().println("Success.");
-        } else {
-            response.getWriter().println("Fail.");
-        }
+        rs = enteredOtp.equals(sessionOtp);
         request.getSession().removeAttribute("otp");
+        // Set response type to JSON and encode in UTF-8
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // Convert employee list to JSON using Gson
+        Gson gson = new Gson();
+        String employeesJson = gson.toJson(rs);
+        response.getWriter().write(employeesJson);
     }
 
     /**
