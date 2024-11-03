@@ -189,7 +189,6 @@
                             </div>
                         </div>
                         <div class="tab-pane fade w-100" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab" id="orderContent">
-                            <a target="_blank" href="/OrderController/Create" class="btn btn-primary mb-3">Create New Order</a>
                             <button id="loadOrderButton" class="btn btn-outline-secondary mb-3">Load Order Page</button>
                             <div id="includeOrderContainer" class="w-100 container-fluid p-0 m-0"></div>
                             <div id="mainOrder">

@@ -1,6 +1,6 @@
 <%-- 
     Document   : signup
-    Created on : 28 thg 9, 2024, 15:47:51
+    Created on : 28 Sep, 2024, 15:47:51
     Author     : thaii
 --%>
 
@@ -11,13 +11,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!-- AE copy từ đây tới title nếu tạo jsp mới thêm các thể khác thì thêm trên <title> -->
+        <!-- Copy this from here to title if creating a new JSP, add other tags above <title> if needed -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.all.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.min.css">
         <link rel="icon" href="${host}/ImageController/a/logo.png" type="image/x-icon">
         <title>Sign Up Page</title>
         <style>
@@ -34,7 +35,7 @@
             }
 
             a:hover {
-                color: inherit; /* Giữ nguyên màu */
+                color: inherit; /* Keep color unchanged */
             }
 
             .btn-dark{
@@ -43,13 +44,13 @@
         </style>
         <script>
             function validateForm() {
-                var OTPResult = document.getElementById('verificationResult').value; // Lấy giá trị của input hidden
-                if (OTPResult !== 'Success') { // Kiểm tra nếu giá trị không phải 'Success'
-                    alert("Vui lòng xác thực OTP"); // In ra giá trị OTPResult
-                    return false; // Dừng thực hiện
+                var OTPResult = document.getElementById('verificationResult').value; // Get value from hidden input
+                if (OTPResult !== 'Success') { // Check if value is not 'Success'
+                    alert("Please verify OTP"); // Print OTPResult value
+                    return false; // Stop execution
                 } else {
-                    // Thực hiện hành động khác nếu OTPResult là 'Success'
-                    console.log("OTP xác nhận thành công.");
+                    // Other actions if OTPResult is 'Success'
+                    console.log("OTP verification successful.");
                 }
 
                 var email = document.getElementById("email").value;
@@ -57,27 +58,27 @@
                 var emailError = document.getElementById("emailError");
                 var passwordError = document.getElementById("passwordError");
 
-                // Reset thông báo lỗi
+                // Reset error messages
                 emailError.textContent = "";
                 passwordError.textContent = "";
 
-                // Regular expression kiểm tra định dạng email
+                // Regular expression to check email format
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
-                    emailError.textContent = "Email không hợp lệ.";
-                    console.log("Email không hợp lệ");
-                    return false; // Dừng form submit
+                    emailError.textContent = "Invalid email.";
+                    console.log("Invalid email");
+                    return false; // Stop form submit
                 }
 
-                // Regular expression kiểm tra mật khẩu
+                // Regular expression to check password
                 var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
                 if (!passwordRegex.test(password)) {
-                    passwordError.textContent = "Mật khẩu phải có từ 6-32 ký tự, ít nhất 1 chữ in hoa, 1 số và 1 ký tự đặc biệt.";
-                    console.log("Password không hợp lệ");
-                    return false; // Dừng form submit
+                    passwordError.textContent = "Password must be 6-32 characters, at least 1 uppercase letter, 1 number, and 1 special character.";
+                    console.log("Invalid password");
+                    return false; // Stop form submit
                 }
 
-                console.log("Form validation passed"); // Form hợp lệ
+                console.log("Form validation passed"); // Form is valid
                 return true;
             }
             function togglePassword() {
@@ -122,11 +123,26 @@
                         $('#sendOtpButton').hide();
                         $('#otpSend').removeClass('mb-3');
                         $('#notificationOtp').hide();
+
+                        // SweetAlert success notification
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'OTP sent successfully!'
+                        });
                     },
                     error: function (xhr, status, error) {
                         $('#alertOTP').removeClass('d-none');
                         $('#notificationOtp').attr('hidden', true);
+
+                        // SweetAlert error notification
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Unable to send OTP. Please try again later.'
+                        });
                     }
+
                 });
             }
 
@@ -134,15 +150,40 @@
                 const otp = $('#otp').val();
                 $.ajax({
                     type: "POST",
-                    url: "VerifyOtpServlet",
+                    url: "/VerifyOtpServlet",
                     data: {otp: otp},
-                    success: function () {
-                        $('#verificationResult').val('Success');
-                        $('#otpInput').hide();
-                        $('#OTPSuccess').css('display', 'block');
+                    success: function (response) {
+                        if (response === true) {
+                            $('#verificationResult').val('Success');
+                            $('#otpInput').hide();
+                            $('#OTPSuccess').css('display', 'block');
+
+                            Swal.fire({
+                                title: 'Verification Successful!',
+                                text: 'Your OTP has been verified successfully.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            $('#otpInput').hide();
+                            $('#sendOtpButton').show();
+                            $('#otpSend').addClass('mb-3');
+
+                            Swal.fire({
+                                title: 'Verification Failed',
+                                text: 'The OTP is incorrect. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
                     },
                     error: function (xhr, status, error) {
-                        alert("Lỗi: " + error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred during OTP verification. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 });
             }
@@ -153,38 +194,38 @@
                 var alertOTP = document.getElementById("alertOTP");
                 var countdown = 60;
 
-                // Vô hiệu hóa nút
+                // Disable button
                 sendOtpButton.disabled = true;
 
-                // Cập nhật nội dung nút với thời gian đếm ngược
-                sendOtpButton.innerText = "Chờ " + countdown + " giây";
+                // Update button text with countdown
+                sendOtpButton.innerText = "Wait " + countdown + " seconds";
 
-                // Tạo bộ đếm ngược
+                // Create countdown timer
                 var interval = setInterval(function () {
                     countdown--;
-                    sendOtpButton.innerText = "Chờ " + countdown + " giây";
+                    sendOtpButton.innerText = "Wait " + countdown + " seconds";
 
-                    // Kiểm tra nếu otpSend không có class mb-3 thì dừng bộ đếm                    
+                    // Stop timer if otpSend doesn't have 'mb-3' class
                     if (!otpSend.classList.contains('mb-3') || !alertOTP.classList.contains('d-none')) {
                         clearInterval(interval);
                         sendOtpButton.disabled = false;
                         sendOtpButton.innerText = "Send OTP";
-                        return; // Thoát khỏi hàm
+                        return; // Exit function
                     }
 
-                    // Khi hết 60 giây, kích hoạt lại nút
+                    // Enable button after 60 seconds
                     if (countdown <= 0) {
                         clearInterval(interval);
                         sendOtpButton.disabled = false;
                         sendOtpButton.innerText = "Send OTP";
                     }
-                }, 1000); // Cập nhật mỗi giây
+                }, 1000); // Update every second
             }
 
         </script>
         <%
             Cookie[] cookies = request.getCookies();
-            // Duyệt qua các cookies và kiểm tra cookie "userEmail" nếu có thì quay về trang chủ
+            // Iterate through cookies and check for "userEmail" cookie; if found, redirect to homepage
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("userEmail")) {
@@ -198,73 +239,51 @@
         <div class="row h-100">
             <!-- Left side with form -->
             <div class="col-lg-6 d-flex justify-content-center align-items-center">
-                <div class="w-100" style="max-width: 400px;">
-                    <a class="logo text-decoration-none" href="/"><h1 class="mb-3">Welcome to  DriveAura</h1></a>   
-                    <!-- Hiện thông báo có tài khoản rồi -->
-                    <c:if test="${not empty message}">
-                        <div class="alert alert-warning">${message}</div>
-                    </c:if>
-                    <%
-                        session.removeAttribute("message");
-                    %>
-                    <form onsubmit="return validateForm()" action="/LoginController" method="POST">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input name="nameTxt" required type="text" class="form-control" id="name" placeholder="Enter your name">
+                <div class="w-100" style="max-width: 450px;">
+                    <h1 class="fw-bold mb-4 logo"><a href="/" class="text-decoration-none">Your Website Name</a></h1>
+                    <h2 class="fw-bold mb-4">Create Your Account</h2>
+                    <form action="SignUpServlet" method="post" onsubmit="return validateForm();">
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Your email">
+                            <div class="text-danger" id="emailError"></div>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
-                            <input name="emailTxt" required type="email" class="form-control" id="email" placeholder="Enter your email">
-                            <span id="emailError" class="text-danger"></span> <!-- Thêm thẻ này để hiển thị lỗi -->
-                        </div>
-                        <label for="password" class="form-label">Password</label>
-                        <div class="mb-3 d-flex">
-                            <input required type="password" class="form-control" id="password" name="pwdTxt" placeholder="Enter your password">
-                            <button type="button" class="form-control btn btn-outline-dark" id="showPassword" onclick="togglePassword()" style="width: 50px;">
-                                <i class="fa-solid fa-eye p-0 m-0" id="icon"></i>
-                            </button>
-                        </div>
-                        <span id="passwordError" class="text-danger mb-3"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
-                        <!-- Bắt đầu phần OTP -->
-                        <div class="alert alert-warning alert-dismissible fade d-none show" role="alert" id="alertOTP">
-                            You should enter your email.
-                            <button type="button" class="btn-close" aria-label="Close" onclick="hideAlert()"></button>
-                        </div>
-                        <div class="d-flex mb-3 align-items-center" id="otpSend">
-                            <button type="button" class="btn btn-outline-primary me-3" id="sendOtpButton" onclick="showNoti();
-                                    sendOtp();
-                                    disableButtonWithCountdown()">Send OTP</button>
-                            <p class="text-danger" hidden id="notificationOtp">Please wait a few seconds.</p>
-                        </div>
-                        <div id="otpInput" style="display: none;" class="mb-3">
-                            <label for="otp" class="form-label">Enter your code</label>
-                            <div class="mb-2">
-                                <input type="text" class="form-control" id="otp" name="otp">
+                        <div class="form-group mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                                    <i class="fas fa-eye" id="icon"></i>
+                                </button>
                             </div>
-                            <button type="button" class="btn btn-success" onclick="verifyOtp()">Verification</button>
+                            <div class="text-danger" id="passwordError"></div>
                         </div>
-                        <p style="display: none;" class="text-success mb-3 fw-bold" id="OTPSuccess">OTP authentication successful!</p>
-                        <input hidden id="verificationResult" class="mt-3" name="OTPResult" value=""/>
-                        <!-- Kết thúc phần OTP -->
-                        <div class="form-check mb-3">
-                            <input required type="checkbox" class="form-check-input" id="terms" name="agreeBox">
-                            <label class="form-check-label" for="terms">I agree to the <a href="#">terms & policy</a></label>
+                        <div class="form-group" id="otpSend">
+                            <button type="button" class="btn btn-dark btn-block mb-3" id="sendOtpButton" onclick="sendOtp(); disableButtonWithCountdown();">Send OTP</button>
+                            <p class="text-muted" id="notificationOtp" hidden>An OTP will be sent to your email.</p>
                         </div>
-                        <button type="submit" class="btn btn-dark w-100 mb-3" name="signUpBtn">Sign Up</button>
-                        <div class="text-center">Or</div>   
-                        <a class="btn btn-outline-dark w-100 mt-3" href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/LoginController/SignUp&response_type=code&client_id=660845253786-djntvvn4rk8lnt6vmrbop3blvttdmrnm.apps.googleusercontent.com&approval_prompt=force&state=signup">
-                            <img src="${host}/ImageController/a/logoGG.png" style="width: 20px;" alt="Google Logo"> 
-                            Sign up with Google
-                        </a>
+                        <div class="form-group d-none" id="alertOTP">
+                            <p class="text-danger">Error occurred while sending OTP. Please try again later.</p>
+                        </div>
+                        <div class="form-group d-none" id="OTPSuccess">
+                            <p class="text-success">OTP verified successfully.</p>
+                        </div>
+                        <div class="form-group mb-3" id="otpInput" style="display: none;">
+                            <label for="otp" class="form-label">Enter OTP</label>
+                            <input type="text" class="form-control" id="otp" name="otp" placeholder="One-time password">
+                            <button type="button" class="btn btn-dark btn-block mt-3" onclick="verifyOtp()">Verify OTP</button>
+                        </div>
+                        <input type="hidden" id="verificationResult" value="">
+
+                        <button type="submit" class="btn btn-dark btn-block mt-3">Sign Up</button>
                     </form>
-                    <div class="text-center mt-3">
-                        Have an account? <a href="/HomePageController/Login">Login</a>
-                    </div>
+                    <p class="mt-4 text-muted">Already have an account? <a href="signin.jsp" class="text-decoration-none">Sign in here</a></p>
                 </div>
-            </div>  
+            </div>
             <!-- Right side with background -->
-            <div class="col-lg-6 d-none d-lg-block" style="background-image: url('${host}/ImageController/a/loginImage.jpg'); background-size: cover; background-position: center;"></div>
+            <div class="col-lg-6 d-none d-lg-block bg-dark">
+                <!-- Background and image elements here -->
+            </div>
         </div>
     </div>
-</body>
 </html>
