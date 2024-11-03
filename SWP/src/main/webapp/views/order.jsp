@@ -54,7 +54,7 @@
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("userEmail")) {
                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
-%>
+        %>
         <input hidden value="<%= userEmail%>" id="userEmail">
         <%
                     }
@@ -160,7 +160,7 @@
                     </div>
                     <div class="modal-body text-center">
                         <img src="/ImageController/a/vcb.jpg" alt="QR Code for Payment" class="img-fluid rounded">
-                        <p class="mt-3"><strong>Scan the QR code to complete the payment</strong></p>
+                        <p class="mt-3"><strong>Scan the QR code to complete the payment using the format (Full Name)_(Car Name), for example: Nguyen Van A_Car AAA. Please contact us directly if any issues occur.</strong></p>
                     </div>
                 </div>
             </div>

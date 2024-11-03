@@ -88,6 +88,9 @@ public class CustomerController extends HttpServlet {
         if (host.equals("/CustomerController/Wishlist")) {
             request.getRequestDispatcher("/views/wishlist.jsp").forward(request, response);
         }
+        if (host.equals("/CustomerController/Appointment")) {
+            request.getRequestDispatcher("/views/appointmentCustomer.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -194,7 +197,7 @@ public class CustomerController extends HttpServlet {
             String employeesJson = gson.toJson(cus);
             response.getWriter().write(employeesJson);
         }
-        
+
         //get cus for emp order
         if (request.getParameter("getWishlistCars") != null && request.getParameter("getWishlistCars").equals("true")) {
             String email = request.getParameter("userEmail");
@@ -212,7 +215,7 @@ public class CustomerController extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(CustomerController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             // Set response type to JSON and encode in UTF-8
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
