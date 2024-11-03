@@ -87,7 +87,7 @@ public class SendOtpServlet extends HttpServlet {
         boolean rs = false;
         // Tạo mã OTP ngẫu nhiên
         int otp = new Random().nextInt(999999);
-        
+
         if (isHave == true) {
             // Gửi mã OTP đến email
             if (sendEmail(emailSendOTP, otp)) {
@@ -103,6 +103,7 @@ public class SendOtpServlet extends HttpServlet {
         } else {
             rs = false;
         }
+
         // Set response type to JSON and encode in UTF-8
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
