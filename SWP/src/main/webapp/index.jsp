@@ -51,7 +51,7 @@
 
             a{
                 text-decoration: none;
-            }          
+            }
 
             .navbar-brand  {
                 font-family: "Oswald", sans-serif;
@@ -89,8 +89,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Product</a>
-                        </li>
+                            <a class="nav-link" href="/ProductController/Views">Product</a>                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/HomePageController/Event">Event</a>
                         </li>

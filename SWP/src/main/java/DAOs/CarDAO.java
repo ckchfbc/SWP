@@ -5,17 +5,26 @@
 package DAOs;
 
 import DB.DBConnection;
+import Models.BrandModel;
 import Models.CarModel;
+import Models.CarModel_Model;
+import Models.FuelModel;
 import Models.newCarModel;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.checkerframework.checker.units.qual.A;
 
 /**
  *
@@ -430,110 +439,111 @@ public class CarDAO {
         return newCars;
     }
 
-    // Method to get all brands
-    public List<String> getAllBrands() {
-        List<String> brands = new ArrayList<>();
-        String sql = "SELECT brand_name FROM brands";
+    public List<FuelModel> getAllFuelTypes() {
+        List<FuelModel> models = new ArrayList<>();
+        String sql = "SELECT * FROM swp.fuel;";
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                brands.add(rs.getString("brand_name"));
+                FuelModel model = new FuelModel();
+                model.setFuel_id(rs.getInt("fuel_id"));
+                model.setFuel_name(rs.getString("fuel_name"));
+                models.add(model);
             }
         } catch (SQLException e) {
-            System.err.println("Error fetching brands: " + e.getMessage());
+            Logger.getLogger(CarDAO.class.getName()).log(Level.SEVERE, "Error fetching fuel types", e);
+        }
+        return models;
+    }
+
+    public List<BrandModel> getAllBrands() {
+        List<BrandModel> brands = new ArrayList<>();
+        String sql = "SELECT * FROM swp.brands;";
+
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                BrandModel brand = new BrandModel();
+                brand.setBrand_id(rs.getInt("brand_id"));
+                brand.setBrand_name(rs.getString("brand_name"));
+                brand.setCountry_of_origin(rs.getString("country_of_origin"));
+                brand.setDescription(rs.getString("description"));
+                brands.add(brand);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(CarDAO.class.getName()).log(Level.SEVERE, "Error fetching brands", e);
         }
         return brands;
     }
 
-// Method to get all fuel types
-    public List<String> getAllFuelTypes() {
-        List<String> fuels = new ArrayList<>();
-        String sql = "SELECT fuel_name FROM fuel;";
+    public List<CarModel_Model> getAllModels() {
+        List<CarModel_Model> models = new ArrayList<>();
+        String sql = "SELECT * FROM swp.model;";
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                fuels.add(rs.getString("fuel_name"));
+                CarModel_Model model = new CarModel_Model();
+                model.setModel_id(rs.getInt("model_id"));
+                model.setModel_name(rs.getString("model_name"));
+                models.add(model);
             }
         } catch (SQLException e) {
-            System.err.println("Error fetching fuel types: " + e.getMessage());
+            Logger.getLogger(CarDAO.class.getName()).log(Level.SEVERE, "Error fetching car models", e);
         }
-        return fuels;
+        return models;
     }
 
-// Method to filter cars by price, brand, or fuel
-    public List<newCarModel> getFilteredCars(String price, String brand, String fuel) {
+    public List<newCarModel> getAllfilterCars(int brand_id, int fuel_id, int model_id) {
+        String sql = "SELECT c.*, (SELECT car_image_id FROM car_image ci WHERE ci.car_id = c.car_id ORDER BY ci.car_image_id ASC LIMIT 1) AS first_car_image_id, i.quantity FROM cars c LEFT JOIN inventory i ON c.car_id = i.car_id WHERE c.status = 1 ";
+        List<Object> params = new ArrayList<>();
+
+        if (brand_id > 0) {
+            sql += "AND c.brand_id = ? ";
+            params.add(brand_id);
+        }
+        if (fuel_id > 0) {
+            sql += "AND c.fuel_id = ? ";
+            params.add(fuel_id);
+        }
+        if (model_id > 0) {
+            sql += "AND c.model_id = ? ";
+            params.add(model_id);
+        }
+
         List<newCarModel> cars = new ArrayList<>();
-
-        // Base SQL query
-        String sql = "SELECT c.car_id, c.car_name, b.brand_name, b.brand_id, f.fuel_name, f.fuel_id, "
-                + "c.price, c.color, c.date_start, c.status, c.description, i.quantity, "
-                + "c.first_car_image_id FROM cars c "
-                + "JOIN brands b ON c.brand_id = b.brand_id "
-                + "JOIN fuel f ON c.fuel_id = f.fuel_id "
-                + "JOIN inventory i ON c.car_id = i.car_id WHERE 1=1 ";
-
-        // Add dynamic filters based on input parameters
-        if (price != null && !price.isEmpty()) {
-            sql += getPriceFilter(price);
-        }
-        if (brand != null && !brand.isEmpty()) {
-            sql += "AND b.brand_name = ? ";
-        }
-        if (fuel != null && !fuel.isEmpty()) {
-            sql += "AND f.fuel_name = ? ";
-        }
+        Logger logger = Logger.getLogger(CarDAO.class.getName());
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            // Set parameters dynamically
-            int paramIndex = 1;
-            if (brand != null && !brand.isEmpty()) {
-                stmt.setString(paramIndex++, brand);
-            }
-            if (fuel != null && !fuel.isEmpty()) {
-                stmt.setString(paramIndex++, fuel);
+            // Bind parameters
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
             }
 
-            // Execute query and populate the list
             try ( ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     newCarModel car = new newCarModel();
                     car.setCar_id(rs.getInt("car_id"));
-                    car.setCar_name(rs.getString("car_name"));
                     car.setBrand_id(rs.getInt("brand_id"));
-                    car.setFuel_id(rs.getInt("fuel_id"));
-                    car.setPrice(rs.getBigDecimal("price"));
-                    car.setColor(rs.getString("color"));
+                    car.setModel_id(rs.getInt("model_id"));
+                    car.setCar_name(rs.getString("car_name"));
                     car.setDate_start(rs.getString("date_start"));
+                    car.setColor(rs.getString("color"));
+                    car.setPrice(rs.getBigDecimal("price"));
+                    car.setFuel_id(rs.getInt("fuel_id"));
                     car.setStatus(rs.getBoolean("status"));
                     car.setDescription(rs.getString("description"));
                     car.setFirst_car_image_id(rs.getInt("first_car_image_id"));
-                    car.setQuantity(rs.getInt("quantity"));
+                    car.setQuantity(rs.getObject("quantity") == null ? 0 : rs.getInt("quantity"));
 
                     cars.add(car);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error filtering cars: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error retrieving cars from database", e);
         }
-
         return cars;
     }
-// Helper method to generate SQL condition for price filter
 
-    private String getPriceFilter(String price) {
-        switch (price) {
-            case "under-20000":
-                return "AND c.price < 20000 ";
-            case "20000-50000":
-                return "AND c.price BETWEEN 20000 AND 50000 ";
-            case "above-50000":
-                return "AND c.price > 50000 ";
-            default:
-                System.err.println("Invalid price range: " + price);
-                return "";
-        }
-    }
 }
