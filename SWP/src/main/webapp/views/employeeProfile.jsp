@@ -49,104 +49,9 @@
 
         </style>
     </head>
-    <body class="container-fluid">
-        <!-- Navigation -->
-        <nav class="shadow-sm rounded navbar navbar-expand-md navbar-light bg-white position-fixed top-0 start-0 w-100 m-0 p-0" style="z-index: 1;">
-            <div class="container">
-                <a class="navbar-brand" href="/"><h1>DriveAura</h1></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/HomePageController/Event">Event</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Brand</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Zalo</a>
-                        </li>                        
-                        <!-- Nút logOut cho customer -->
-
-                        <%
-                            Cookie[] cookies = request.getCookies();
-
-                            // Lấy danh sách cookies từ request
-                            String userEmail = null;
-                            String role = null;
-
-                            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
-                            if (cookies != null) {
-                                for (Cookie cookie : cookies) {
-                                    if (cookie.getName().equals("userEmail")) {
-                                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-                                    }
-                                    if (cookie.getName().equals("role")) {
-                                        role = cookie.getValue();
-                                    }
-                                }
-                            }
-
-                            // Kiểm tra nếu cookie "userEmail" tồn tại
-                            if ((userEmail != null) && (role.equals("customer"))) {
-                        %>
-                        <!-- Hiển thị nút nếu là customer -->
-                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile"><i class="fa-solid fa-user"></i></a>
-                        <input hidden value="<%= userEmail%>" id="userEmail">    
-                        <input hidden id="role" value="<%= role%>">
-                        <%
-                        } else {
-                            if ((userEmail != null) && (role.equals("employee"))) {
-                        %>
-                        <!-- Hiển thị nút nếu là employee -->
-                        <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile"><i class="fa-solid fa-user"></i></a>
-                        <input hidden id="role" value="<%= role%>">
-                        <input hidden value="<%= userEmail%>" id="userEmail">  
-                        <%
-                        } else {
-                        %>
-                        <!-- Hiển thị thông báo nếu không có cookie -->
-                        <li class="nav-item">                            
-                            <a class="nav-link" href="${host}/HomePageController/Login">Login</a>
-                        </li>
-                        <%
-                                }
-                            }
-                        %>
-                        <!-- Nút tìm kiếm -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Modal tìm kiếm -->
-        <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="searchModalLabel">Tìm Kiếm</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="searchForm">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
-                                <button class="btn btn-outline-secondary" type="submit">Tìm</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <body class="container-fluid p-0 d-flex flex-column min-vh-100">
+        <!-- navBar -->
+        <%@include file="navbar.jsp" %>
 
         <div class="container-fluid w-100 pt-5 mt-5">
             <div class="row justify-content-center">
@@ -270,5 +175,10 @@
             });
 
         </script>
+        <footer class="bg-dark text-white py-4 mt-auto w-100">
+            <div class="container">
+                <%@include file="/views/footer.jsp" %>
+            </div>
+        </footer>
     </body>
 </html>

@@ -299,7 +299,7 @@
                         <!-- Kết thúc phần OTP -->
                         <div class="form-check mb-3">
                             <input required type="checkbox" class="form-check-input" id="terms" name="agreeBox">
-                            <label class="form-check-label" for="terms">I agree to the <a href="#">terms & policy</a></label>
+                            <label class="form-check-label" for="terms">I agree to the <a href="/HomePageController/Term" target="_blank">terms & policy</a></label>
                         </div>
                         <button type="submit" class="btn btn-dark w-100 mb-3" name="signUpBtn">Sign Up</button>
                         <div class="text-center">Or</div>   

@@ -86,7 +86,7 @@
                             </div>
                             <div class="form-check mb-3">
                                 <input required type="checkbox" class="form-check-input" id="terms">
-                                <label class="form-check-label" for="terms">I agree to the <a href="#">terms & policy</a></label>
+                                <label class="form-check-label" for="terms">I agree to the <a href="/HomePageController/Term" target="_blank">terms & policy</a></label>
                             </div>
                             <span id="passwordError" class="text-danger mb-4"></span> <!-- Thêm thẻ này để hiển thị lỗi -->                           
                             <button type="submit" class="btn btn-dark w-100 mb-3" name="loginBtn">Login</button>

@@ -161,13 +161,20 @@ public class OrderDAO {
         OrderModel event = getOrderById(Integer.parseInt(id));
         String sql = "UPDATE orders SET order_status = ? WHERE order_id = ?;";
         PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
         try ( Connection conn = DBConnection.getConnection()) {
             stmt = conn.prepareStatement(sql);
             stmt.setBoolean(1, !event.isOrder_status());
             stmt.setInt(2, event.getOrder_id());
             int row = stmt.executeUpdate();
             if (row > 0) {
-                return true;
+                String sqlUpdateInventory = "UPDATE inventory SET quantity = quantity - 1 WHERE car_id = (SELECT car_id FROM orders WHERE order_id = ?)";
+                stmt2 = conn.prepareStatement(sqlUpdateInventory);
+                stmt2.setInt(1, event.getOrder_id());
+                int row2 = stmt.executeUpdate();
+                if (row2 > 0) {
+                    return true;
+                }
             }
         }
         return false;
@@ -321,10 +328,10 @@ public class OrderDAO {
 
         String updateCustomerSql = "UPDATE customers SET cus_id_number = ? WHERE customer_id = ?;";
 
-        try ( Connection conn = DBConnection.getConnection()) {           
+        try ( Connection conn = DBConnection.getConnection()) {
             // Thực hiện thêm đơn hàng
             try ( PreparedStatement stmt = conn.prepareStatement(insertOrderSql)) {
-               
+
                 // Now use employee_id in your insert statement
                 PreparedStatement stmtInsert = conn.prepareStatement(insertOrderSql);
                 stmtInsert.setInt(1, customer_id);

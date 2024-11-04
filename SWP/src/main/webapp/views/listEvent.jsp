@@ -31,11 +31,11 @@
             }
         </style>
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
 
-        <div class="container mt-5 pt-5">
+        <div class="container my-5 pt-5">
             <h1 class="text-center">Event List</h1>
             <div class="row" id="eventCards">
                 <!-- Thẻ sự kiện sẽ được thêm ở đây -->
@@ -158,5 +158,10 @@
                 return dateString; // Trả về giá trị gốc nếu không phải định dạng đúng
             }
         </script>
+        <footer class="bg-dark text-white py-4 mt-auto w-100">
+            <div class="container">
+                <%@include file="/views/footer.jsp" %>
+            </div>
+        </footer>
     </body>
 </html>

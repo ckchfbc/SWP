@@ -37,7 +37,7 @@
             }
         </style>
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
 
@@ -58,7 +58,7 @@
 
 
         <!-- Footer -->
-        <footer class="bg-dark text-white py-4">
+        <footer class="bg-dark text-white py-4 mt-auto w-100">
             <div class="container">
                 <%@include file="/views/footer.jsp" %>
             </div>
