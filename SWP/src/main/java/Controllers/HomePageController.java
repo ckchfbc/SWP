@@ -85,6 +85,9 @@ public class HomePageController extends HttpServlet {
         if (host.equals("/HomePageController/Event")) {
             request.getRequestDispatcher("/views/listEvent.jsp").forward(request, response);
         }
+        if (host.equals("/HomePageController/Term")) {
+            request.getRequestDispatcher("/views/termandpolicy.jsp").forward(request, response);
+        }
     }
 
     /**

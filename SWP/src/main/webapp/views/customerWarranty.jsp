@@ -38,7 +38,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <!-- JavaScript Links -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>       
         <script
@@ -112,7 +112,7 @@
         </script>
 
         <!-- Table Structure -->
-        <div class="container mt-5 pt-5">
+        <div class="container my-5 pt-5">
             <table id="warrantyTable" class="table table-striped nowrap w-100" style="width: 100%;">
                 <thead>
                     <tr>
@@ -144,5 +144,10 @@
                 </div>
             </div>
         </div>
+        <footer class="bg-dark text-white py-4 mt-auto w-100">
+            <div class="container">
+                <%@include file="/views/footer.jsp" %>
+            </div>
+        </footer>
     </body>
 </html>

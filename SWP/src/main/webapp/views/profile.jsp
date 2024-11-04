@@ -46,7 +46,7 @@
 
         </style>
     </head>
-    <body class="container-fluid">
+    <body class="container-fluid p-0 d-flex flex-column min-vh-100">
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
 
@@ -156,7 +156,7 @@
 
                 </div>
             </div>
-        </div>        
+        </div>
         <script>
             $(document).ready(function () {
                 // Lấy userEmail từ cookie
@@ -204,5 +204,10 @@
             });
 
         </script>
+        <footer class="bg-dark text-white py-4 mt-auto w-100">
+            <div class="container">
+                <%@include file="/views/footer.jsp" %>
+            </div>
+        </footer>
     </body>
 </html>

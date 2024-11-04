@@ -9,6 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <title>JSP Page</title>
     </head>
     <body>
@@ -62,7 +63,7 @@
                                 <i class="fa-solid fa-user"></i>
                             </a>
                         </li>                        
-                        <input hidden value="<%= userEmail %>" id="userEmail">    
+                        <input hidden value="<%= userEmail%>" id="userEmail">    
                         <input hidden id="role" value="<%= role%>">
                         <%
                         } else {
@@ -74,8 +75,8 @@
                                 <i class="fa-solid fa-user"></i>
                             </a>
                         </li>                        
-                        <input hidden id="role" value="<%= role %>">
-                        <input hidden value="<%= userEmail %>" id="userEmail">
+                        <input hidden id="role" value="<%= role%>">
+                        <input hidden value="<%= userEmail%>" id="userEmail">
                         <%
                         } else {
                         %>

@@ -270,9 +270,9 @@
                                 // Mô tả xe
                                 var desc = document.getElementById("description");
                                 desc.innerHTML = car.description;
-
+                                var role = document.getElementById('role').value;
                                 // Tình trạng kho (In Stock hoặc Out of Stock)
-                                if (car.quantity > 0) {
+                                if (car.quantity > 0 && role === 'customer') {
                                     $('#stock_status').text('In Stock').removeClass('bg-danger').addClass('bg-success');
                                     //Buy btn
                                     var buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4">Buy</a>';
