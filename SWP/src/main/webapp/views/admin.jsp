@@ -80,12 +80,13 @@
             <div class="row">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center col-12">
                     <a class="navbar-brand" href="#">ADMIN DASHBOARD</a>
-                    <div class="nav-item justify-content-end">
+                    <div class="nav-item justify-content-end me-3">
                         <button onclick="logOut()" class="btn btn-danger d-flex align-items-center w-100" id="logout-button">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
                         </button>
                     </div>
+                    <a target="_blank" href="/HomePageController/ResetPassword" class="btn btn-warning btn-custom me-2 nav-item">Change Password</a>
                 </nav>
             </div>
 
@@ -94,15 +95,7 @@
                 <!-- Nav (Vertical Tabs) -->
                 <div class="col-xl-2 bg-dark">
                     <ul class="nav flex-column nav-pills shadow-sm p-3 m-0 p-0 h-100" id="v-pills-tab"
-                        role="tablist" aria-orientation="vertical">
-                        <li class="nav-item mb-2">
-                            <a class="nav-link active d-flex align-items-center text-white text-center"
-                               id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-home" role="tab"
-                               aria-controls="v-pills-home" aria-selected="true">
-                                <i class="fas fa-home"></i>
-                                <span>Home</span>
-                            </a>
-                        </li>
+                        role="tablist" aria-orientation="vertical">                        
                         <li class="nav-item mb-2">
                             <a class="nav-link d-flex align-items-center text-white" id="v-pills-cars-tab"
                                data-bs-toggle="pill" href="#v-pills-cars" role="tab" aria-controls="v-pills-cars"
@@ -149,12 +142,6 @@
                 <!-- Tab Content -->
                 <div class="col-xl-10">
                     <div class="tab-content shadow-sm p-4 rounded bg-white w-100" id="v-pills-tabContent">
-                        <div class="tab-pane fade show active w-100" id="v-pills-home" role="tabpanel"
-                             aria-labelledby="v-pills-home-tab">
-                            <!-- thay bằng thể include là oke -->
-                            <h3>Home</h3>
-                            <p>This is the home section content.</p>
-                        </div>
                         <div class="tab-pane fade w-100" id="v-pills-cars" role="tabpanel" aria-labelledby="v-pills-cars-tab">
                             <a target="_blank" href="/CarController/Create" class="btn btn-primary mb-3">Create New Car</a>
                             <button id="loadCarButton" class="btn btn-outline-secondary mb-3">Load Car Page</button>

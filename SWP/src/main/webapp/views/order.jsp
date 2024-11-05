@@ -54,7 +54,7 @@
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("userEmail")) {
                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
-        %>
+%>
         <input hidden value="<%= userEmail%>" id="userEmail">
         <%
                     }
@@ -138,7 +138,7 @@
             <!-- Phần alert của bắt lỗi -->
             <div class="custom-checkbox text-center">
                 <input type="checkbox" id="agreementCheckbox">
-                <label for="agreementCheckbox">I have made the payment and agree to the terms and conditions.</label>
+                <label for="agreementCheckbox">I have made the payment and agree to the <a href="/HomePageController/Term" target="_blank">terms & policy</a></label>
             </div>
 
             <!-- Action Buttons -->
@@ -159,8 +159,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
+                        <p class="mt-3"><strong>Scan the QR code to complete the payment using the format (Full Name)_(Car Name)_(Deposit/All), for example: Nguyen Van A_Car AAA_Deposit. Please contact us directly if any issues occur.</strong></p>
                         <img src="/ImageController/a/vcb.jpg" alt="QR Code for Payment" class="img-fluid rounded">
-                        <p class="mt-3"><strong>Scan the QR code to complete the payment using the format (Full Name)_(Car Name), for example: Nguyen Van A_Car AAA. Please contact us directly if any issues occur.</strong></p>
                     </div>
                 </div>
             </div>
@@ -341,19 +341,19 @@
 
                 // Kiểm tra customer_phone
                 if (!/^\d{10}$/.test(customer_phone)) {
-                    sendMessageError("Số điện thoại phải là số và 10 ký tự.");
+                    sendMessageError("Phone number must be numeric and 10 characters.");
                     return false; // Dừng lại nếu lỗi
                 }
 
                 // Kiểm tra customer_cccd
                 if (!/^\d{12}$/.test(customer_cccd)) {
-                    sendMessageError("CCCD phải là số và 12 ký tự.");
+                    sendMessageError("CCCD must be a number and 12 characters.");
                     return false; // Dừng lại nếu lỗi
                 }
 
                 // Kiểm tra customer_address
                 if (customer_address.length > 255) {
-                    sendMessageError("Địa chỉ không được vượt quá 255 ký tự.");
+                    sendMessageError("Address cannot exceed 255 characters.");
                     return false; // Dừng lại nếu lỗi
                 }
 

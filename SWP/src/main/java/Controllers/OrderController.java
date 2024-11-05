@@ -84,11 +84,50 @@ public class OrderController extends HttpServlet {
             try ( PrintWriter out = response.getWriter()) {
                 boolean isUpdated = orderDao.changeDepositStatus(id);
                 if (isUpdated) {
-                    out.println("<script>alert('Change Deposit Status Success!');</script>");
-                    out.println("<script>window.close();</script>");
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Servlet OrderController</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>");
+                    out.println("<script>");
+                    out.println("Swal.fire({");
+                    out.println("  title: 'Success!',");
+                    out.println("  text: 'Change Deposit Status Success!',");
+                    out.println("  icon: 'success',");
+                    out.println("  confirmButtonText: 'OK'");
+                    out.println("}).then((result) => {");
+                    out.println("  if (result.isConfirmed) {");
+                    out.println("    window.close();");
+                    out.println("  }");
+                    out.println("});");
+                    out.println("</script>");
+                    out.println("</body>");
+                    out.println("</html>");
+
                 } else {
-                    out.println("<script>alert('Change Deposit Status Failed!');</script>");
-                    out.println("<script>window.close();</script>");
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Servlet OrderController</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>");
+                    out.println("<script>");
+                    out.println("Swal.fire({");
+                    out.println("  title: 'Error!',");
+                    out.println("  text: 'Change Deposit Status Failed!',");
+                    out.println("  icon: 'error',");
+                    out.println("  confirmButtonText: 'OK'");
+                    out.println("}).then((result) => {");
+                    out.println("  if (result.isConfirmed) {");
+                    out.println("    window.close();");
+                    out.println("  }");
+                    out.println("});");
+                    out.println("</script>");
+                    out.println("</body>");
+                    out.println("</html>");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,11 +144,51 @@ public class OrderController extends HttpServlet {
             try ( PrintWriter out = response.getWriter()) {
                 boolean isUpdated = orderDao.changeOrderStatus(id);
                 if (isUpdated) {
-                    out.println("<script>alert('Change Order Status Success!');</script>");
-                    out.println("<script>window.close();</script>");
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Servlet OrderController</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>");
+                    out.println("<script>");
+                    out.println("Swal.fire({");
+                    out.println("  title: 'Success!',");
+                    out.println("  text: 'Change Order Status Success!',");
+                    out.println("  icon: 'success',");
+                    out.println("  confirmButtonText: 'OK'");
+                    out.println("}).then((result) => {");
+                    out.println("  if (result.isConfirmed) {");
+                    out.println("    window.close();");
+                    out.println("  }");
+                    out.println("});");
+                    out.println("</script>");
+                    out.println("</body>");
+                    out.println("</html>");
+
                 } else {
-                    out.println("<script>alert('Change Order Status Failed!');</script>");
-                    out.println("<script>window.close();</script>");
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Servlet OrderController</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>");
+                    out.println("<script>");
+                    out.println("Swal.fire({");
+                    out.println("  title: 'Error!',");
+                    out.println("  text: 'Change Order Status Failed!',");
+                    out.println("  icon: 'error',");
+                    out.println("  confirmButtonText: 'OK'");
+                    out.println("}).then((result) => {");
+                    out.println("  if (result.isConfirmed) {");
+                    out.println("    window.close();");
+                    out.println("  }");
+                    out.println("});");
+                    out.println("</script>");
+                    out.println("</body>");
+                    out.println("</html>");
+
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
@@ -258,7 +337,7 @@ public class OrderController extends HttpServlet {
             String userEmail = request.getParameter("userEmail");
             EmployeeDAO empDao = new EmployeeDAO();
             EmployeeModels emp = new EmployeeModels();
-            
+
             try {
                 emp = empDao.getEmployeeByEmail(userEmail);
             } catch (SQLException ex) {
@@ -266,7 +345,7 @@ public class OrderController extends HttpServlet {
             }
             int emp_id = emp.getEmployeeId();
             boolean isCreate = false;
-            
+
             try {
                 isCreate = orderDao.createOrderByEmp(carId, cusId, cccd, total, emp_id);
             } catch (SQLException ex) {
@@ -279,6 +358,40 @@ public class OrderController extends HttpServlet {
             // Sử dụng Gson để chuyển danh sách thành JSON
             Gson gson = new Gson();
             String eventsJson = gson.toJson(isCreate);
+            response.getWriter().write(eventsJson);
+        }
+
+        if (request.getParameter("changeDeposit") != null && request.getParameter("changeDeposit").equals("true")) {
+            String orderId = request.getParameter("orderId");
+            boolean isUpdated = false;
+            try {
+                isUpdated = orderDao.changeDepositStatus(orderId);
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Gson gson = new Gson();
+            String eventsJson = gson.toJson(isUpdated);
+            response.getWriter().write(eventsJson);
+        }
+
+        if (request.getParameter("changeOrder") != null && request.getParameter("changeOrder").equals("true")) {
+            String orderId = request.getParameter("orderId");
+            boolean isUpdated = false;
+            try {
+                isUpdated = orderDao.changeOrderStatus(orderId);
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Gson gson = new Gson();
+            String eventsJson = gson.toJson(isUpdated);
             response.getWriter().write(eventsJson);
         }
     }
