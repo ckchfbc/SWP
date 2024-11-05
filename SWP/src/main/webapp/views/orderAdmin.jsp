@@ -57,7 +57,8 @@
                 }
                 return dateString; // Trả về giá trị gốc nếu không phải định dạng đúng
             }
-            $(document).ready(function () {
+
+            function getOrder() {
                 const today = new Date();
                 const todayFormatted = today.getFullYear() + '-' +
                         String(today.getMonth() + 1).padStart(2, '0') + '-' +
@@ -89,26 +90,26 @@
                                     data: null,
                                     render: function (row) {
                                         let html = '';
-                                        
+
                                         if (row.date_end < todayFormatted && (!row.order_status || !row.deposit_status)) {
                                             html += '<p class="text-danger fw-bold m-0 p-0 fs-5">Expired</p>';
                                             return html;
                                         }
-                                        
+
                                         if (!row.deposit_status) {
                                             html += '<a href="#" class="btn btn-primary me-2" ' +
-                                                    'onclick="return showConfirmationDeposit(\'/OrderController/AcceptDeposit/' + row.order_id + '\')">Deposit</a>';
+                                                    'onclick="return showConfirmationDeposit(' + row.order_id + ')">Deposit</a>';
                                         }
 
                                         if (!row.order_status && row.deposit_status) {
                                             html += '<a href="#" class="btn btn-primary me-2" ' +
-                                                    'onclick="return showConfirmationOrder(\'/OrderController/AcceptOrder/' + row.order_id + '\')">Order</a>';
+                                                    'onclick="return showConfirmationOrder(' + row.order_id + ')">Order</a>';
                                         }
 
                                         if (row.order_status && row.deposit_status) {
                                             html += '<p class="text-success fw-bold m-0 p-0 fs-5">Done</p>';
                                         }
-                                        
+
                                         return html;
                                     }
                                 }
@@ -120,10 +121,14 @@
                         console.error("Có lỗi xảy ra: " + error);
                     }
                 });
+            }
+
+            $(document).ready(function () {
+                getOrder();
             });
 
             // Hàm xác nhận Deposit
-            function showConfirmationDeposit(url) {
+            function showConfirmationDeposit(orderId) {
                 Swal.fire({
                     title: 'Confirm order has been deposited',
                     text: "Are you sure you want to confirm? Once changed, it cannot be edited.",
@@ -135,15 +140,36 @@
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Chuyển hướng đến URL nếu người dùng đồng ý
-                        window.open(url, '_blank');
+                        $.ajax({
+                            url: "/OrderController", // URL của Servlet
+                            type: "POST", // Phương thức HTTP POST
+                            data: {changeDeposit: "true", orderId: orderId},
+                            dataType: "json", // Định dạng dữ liệu trả về là JSON
+                            success: function (response) {
+                                if (response === true) {
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: 'Deposit changed successfully.',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#ordersTable').DataTable().clear().destroy();
+                                            getOrder();
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Có lỗi xảy ra: " + error);
+                            }
+                        });
                     }
                 });
-                return false; // Ngăn href thực hiện mặc định
             }
 
             // Hàm xác nhận Order
-            function showConfirmationOrder(url) {
+            function showConfirmationOrder(orderId) {
                 Swal.fire({
                     title: 'Confirm order has been done',
                     text: "Are you sure you want to confirm? Once changed, it cannot be edited.",
@@ -155,11 +181,32 @@
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Chuyển hướng đến URL nếu người dùng đồng ý
-                        window.open(url, '_blank');
+                        $.ajax({
+                            url: "/OrderController", // URL của Servlet
+                            type: "POST", // Phương thức HTTP POST
+                            data: {changeOrder: "true", orderId: orderId},
+                            dataType: "json", // Định dạng dữ liệu trả về là JSON
+                            success: function (response) {
+                                if (response === true) {
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: 'Order changed successfully.',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#ordersTable').DataTable().clear().destroy();
+                                            getOrder();
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Có lỗi xảy ra: " + error);
+                            }
+                        });
                     }
                 });
-                return false; // Ngăn href thực hiện mặc định
             }
         </script>
 

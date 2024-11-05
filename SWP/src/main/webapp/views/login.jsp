@@ -109,7 +109,6 @@
         <!-- valid data -->
         <script>
             function validateForm() {
-                console.log("Form validation started"); // Xác định hàm này có chạy không
                 var email = document.getElementById("email").value;
                 var password = document.getElementById("password").value;
                 var emailError = document.getElementById("emailError");
@@ -137,6 +136,7 @@
                 console.log("Form validation passed"); // Form hợp lệ
                 return true;
             }
+            
             function togglePassword() {
                 var passwordField = document.getElementById("password");
                 var icon = document.getElementById("icon");

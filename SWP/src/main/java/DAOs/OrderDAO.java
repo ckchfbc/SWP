@@ -143,12 +143,11 @@ public class OrderDAO {
 
     public boolean changeDepositStatus(String id) throws SQLException {
         OrderModel event = getOrderById(Integer.parseInt(id));
-        String sql = "UPDATE orders SET deposit_status = ? WHERE order_id = ?;";
+        String sql = "UPDATE orders SET deposit_status = true WHERE order_id = ?;";
         PreparedStatement stmt = null;
         try ( Connection conn = DBConnection.getConnection()) {
             stmt = conn.prepareStatement(sql);
-            stmt.setBoolean(1, !event.isDeposit_status());
-            stmt.setInt(2, event.getOrder_id());
+            stmt.setInt(1, event.getOrder_id());
             int row = stmt.executeUpdate();
             if (row > 0) {
                 return true;
@@ -158,23 +157,30 @@ public class OrderDAO {
     }
 
     public boolean changeOrderStatus(String id) throws SQLException {
-        OrderModel event = getOrderById(Integer.parseInt(id));
-        String sql = "UPDATE orders SET order_status = ? WHERE order_id = ?;";
+        int orderId = Integer.parseInt(id);
+        String sqlUpdateOrder = "UPDATE orders SET order_status = true WHERE order_id = ?;";
         PreparedStatement stmt = null;
-        PreparedStatement stmt2 = null;
         try ( Connection conn = DBConnection.getConnection()) {
-            stmt = conn.prepareStatement(sql);
-            stmt.setBoolean(1, !event.isOrder_status());
-            stmt.setInt(2, event.getOrder_id());
+            stmt = conn.prepareStatement(sqlUpdateOrder);
+            stmt.setInt(1, orderId);
             int row = stmt.executeUpdate();
             if (row > 0) {
-                String sqlUpdateInventory = "UPDATE inventory SET quantity = quantity - 1 WHERE car_id = (SELECT car_id FROM orders WHERE order_id = ?)";
-                stmt2 = conn.prepareStatement(sqlUpdateInventory);
-                stmt2.setInt(1, event.getOrder_id());
-                int row2 = stmt.executeUpdate();
-                if (row2 > 0) {
-                    return true;
-                }
+                return updateInventory(orderId);
+            }
+        }
+
+        return false;
+    }
+
+    public boolean updateInventory(int orderId) throws SQLException {
+        String sqlUpdateInventory = "UPDATE inventory SET quantity = quantity - 1 WHERE car_id = (SELECT car_id FROM orders WHERE order_id = ?);";
+        PreparedStatement stmt = null;
+        try ( Connection conn = DBConnection.getConnection()) {
+            stmt = conn.prepareStatement(sqlUpdateInventory);
+            stmt.setInt(1, orderId);
+            int row = stmt.executeUpdate();
+            if (row > 0) {
+                return true;
             }
         }
         return false;
