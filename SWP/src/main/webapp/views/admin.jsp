@@ -95,7 +95,15 @@
                 <!-- Nav (Vertical Tabs) -->
                 <div class="col-xl-2 bg-dark">
                     <ul class="nav flex-column nav-pills shadow-sm p-3 m-0 p-0 h-100" id="v-pills-tab"
-                        role="tablist" aria-orientation="vertical">                        
+                        role="tablist" aria-orientation="vertical">  
+                        <li class="nav-item mb-2">
+                            <a class="nav-link d-flex align-items-center text-white" id="v-pills-revenue-tab"
+                               data-bs-toggle="pill" href="#v-pills-revenue" role="tab" aria-controls="v-pills-revenue"
+                               aria-selected="false">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                                <span>Revenue</span>
+                            </a>
+                        </li>
                         <li class="nav-item mb-2">
                             <a class="nav-link d-flex align-items-center text-white" id="v-pills-cars-tab"
                                data-bs-toggle="pill" href="#v-pills-cars" role="tab" aria-controls="v-pills-cars"
@@ -141,6 +149,14 @@
 
                 <!-- Tab Content -->
                 <div class="col-xl-10">
+                    <div class="tab-pane fade w-100" id="v-pills-revenue" role="tabpanel" aria-labelledby="v-pills-revenue-tab">
+                        <button id="loadRevenueButton" class="btn btn-outline-secondary mb-3">Load Revenue Page</button>
+                        <div id="includeRevenueContainer" class="w-100 container-fluid p-0 m-0"></div>
+                        <div id="mainRevenue">
+                            <%@include file="/views/static.jsp" %> 
+                        </div>
+                    </div>
+
                     <div class="tab-content shadow-sm p-4 rounded bg-white w-100" id="v-pills-tabContent">
                         <div class="tab-pane fade w-100" id="v-pills-cars" role="tabpanel" aria-labelledby="v-pills-cars-tab">
                             <a target="_blank" href="/CarController/Create" class="btn btn-primary mb-3">Create New Car</a>
@@ -212,7 +228,14 @@
                                     $('#mainEvent').hide();
                                 });
                             }
-
+                            // Load revenu page
+                            var loadRevenueButton = document.getElementById('loadRevenueButton');
+                            if (loadRevenueButton) {
+                                loadRevenueButton.addEventListener('click', function () {
+                                    $('#includeRevenueContainer').load('/views/static.jsp');
+                                    $('#mainRevenue').hide();
+                                });
+                            }
                             // Load car page
                             var loadCarButton = document.getElementById('loadCarButton');
                             if (loadCarButton) {

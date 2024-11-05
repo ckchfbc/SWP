@@ -76,6 +76,10 @@
         <servlet-name>ProductController</servlet-name>
         <servlet-class>Controllers.ProductController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DailyRevenueController</servlet-name>
+        <servlet-class>Controllers.DailyRevenueController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -151,6 +155,10 @@
     <servlet-mapping>
         <servlet-name>ProductController</servlet-name>
         <url-pattern>/ProductController/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DailyRevenueController</servlet-name>
+        <url-pattern>/DailyRevenueController/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
