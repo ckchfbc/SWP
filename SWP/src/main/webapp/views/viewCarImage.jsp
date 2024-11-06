@@ -33,7 +33,6 @@
                     data: {getCarImg: 'true', carImageId: carId},
                     dataType: "json",
                     success: function (imgIdList) {
-                        console.log("asasd" + imgIdList);
                         $.each(imgIdList, function (index, imageId) {
                             var imgCard = '<div class="col mb-4">' + // Added margin-bottom for spacing
                                     '<div class="card d-flex flex-column" style="height: 100%;">' + // Flex column for card

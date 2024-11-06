@@ -77,7 +77,7 @@
                     <label for="car_image" class="form-label">Car Image</label>
                     <div class="d-flex">
                         <input class="form-control me-2" type="file" name="images" id="car_image" multiple>
-                        <button type="button" class="btn btn-warning" data-bs-toggle="popover" title="Instructions for Uploading Multiple Images" data-bs-content="Hold down the Ctrl key when selecting multiple images."><i class="fa-solid fa-question"></i></button>    
+                        <button type="button" class="btn btn-warning" data-bs-toggle="popover" title="Instructions for Uploading Multiple Images" data-bs-content="Hold down the Ctrl key when selecting multiple images. Maximum 9 picture."><i class="fa-solid fa-question"></i></button>    
                     </div>
                 </div>                
                 <!-- Phần alert của bắt lỗi -->
@@ -211,7 +211,7 @@
                 const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Các loại ảnh cho phép
 
                 console.log(files.length);
-                if (files.length > 12) {
+                if (files.length > 9) {
                     sendMessageError('Maximum 12 images.');
                     event.preventDefault();
                 }

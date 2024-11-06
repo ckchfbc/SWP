@@ -189,13 +189,23 @@
             }
 
             function checkCusHaveOrder(carId) {
-                var userRole = document.getElementById('role').value;
-                var userEmail = document.getElementById('userEmail').value;
+                var roleElement = document.getElementById('role');
+                var emailElement = document.getElementById('userEmail');
+
+                // Check if the elements are found in the DOM
+                if (!roleElement || !emailElement) {
+                    console.error("Role or userEmail element is missing in the DOM.");
+                    return;
+                }
+
+                var userRole = roleElement.value;
+                var userEmail = emailElement.value;
+
                 $.ajax({
-                    url: "/ReviewController", // URL của Servlet
-                    type: "POST", // Phương thức HTTP POST
+                    url: "/ReviewController",
+                    type: "POST",
                     data: {checkCusHaveOrder: "true", carId: carId, userEmail: userEmail},
-                    dataType: "json", // Định dạng dữ liệu trả về là JSON
+                    dataType: "json",
                     success: function (response) {
                         if (!response) {
                             if (userRole === 'customer') {
@@ -219,6 +229,7 @@
                     }
                 });
             }
+
 
             // Hàm định dạng ngày tháng
             function formatDate(dateString) {

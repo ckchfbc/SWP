@@ -6,42 +6,59 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Edit Employee</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-        <h2>Edit Employee Details</h2>
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Edit Employee Details</h2>
 
-        <!-- Form to edit employee details -->
-        <form id="editEmployeeForm" action="EmployeeController" method="post" onsubmit="return validateForm()">
-            <!-- Hidden field to trigger the update operation -->
-            <input type="hidden" name="updateEmployee" value="true">
+            <!-- Form to edit employee details -->
+            <form id="editEmployeeForm" action="EmployeeController" method="post" onsubmit="return validateForm()" class="needs-validation" novalidate>
+                <!-- Hidden field to trigger the update operation -->
+                <input type="hidden" name="updateEmployee" value="true">
 
-            <label for="employee_id">Employee ID:</label>
-            <input type="text" id="employee_id" name="employee_id" readonly required
-                   value="${employee.employeeId}"><br><br>
+                <div class="mb-3">
+                    <label for="employee_id" class="form-label">Employee ID:</label>
+                    <input type="text" id="employee_id" name="employee_id" class="form-control" readonly required
+                           value="${employee.employeeId}">
+                </div>
 
-            <label for="employee_name">Name:</label>
-            <input type="text" id="employee_name" name="employee_name" required
-                   value="${employee.name}"><br><br>
+                <div class="mb-3">
+                    <label for="employee_name" class="form-label">Name:</label>
+                    <input type="text" id="employee_name" name="employee_name" class="form-control" required
+                           value="${employee.name}">
+                </div>
 
-            <label for="employee_email">Email:</label>
-            <input type="email" id="employee_email" name="employee_email" required
-                   pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
-                   title="Please enter a valid email address with '@' symbol"
-                   value="${employee.email}"><br><br>
+                <div class="mb-3">
+                    <label for="employee_email" class="form-label">Email:</label>
+                    <input type="email" id="employee_email" name="employee_email" class="form-control" required
+                           pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
+                           title="Please enter a valid email address with '@' symbol"
+                           value="${employee.email}">
+                </div>
 
-            <label for="employee_password">New Password (optional):</label>
-            <input type="password" id="employee_password" name="employee_password"><br><br>
+                <div class="mb-3">
+                    <label for="employee_password" class="form-label">New Password (optional):</label>
+                    <input type="password" id="employee_password" name="employee_password" class="form-control">
+                </div>
 
-            <label for="employee_phone">Phone:</label>
-            <input type="text" id="employee_phone" name="employee_phone" pattern="\d{10}"
-                   title="Please enter a valid 10-digit phone number" value="${employee.phoneNumber}"><br><br>
+                <div class="mb-3">
+                    <label for="employee_phone" class="form-label">Phone:</label>
+                    <input type="text" id="employee_phone" name="employee_phone" class="form-control" pattern="\d{10}"
+                           title="Please enter a valid 10-digit phone number" value="${employee.phoneNumber}">
+                </div>
 
-            <button type="submit">Update Employee</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Update Employee</button>
+            </form>
+        </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             function validateForm() {
                 // Kiểm tra email

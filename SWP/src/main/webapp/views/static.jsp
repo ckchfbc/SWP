@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Daily Revenue and Car Statistics</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -17,10 +18,11 @@
         </style>
         <script>
             $(document).ready(function () {
+                
                 $.ajax({
                     type: "POST",
                     url: "/DailyRevenueController",
-                    success: function (response) {
+                    success: function (response) {                        
                         // Parse the response
                         var dailyRevenue = response.dailyRevenue;
                         var dailyCarStatic = response.dailyCarStatic;
@@ -104,7 +106,7 @@
     </head>
     <body>
         <h1 style="text-align: center;">Daily Revenue and Car Statistics</h1>
-        <canvas id="revenueChart"></canvas>
-        <canvas id="carStaticChart"></canvas>
+        <canvas id="revenueChart" class="w-100"></canvas>
+        <canvas id="carStaticChart" class="w-50"></canvas>
     </body>
 </html>
