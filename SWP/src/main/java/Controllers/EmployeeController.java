@@ -87,8 +87,32 @@ public class EmployeeController extends HttpServlet {
         } else if (host.equals("/EmployeeController/Feedback")) {
             request.getRequestDispatcher("/views/employeeFeedback.jsp").forward(request, response);
         } else if (host.startsWith("/EmployeeController/Edit")) {
-//            System.out.println("Navigating to editEvent.jsp");  // Debug
-            request.getRequestDispatcher("/views/editEvent.jsp").forward(request, response);
+            // Extract employee ID from the URL
+            String[] s = host.split("/");
+            String id = s[s.length - 1];
+            System.out.println("Extracted Employee ID: " + id);
+
+            EmployeeDAO employeeDAO = new EmployeeDAO();
+            response.setContentType("text/html;charset=UTF-8");
+            try {
+                // Fetch employee details by ID
+                int employeeId = Integer.parseInt(id);
+                EmployeeModels employee = employeeDAO.getEmployeeByID(employeeId);
+
+                if (employee != null) {
+                    // Pass the employee object to the JSP page
+                    request.setAttribute("employee", employee);
+                    request.getRequestDispatcher("/views/editEmployee.jsp").forward(request, response);
+                } else {
+                    // Employee not found, show an error page or send a 404 response
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Employee not found.");
+                }
+            } catch (NumberFormatException e) {
+                // Handle invalid ID format
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Employee ID format.");
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (host.equals("/EmployeeController/Profile")) {
             request.getRequestDispatcher("/views/employeeProfile.jsp").forward(request, response);
         } else if (host.startsWith("/EmployeeController/Status/")) {
@@ -188,7 +212,61 @@ public class EmployeeController extends HttpServlet {
             String employeesJson = gson.toJson(employees);
             response.getWriter().write(employeesJson);
         }
+        if (request.getParameter("updateEmployee") != null) {
+            // Retrieve parameters from the form for updating
+            String employeeId = request.getParameter("employee_id").trim();
+            int userID = employeeDAO.getUserID(Integer.parseInt(employeeId));
+            String employeeName = request.getParameter("employee_name").trim();
+            String employeeEmail = request.getParameter("employee_email").trim();
+            String employeePassword = request.getParameter("employee_password").trim();  // Optional password
+            String employeePhone = request.getParameter("employee_phone").trim();
 
+            response.setContentType("text/html;charset=UTF-8");
+
+            try ( PrintWriter out = response.getWriter()) {
+                // Validate the employee ID format
+                int id;
+                try {
+                    id = userID;
+                } catch (NumberFormatException e) {
+                    out.println("<html><body>");
+                    out.println("<p>Invalid Employee ID format: " + e.getMessage() + "</p>");
+                    out.println("</body></html>");
+                    return;
+                }
+
+                // Call DAO to update employee details
+                boolean isUpdated = employeeDAO.editEmployeeAccount(id, employeeEmail, employeeName, employeePassword, employeePhone);
+
+                // Generate response based on update success/failure
+                System.out.println("<html>");
+                System.out.println("<body>");
+                System.out.println("<h3>Update Status:</h3>");
+                System.out.println("<p>Employee ID: " + id + "</p>");
+                System.out.println("<p>Employee Name: " + employeeName + "</p>");
+                System.out.println("<p>Employee Email: " + employeeEmail + "</p>");
+                System.out.println("<p>Employee Phone: " + employeePhone + "</p>");
+
+                if (employeePassword != null && !employeePassword.isEmpty()) {
+                    out.println("<p>Password: [Updated]</p>");
+                } else {
+                    out.println("<p>Password: [Not Updated]</p>");
+                }
+
+                if (isUpdated) {
+                    out.println("<p>Employee updated successfully!</p>");
+                    out.println("<script>window.close();</script>");  // Close the window on success
+                } else {
+                    out.println("<p>Failed to update employee. Please try again.</p>");
+                }
+
+                out.println("</body>");
+                out.println("</html>");
+            } catch (Exception e) {
+                System.out.println("Unexpected Exception: " + e.getMessage());  // Log unexpected errors
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
+            }
+        }
         if (request.getParameter("getInforEmployee") != null) {
             String empEmail = request.getParameter("getInforEmployee");
             EmployeeDAO empDao = new EmployeeDAO();
@@ -208,12 +286,12 @@ public class EmployeeController extends HttpServlet {
             String employeesJson = gson.toJson(emp);
             response.getWriter().write(employeesJson);
         }
-        
+
         // lấy data cho cus
         if (request.getParameter("fetchFeedbackForEmployee") != null && request.getParameter("fetchFeedbackForEmployee").equals("true")) {
             String userEmail = request.getParameter("userEmail");
-           EmployeeDAO empDao = new EmployeeDAO();
-           EmployeeModels emp = new EmployeeModels();
+            EmployeeDAO empDao = new EmployeeDAO();
+            EmployeeModels emp = new EmployeeModels();
             try {
                 emp = empDao.getEmployeeByEmail(userEmail);
             } catch (SQLException ex) {

@@ -50,15 +50,50 @@
         </div>
 
         <script>
+            function showAlert(message) {
+                const alertError = document.getElementById('alertError');
+                const alertTxt = document.getElementById('alertTxt');
+                alertTxt.textContent = message;
+                alertError.classList.remove('d-none');
+                alertError.style.display = 'block';
+            }
+
+            function hideAlert() {
+                const alertError = document.getElementById('alertError');
+                alertError.classList.add('d-none');
+                alertError.style.display = 'none';
+            }
+
             document.getElementById('employeeForm').addEventListener('submit', function (event) {
-                const employeeName = document.getElementById('employeeName').value;
+                event.preventDefault();
+
                 const employeeEmail = document.getElementById('employeeEmail').value;
                 const employeePassword = document.getElementById('employeePassword').value;
                 const employeePhone = document.getElementById('employeePhone').value;
 
-                this.submit();  // Submit the form after processing
-            });
+                // Email validation
+                if (!employeeEmail.includes('@')) {
+                    showAlert('Email must contain an @ symbol.');
+                    return;
+                }
 
+                // Password validation
+                const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                if (!passwordPattern.test(employeePassword)) {
+                    showAlert('Password must be at least 8 characters long, contain uppercase, lowercase, a number, and a special character.');
+                    return;
+                }
+
+                // Phone number validation (10-15 digits)
+                const phonePattern = /^[0-9]{10,15}$/;
+                if (!phonePattern.test(employeePhone)) {
+                    showAlert('Phone number must be between 10 and 15 digits.');
+                    return;
+                }
+
+                hideAlert(); // Hide any previous error messages
+                this.submit();  // Submit the form after validation passes
+            });
         </script>
     </body>
 </html>

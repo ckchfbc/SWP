@@ -76,13 +76,35 @@ public class EmployeeDAO {
         return false;
     }
 
+    public int getUserID(int employeeId) {
+        String query = "SELECT user_id FROM employees WHERE employee_id = ?";
+        Integer userId = null;
+
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, employeeId); // Set the employee ID parameter
+            try ( ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    userId = rs.getInt("user_id");
+                } else {
+                    System.out.println("No user found with employee ID: " + employeeId);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error retrieving user ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return userId;
+    }
+
     // Update an employee account with optional password update
     public boolean editEmployeeAccount(int userId, String email, String name, String password, String phoneNumber) {
         boolean updatePassword = (password != null && !password.isEmpty());
+        // Define the queries based on whether the password should be updated
         String accQuery = updatePassword
                 ? "UPDATE user_account SET email = ?, password = ? WHERE user_id = ?"
                 : "UPDATE user_account SET email = ? WHERE user_id = ?";
-
         String empQuery = "UPDATE employees SET name = ?, email = ?, phone_number = ? WHERE user_id = ?";
 
         try ( Connection conn = DBConnection.getConnection()) {
@@ -96,7 +118,7 @@ public class EmployeeDAO {
             try ( PreparedStatement accStmt = conn.prepareStatement(accQuery)) {
                 accStmt.setString(1, email);
                 if (updatePassword) {
-                    accStmt.setString(2, md5Hex(password));
+                    accStmt.setString(2, md5Hex(password));  // Hash the password
                     accStmt.setInt(3, userId);
                 } else {
                     accStmt.setInt(2, userId);
@@ -112,13 +134,24 @@ public class EmployeeDAO {
                 empStmt.executeUpdate();
             }
 
-            conn.commit(); // Commit transaction
+            conn.commit(); // Commit transaction if both updates succeed
             System.out.println("Transaction committed successfully.");
             return true;
+
         } catch (SQLException e) {
             System.err.println("Error updating employee: " + e.getMessage());
             e.printStackTrace();
+            try ( Connection conn = DBConnection.getConnection()) {
+                if (conn != null) {
+                    conn.rollback(); // Roll back transaction on error
+                    System.out.println("Transaction rolled back.");
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Error rolling back transaction: " + rollbackEx.getMessage());
+                rollbackEx.printStackTrace();
+            }
         }
+
         return false;
     }
 
