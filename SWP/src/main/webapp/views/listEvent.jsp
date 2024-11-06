@@ -75,25 +75,30 @@
             function displayEventCards() {
                 const eventCardsContainer = document.getElementById('eventCards');
                 // Hiển thị 2 sự kiện mỗi lần
-                for (let i = eventsDisplayed; i < eventsDisplayed + eventsPerPage && i < allEvents.length; i++) {
-                    const event = allEvents[i];
-                    const eventCard =
-                            '<div class="col-6 mb-4">' + // Mỗi thẻ chiếm 6 cột (tức là 2 thẻ trên một hàng)
-                            '<div class="card">' +
-                            '<img src="/ImageController/b/' + event.event_id + '" class="card-img-top" alt="' + event.event_name + '">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title">' + event.event_name + '</h5>' +
-                            '<div class="d-flex justify-content-between">' + // Sử dụng flexbox để bố trí các phần tử
-                            '<p class="card-text"><small class="text-muted">Start: ' + formatDate(event.date_start) + '</small></p>' +
-                            '<p class="card-text"><small class="text-muted">End: ' + formatDate(event.date_end) + '</small></p>' +
-                            '</div>' +
-                            '<a href="/EventController/Views/' + event.event_id + '" class="btn btn-primary">View Event</a>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
+                if (allEvents.length > 0) {
+                    for (let i = eventsDisplayed; i < eventsDisplayed + eventsPerPage && i < allEvents.length; i++) {
+                        const event = allEvents[i];
+                        const eventCard =
+                                '<div class="col-6 mb-4">' + // Mỗi thẻ chiếm 6 cột (tức là 2 thẻ trên một hàng)
+                                '<div class="card">' +
+                                '<img src="/ImageController/b/' + event.event_id + '" class="card-img-top" alt="' + event.event_name + '">' +
+                                '<div class="card-body">' +
+                                '<h5 class="card-title">' + event.event_name + '</h5>' +
+                                '<div class="d-flex justify-content-between">' + // Sử dụng flexbox để bố trí các phần tử
+                                '<p class="card-text"><small class="text-muted">Start: ' + formatDate(event.date_start) + '</small></p>' +
+                                '<p class="card-text"><small class="text-muted">End: ' + formatDate(event.date_end) + '</small></p>' +
+                                '</div>' +
+                                '<a href="/EventController/Views/' + event.event_id + '" class="btn btn-primary">View Event</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
 
-                    eventCardsContainer.insertAdjacentHTML('beforeend', eventCard);
+                        eventCardsContainer.insertAdjacentHTML('beforeend', eventCard);
+                    }
+                }else{
+                    eventCardsContainer.insertAdjacentHTML('beforeend', '<h4 class="text-center">No Events</h4>');
                 }
+
 
                 // Cập nhật số sự kiện đã hiển thị
                 eventsDisplayed += eventsPerPage;

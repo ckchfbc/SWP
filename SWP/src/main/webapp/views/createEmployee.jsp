@@ -12,12 +12,7 @@
         <title>Create Employee</title>
         <link
             href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
-            rel="stylesheet">
-        <style>
-            #alertError {
-                display: none;
-            }
-        </style>       
+            rel="stylesheet">    
     </head>
     <body>
         <div class="container mt-5">
@@ -40,8 +35,8 @@
                     <input type="text" class="form-control" id="employeePhone" name="employee_phone" required>
                 </div>
                 <!-- Alert Section -->
-                <div class="alert alert-warning alert-dismissible fade d-none" role="alert" id="alertError">
-                    <p id="alertTxt" class="p-0 m-0"></p>
+                <div class="alert alert-warning alert-dismissible d-none" role="alert" id="alertError">
+                    <p id="alertTxt" class="p-0 m-0 text-danger"></p>
                     <button type="button" class="btn-close" aria-label="Close" onclick="hideAlert()"></button>
                 </div>
 
@@ -53,7 +48,7 @@
             function showAlert(message) {
                 const alertError = document.getElementById('alertError');
                 const alertTxt = document.getElementById('alertTxt');
-                alertTxt.textContent = message;
+                alertTxt.innerHTML = message;
                 alertError.classList.remove('d-none');
                 alertError.style.display = 'block';
             }
@@ -65,7 +60,6 @@
             }
 
             document.getElementById('employeeForm').addEventListener('submit', function (event) {
-                event.preventDefault();
 
                 const employeeEmail = document.getElementById('employeeEmail').value;
                 const employeePassword = document.getElementById('employeePassword').value;
@@ -74,13 +68,15 @@
                 // Email validation
                 if (!employeeEmail.includes('@')) {
                     showAlert('Email must contain an @ symbol.');
+                    event.preventDefault();
                     return;
                 }
 
                 // Password validation
-                const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-                if (!passwordPattern.test(employeePassword)) {
-                    showAlert('Password must be at least 8 characters long, contain uppercase, lowercase, a number, and a special character.');
+                var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
+                if (!passwordRegex.test(employeePassword)) {
+                    showAlert('Password must be 6-32 characters, at least 1 uppercase letter, 1 number and 1 special character.');
+                    event.preventDefault();
                     return;
                 }
 
@@ -88,11 +84,11 @@
                 const phonePattern = /^[0-9]{10,15}$/;
                 if (!phonePattern.test(employeePhone)) {
                     showAlert('Phone number must be between 10 and 15 digits.');
+                    event.preventDefault();
                     return;
                 }
 
                 hideAlert(); // Hide any previous error messages
-                this.submit();  // Submit the form after validation passes
             });
         </script>
     </body>

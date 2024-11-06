@@ -74,7 +74,7 @@
                 // Regular expression kiểm tra mật khẩu
                 var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
                 if (!passwordRegex.test(password)) {
-                    passwordError.textContent = "Mật khẩu phải có từ 6-32 ký tự, ít nhất 1 chữ in hoa, 1 số và 1 ký tự đặc biệt.";
+                    passwordError.textContent = "Password must be 6-32 characters, at least 1 uppercase letter, 1 number and 1 special character.";
                     console.log("Password không hợp lệ");
                     return false; // Dừng form submit
                 }

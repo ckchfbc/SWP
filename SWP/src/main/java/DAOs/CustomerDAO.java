@@ -162,8 +162,7 @@ public class CustomerDAO {
         String sql = "UPDATE user_account AS ua "
                 + "JOIN customers AS c ON ua.user_id = c.user_id "
                 + "SET ua.status = NOT ua.status "
-                + // Toggle the status directly in SQL
-                "WHERE c.customer_id = ?;";
+                + "WHERE c.customer_id = ?;";
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);

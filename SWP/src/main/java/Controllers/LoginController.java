@@ -184,10 +184,15 @@ public class LoginController extends HttpServlet {
                     if (accDao.loginAccount(email, password)) {
                         // Tạo một cookie admin mới
                         Cookie userCookie = new Cookie("admin", "true");
-                        userCookie.setMaxAge(24 * 60 * 60); // 1 ngày
+                        Cookie userCookie2 = new Cookie("email", email);
+                        userCookie.setMaxAge(12 * 60 * 60); // 0.5ngày
                         userCookie.setHttpOnly(true); // Bảo mật
                         userCookie.setPath("/");
-                        response.addCookie(userCookie); // Thêm cookie vào phản hồi                
+                        userCookie2.setMaxAge(12 * 60 * 60); // 0.5ngày
+                        userCookie2.setHttpOnly(true); // Bảo mật
+                        userCookie2.setPath("/");
+                        response.addCookie(userCookie);
+                        response.addCookie(userCookie2); 
                         response.sendRedirect("/AdminController/Dashboard");
                     } else {
                         String message = "Incorrect Password or Email.";
@@ -207,7 +212,10 @@ public class LoginController extends HttpServlet {
                         if (cookie.getName().equals("admin")) {
                             cookie.setMaxAge(0); // Xóa cookie bằng cách đặt thời gian sống là 0
                             response.addCookie(cookie); // Thêm lại cookie đã xóa vào phản hồi
-                            break;
+                        }
+                        if (cookie.getName().equals("email")) {
+                            cookie.setMaxAge(0); // Xóa cookie bằng cách đặt thời gian sống là 0
+                            response.addCookie(cookie); // Thêm lại cookie đã xóa vào phản hồi
                         }
                     }
                 }
@@ -222,12 +230,12 @@ public class LoginController extends HttpServlet {
         String role = accDAO.getRole(email);
         Cookie roleCokie = new Cookie("role", role);
         //email
-        userCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+        userCookie.setMaxAge(24 * 60 * 60); // 7 ngày
         userCookie.setHttpOnly(true); // Bảo mật
         userCookie.setPath("/");
         response.addCookie(userCookie); // Thêm cookie vào phản hồi                
         //role
-        roleCokie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+        roleCokie.setMaxAge(24 * 60 * 60); // 7 ngày
         roleCokie.setHttpOnly(true); // Bảo mật
         roleCokie.setPath("/");
         response.addCookie(roleCokie); // Thêm cookie vào phản hồi      

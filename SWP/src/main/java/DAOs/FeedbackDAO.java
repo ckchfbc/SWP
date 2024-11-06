@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class FeedbackDAO {
 
-    public boolean createFeeadback(int order_id, String feedbackContent, int customerId) {
+    public boolean createFeedback(int order_id, String feedbackContent, int customerId) {
         String sql = "INSERT INTO feedbacks (order_id, customer_id, feedback_content, date_create, feedback_status) VALUES (?, ?, ?, ?, ?);";
         PreparedStatement stmt = null;
         // Lấy ngày hiện tại
@@ -70,7 +70,7 @@ public class FeedbackDAO {
         return false;
     }
 
-    public static List<FeedbackModel> getAllReviewForCustomer(int cusId) throws SQLException {
+    public static List<FeedbackModel> getAllFeedbackForCustomer(int cusId) throws SQLException {
         String sql = "SELECT * FROM feedbacks where customer_id = ?;";
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -96,14 +96,14 @@ public class FeedbackDAO {
         return fbs;
     }
 
-    public static List<FeedbackModel> getAllReviewForEmployee(int cusId) throws SQLException {
-        String sql = "SELECT f.* FROM feedbacks f JOIN orders o ON f.order_id = o.order_id WHERE o.employee_id = 4;";
+    public static List<FeedbackModel> getAllFeedbackForEmployee(int empId) throws SQLException {
+        String sql = "SELECT f.* FROM feedbacks f JOIN orders o ON f.order_id = o.order_id WHERE o.employee_id = ?;";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<FeedbackModel> fbs = new ArrayList<>();
         try ( Connection conn = DBConnection.getConnection()) {
             stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, cusId);
+            stmt.setInt(1, empId);
             rs = stmt.executeQuery();
             while (rs.next()) {
                 FeedbackModel fb = new FeedbackModel();

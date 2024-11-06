@@ -243,22 +243,36 @@ public class CarDAO {
         return newCars;
     }
 
-    public static List<CarModel> getRelatedCar(int brand_id) throws SQLException {
-        String sql = "SELECT c.*, i.quantity\n"
-                + "FROM cars c\n"
-                + "LEFT JOIN inventory i ON c.car_id = i.car_id\n"
-                + "WHERE c.brand_id = ? AND c.status = true\n"
-                + "ORDER BY RAND()\n"
+    public static List<newCarModel> getRelatedCar(int brand_id) throws SQLException {
+        String sql = "SELECT \n"
+                + "    c.*, \n"
+                + "    i.quantity, \n"
+                + "    (\n"
+                + "        SELECT car_image_id \n"
+                + "        FROM car_image ci \n"
+                + "        WHERE ci.car_id = c.car_id \n"
+                + "        ORDER BY ci.car_image_id ASC \n"
+                + "        LIMIT 1\n"
+                + "    ) AS first_car_image_id\n"
+                + "FROM \n"
+                + "    cars c\n"
+                + "LEFT JOIN \n"
+                + "    inventory i ON c.car_id = i.car_id\n"
+                + "WHERE \n"
+                + "    c.brand_id = ? \n"
+                + "    AND c.status = true\n"
+                + "ORDER BY \n"
+                + "    RAND()\n"
                 + "LIMIT 4;";
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<CarModel> cars = new ArrayList<>();
+        List<newCarModel> cars = new ArrayList<>();
         try ( Connection conn = DBConnection.getConnection()) {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, brand_id);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                CarModel car = new CarModel();
+                newCarModel car = new newCarModel();
                 car.setCar_id(rs.getInt("car_id"));
                 car.setBrand_id(rs.getInt("brand_id"));
                 car.setModel_id(rs.getInt("model_id"));
@@ -270,7 +284,7 @@ public class CarDAO {
                 car.setStatus(rs.getBoolean("status"));
                 car.setDescription(rs.getString("description"));
                 car.setQuantity(rs.getInt("quantity"));
-
+                car.setFirst_car_image_id(rs.getInt("first_car_image_id"));
                 cars.add(car);
             }
         } catch (Exception e) {
@@ -495,7 +509,7 @@ public class CarDAO {
         return models;
     }
 
-    public List<newCarModel> getAllfilterCars(int brand_id, int fuel_id, int model_id) {
+    public List<newCarModel> getAllFilterCars(int brand_id, int fuel_id, int model_id) {
         String sql = "SELECT c.*, (SELECT car_image_id FROM car_image ci WHERE ci.car_id = c.car_id ORDER BY ci.car_image_id ASC LIMIT 1) AS first_car_image_id, i.quantity FROM cars c LEFT JOIN inventory i ON c.car_id = i.car_id WHERE c.status = 1 ";
         List<Object> params = new ArrayList<>();
 

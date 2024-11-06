@@ -204,13 +204,14 @@ public class EmployeeDAO {
 
     public boolean changeStatus(String id) throws SQLException {
         EmployeeModels employee = getEmployeeByID(Integer.parseInt(id));
-        String sql = "UPDATE swp.user_account AS ua "
-                + "JOIN swp.employees AS e ON ua.user_id = e.user_id "
+        String sql = "UPDATE user_account AS ua "
+                + "JOIN employees AS e ON ua.user_id = e.user_id "
                 + "SET ua.status = ? "
                 + "WHERE e.employee_id = ?;";
         PreparedStatement stmt = null;
         try ( Connection conn = DBConnection.getConnection()) {
             stmt = conn.prepareStatement(sql);
+            
             if (employee.isStatus() != true) {
                 stmt.setBoolean(1, !employee.isStatus());
                 stmt.setInt(2, employee.getEmployeeId());

@@ -111,7 +111,7 @@
                             <input type="text" class="form-control" id="customerPhone" name="customerPhone" placeholder="Enter your phone number" required>
                         </div>
                         <div class="mb-3">
-                            <label for="customerID" class="form-label"><strong>ID</strong></label>
+                            <label for="customerID" class="form-label"><strong>Citizen Identification</strong></label>
                             <input type="text" class="form-control" id="customerID" name="customerID" placeholder="Enter your ID" required>
                         </div>
                         <div class="mb-3">
