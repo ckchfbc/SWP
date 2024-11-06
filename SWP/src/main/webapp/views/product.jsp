@@ -69,10 +69,12 @@
                 totalPages = Math.ceil(carData.length / itemsPerPage);
                 const start = (currentPage - 1) * itemsPerPage;
                 const end = start + itemsPerPage;
-
                 if (carData.length > 0) {
                     $.each(carData.slice(start, end), function (index, car) {
-                        const formattedPrice = parseFloat(car.price).toLocaleString('en-US', {style: 'currency', currency: 'VND'});
+                        const inStock = car.quantity > 0 ?
+                                '<span class="badge bg-success me-2">In Stock</span>' :
+                                '<span class="badge bg-danger me-2">Out of Stock</span>';
+
                         carList.append(
                                 '<div class="col-xl-3 col-md-4 col-sm-6 mb-4">' +
                                 '<a class="text-decoration-none text-dark" href="/CarController/View/' + car.car_id + '">' +
@@ -80,8 +82,8 @@
                                 '<img src="/ImageController/c/' + car.first_car_image_id + '" class="card-img-top zoom-img" alt="' + car.car_name + '" style="height: 300px;">' +
                                 '<div class="card-body">' +
                                 '<h5 class="card-title">' + car.car_name + '</h5>' +
-                                '<p class="card-text">' + formattedPrice + '</p>' +
-                                '<p class="card-text">inStock</p>' +
+                                '<p class="card-text">' + car.price + ' VND</p>' +
+                                '<p class="card-text">' + inStock + '</p>' +
                                 '</div>' +
                                 '</div>' +
                                 '</a>' +

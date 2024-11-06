@@ -9,14 +9,14 @@ import java.sql.ResultSet;
 public class DBConnection {
 
     // database chính 
-    private static final String URL = "jdbc:mysql://26.57.132.168:3306/swp";
-    private static final String USER = "ckchfbc";
-    private static final String PASSWORD = "1412";
-//
+//    private static final String URL = "jdbc:mysql://26.57.132.168:3306/swp";
+//    private static final String USER = "ckchfbc";
+//    private static final String PASSWORD = "1412";
+////
 ////    //data base của kiên
-//    private static final String URL = "jdbc:mysql://localhost:3306/swp";
-//    private static final String USER = "root";
-//    private static final String PASSWORD = "Lgk1412pvzz";
+    private static final String URL = "jdbc:mysql://localhost:3306/swp";
+    private static final String USER = "root";
+    private static final String PASSWORD = "Lgk1412pvzz";
 //    
     public static Connection getConnection() {
         Connection conn = null;

@@ -59,10 +59,10 @@
 
                 for (let i = startIndex; i < endIndex && i < carsData.length; i++) {
                     const car = carsData[i];
+                    
                     const inStock = car.quantity > 0 ?
                             '<span class="badge bg-success me-2">In Stock</span>' :
                             '<span class="badge bg-danger me-2">Out of Stock</span>';
-
                     const carCard =
                             '<div class="col-xl-3 col-md-6 mb-4">' +
                             '<a class="text-decoration-none text-dark" href="/CarController/View/' + car.car_id + '">' +
