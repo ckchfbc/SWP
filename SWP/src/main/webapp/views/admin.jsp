@@ -16,7 +16,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome for Icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
+        <link rel="icon" href="/ImageController/a/logo.png" type="image/x-icon">
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <style>
             .nav-link .fa-solid, .fas {
@@ -40,6 +40,10 @@
                 width: 50px;
                 height: 50px;
             }
+            #mainCar, #mainCustomer, #mainEmployee, #mainEvent, #mainOrder {
+                max-width: 100%;
+                overflow-x: auto;
+            }
         </style>
     </head>
     <body>
@@ -52,7 +56,12 @@
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("admin")) {
                         isAdmin = true;
-                        break;
+                    }
+                    if (cookie.getName().equals("email")) {
+                        String email = cookie.getValue();
+        %>
+        <input id="email" value="<%= email%>" hidden>
+        <%
                     }
                 }
             }
@@ -79,14 +88,13 @@
         <div class="container-fluid m-0 p-0">
             <div class="row">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center col-12">
-                    <a class="navbar-brand" href="#">ADMIN DASHBOARD</a>
+                    <a class="navbar-brand fs-3" href="/AdminController/Dashboard">Hello <span id="adminName">Admin</span></a>
                     <div class="nav-item justify-content-end me-3">
                         <button onclick="logOut()" class="btn btn-danger d-flex align-items-center w-100" id="logout-button">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
                         </button>
                     </div>
-                    <a target="_blank" href="/HomePageController/ResetPassword" class="btn btn-warning btn-custom me-2 nav-item">Change Password</a>
                 </nav>
             </div>
 
@@ -158,12 +166,12 @@
                             <div id="mainRevenue">
                                 <%@ include file="/views/static.jsp" %> 
                             </div>
-                        </div>>
+                        </div>
                         <div class="tab-pane fade w-100" id="v-pills-cars" role="tabpanel" aria-labelledby="v-pills-cars-tab">
                             <a target="_blank" href="/CarController/Create" class="btn btn-primary mb-3">Create New Car</a>
                             <button id="loadCarButton" class="btn btn-outline-secondary mb-3">Load Car Page</button>
                             <div id="includeCarContainer" class="w-100 container-fluid p-0 m-0"></div>
-                            <div id="mainCar">
+                            <div id="mainCar" class="container-fluid">
                                 <%@include file="/views/car.jsp" %> 
                             </div>
                         </div>
@@ -275,6 +283,22 @@
                                     $('#mainCustomer').hide();
                                 });
                             }
+
+                            $(document).ready(function () {
+                                var email = document.getElementById("email").value;
+                                $.ajax({
+                                    url: "/AdminController",
+                                    type: "POST",
+                                    data: {getName: 'true', email: email},
+                                    dataType: "json",
+                                    success: function (name) {
+                                        $('#adminName').text(name);
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error("Có lỗi xảy ra khi lấy dữ liệu xe: " + error);
+                                    }
+                                });
+                            });
         </script>
     </body>
 </html>

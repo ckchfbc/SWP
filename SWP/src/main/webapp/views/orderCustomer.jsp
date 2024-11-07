@@ -183,8 +183,8 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-center">
+                            <p class="mt-3"><strong>Scan the QR code to complete the payment using the format (Full Name)_(Car Name)_(Deposit/All), for example: Nguyen Van A_Car AAA_Deposit. Please contact us directly if any issues occur.</strong></p>
                             <img src="/ImageController/a/vcb.jpg" alt="QR Code for Payment" class="img-fluid rounded">
-                            <p class="mt-3"><strong>Scan the QR code to complete the payment using the format (Full Name)_(Car Name), for example: Nguyen Van A_Car AAA. Please contact us directly if any issues occur.</strong></p>
                         </div>
                     </div>
                 </div>

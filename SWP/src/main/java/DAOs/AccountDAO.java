@@ -99,6 +99,7 @@ public class AccountDAO {
         }
         return false;
     }
+
     // Lấy bằng account google cho các phần login và signup
     public CustomerAccountModel getCustomerAccByEmail(GoogleAccount acc) {
         String sql = "select * from customers where email = ?";
@@ -125,6 +126,7 @@ public class AccountDAO {
         }
         return cus_acc;
     }
+
     // Lấy bằng mail
     public CustomerAccountModel getCustomerAccByEmail(String email) {
         String sql = "select * from customers where email = ?";
@@ -286,5 +288,25 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public String getAdminName(String email) {
+        String sql = "SELECT  a.name FROM user_account ua JOIN admin a ON ua.user_id = a.user_id WHERE ua.role = 'admin' AND ua.email = ?;";
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("name");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();   
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

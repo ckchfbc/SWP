@@ -158,7 +158,7 @@
         </script>
 
         <!-- Table Structure -->
-        <table id="carsTable" class="table table-striped nowrap w-100 align-items-center" style="width: 100%;">
+        <table id="carsTable" class="table table-striped nowrap w-100 align-items-center">
             <thead>
                 <tr>
                     <th>ID</th>

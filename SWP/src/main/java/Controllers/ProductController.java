@@ -61,7 +61,7 @@ public class ProductController extends HttpServlet {
 
         try ( PrintWriter out = response.getWriter()) {
             // Fetch filtered car list
-            List<newCarModel> cars = carDAO.getAllfilterCars(brandId, fuelId, modelId);
+            List<newCarModel> cars = carDAO.getAllFilterCars(brandId, fuelId, modelId);
             System.out.println("carsID: " + cars);
             // Convert to JSON and send response
             String json = gson.toJson(cars);

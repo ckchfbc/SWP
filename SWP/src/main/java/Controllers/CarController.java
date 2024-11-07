@@ -14,6 +14,7 @@ import Models.BrandModel;
 import Models.CarModel;
 import Models.FuelModel;
 import Models.ModelsCarModel;
+import Models.newCarModel;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -306,7 +307,7 @@ public class CarController extends HttpServlet {
             }
         }
 
-        // Nếu fetchData có giá trị "true", lấy dữ liệu sự kiện
+        // Nếu fetchData có giá trị "true"
         if (request.getParameter("carId") != null) {
             int carId = Integer.parseInt(request.getParameter("carId"));
             CarModel car = null;
@@ -436,7 +437,8 @@ public class CarController extends HttpServlet {
 
         if (request.getParameter("getRelatedCar") != null) {
             int brand_id = Integer.parseInt(request.getParameter("getRelatedCar"));
-            List<CarModel> cars = new ArrayList<>();
+            System.out.println(brand_id);
+            List<newCarModel> cars = new ArrayList<>();
             try {
                 cars = carDAO.getRelatedCar(brand_id);
             } catch (SQLException e) {

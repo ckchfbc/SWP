@@ -89,10 +89,10 @@
                 var userEmail = document.getElementById('userEmail').value;
 
                 // Validation for feedback content length
-                if (feedbackContent.length < 100) {
+                if (feedbackContent.length < 10) {
                     Swal.fire({
                         title: 'Validation Error',
-                        text: 'Feedback must be at least 100 characters long.',
+                        text: 'Feedback must be at least 10 characters long.',
                         icon: 'warning',
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'OK'

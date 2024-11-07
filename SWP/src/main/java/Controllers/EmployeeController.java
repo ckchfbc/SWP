@@ -302,7 +302,7 @@ public class EmployeeController extends HttpServlet {
             List<FeedbackModel> fbs = new ArrayList();
             FeedbackDAO feedbackDao = new FeedbackDAO();
             try {
-                fbs = feedbackDao.getAllReviewForCustomer(emp_id);
+                fbs = feedbackDao.getAllFeedbackForEmployee(emp_id);
             } catch (SQLException ex) {
                 Logger.getLogger(FeedBackController.class.getName()).log(Level.SEVERE, null, ex);
             }

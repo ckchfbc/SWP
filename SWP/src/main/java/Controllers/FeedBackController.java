@@ -98,7 +98,7 @@ public class FeedBackController extends HttpServlet {
             int cus_id = acc.getCustomer_id();
 
             FeedbackDAO feedbackDao = new FeedbackDAO();
-            boolean isCreate = feedbackDao.createFeeadback(order_id, feedbackContent, cus_id);
+            boolean isCreate = feedbackDao.createFeedback(order_id, feedbackContent, cus_id);
 
             // Set response type to JSON and encode in UTF-8
             response.setContentType("application/json");
@@ -126,7 +126,7 @@ public class FeedBackController extends HttpServlet {
 
             FeedbackDAO feedbackDao = new FeedbackDAO();
             try {
-                fbs = feedbackDao.getAllReviewForCustomer(cus_id);
+                fbs = feedbackDao.getAllFeedbackForCustomer(cus_id);
             } catch (SQLException ex) {
                 Logger.getLogger(FeedBackController.class.getName()).log(Level.SEVERE, null, ex);
             }

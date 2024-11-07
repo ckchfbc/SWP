@@ -70,22 +70,18 @@ public class AdminCustomerContronller extends HttpServlet {
         System.out.println("Request URI: " + host);  // Debug: Check the request URI
 
         if (host.equals("/AdminCustomerContronller/Create")) {
-            System.out.println("Navigating to createEvent.jsp");  // Debug
             request.getRequestDispatcher("/views/createEmployee.jsp").forward(request, response);
         } else if (host.startsWith("/AdminCustomerContronller/Edit")) {
-            System.out.println("Navigating to editEvent.jsp");  // Debug
             request.getRequestDispatcher("/views/editEvent.jsp").forward(request, response);
         } else if (host.startsWith("/AdminCustomerContronller/Status/")) {
             String[] s = host.split("/");
             String id = s[s.length - 1];
-            System.out.println("Extracted Employee ID: " + id);  // Debugging: Confirm ID extraction
 
             CustomerDAO customerDAO = new CustomerDAO();
             response.setContentType("text/html;charset=UTF-8");
 
             try ( PrintWriter out = response.getWriter()) {
                 boolean isUpdated = customerDAO.changeStatus(id);
-                System.out.println("Status Change Result: " + isUpdated);  // Debug: Check update result
 
                 if (isUpdated) {
                     out.println("<script>window.close();</script>");  // Close window on success
