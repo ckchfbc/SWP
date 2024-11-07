@@ -90,10 +90,10 @@ public class SearchController extends HttpServlet {
             // Append the HTML for each car
             htmlResponse.append("<div class=\"card mb-3\">")
                     .append("<div class=\"row g-0\">")
-                    .append("<div class=\"col-md-4\">")
+                    .append("<div class=\"d-flex col-md-4 align-items-center overflow-hidden\">")
                     .append("<img src=\"/ImageController/c/")
                     .append(carImageId)
-                    .append("\" class=\"img-fluid rounded-start\" alt=\"")
+                    .append("\" class=\"img-fluid rounded-start object-fit-cover w-100 h-100\" alt=\"")
                     .append(carName)
                     .append("\" onerror=\"this.src='/path/to/fallback.jpg';\">")
                     .append("</div>")

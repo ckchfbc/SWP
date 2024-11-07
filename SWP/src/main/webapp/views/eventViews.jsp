@@ -16,18 +16,6 @@
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
         <link rel="icon" href="${host}/ImageController/a/logo.png" type="image/x-icon">
         <style>
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-
-            .navbar-brand  {
-                font-family: 'Kirsty', sans-serif;
-                color: #050B20;
-            }
-
             .event-image {
                 max-height: 400px; /* Chiều cao tối đa của hình ảnh */
                 object-fit: cover; /* Đảm bảo hình ảnh không bị méo */

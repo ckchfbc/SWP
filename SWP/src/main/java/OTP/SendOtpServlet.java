@@ -83,25 +83,21 @@ public class SendOtpServlet extends HttpServlet {
             throws ServletException, IOException {
         String emailSendOTP = request.getParameter("email");
         AccountDAO accDao = new AccountDAO();
-        boolean isHave = accDao.checkAccountExsit(emailSendOTP);
         boolean rs = false;
         // Tạo mã OTP ngẫu nhiên
         int otp = new Random().nextInt(999999);
 
-        if (isHave == true) {
-            // Gửi mã OTP đến email
-            if (sendEmail(emailSendOTP, otp)) {
-                // Lưu mã OTP vào session để xác minh sau này
-                request.getSession().setAttribute("otp", otp);
-                request.getSession().setAttribute("emailSendOTP", emailSendOTP);
-                response.setStatus(HttpServletResponse.SC_OK);
-                rs = true;
-            } else {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().println("Gửi email không thành công. Vui lòng thử lại.");
-            }
+        // Gửi mã OTP đến email
+        if (sendEmail(emailSendOTP, otp)) {
+            System.out.println(emailSendOTP);
+            // Lưu mã OTP vào session để xác minh sau này
+            request.getSession().setAttribute("otp", otp);
+            request.getSession().setAttribute("emailSendOTP", emailSendOTP);
+            response.setStatus(HttpServletResponse.SC_OK);
+            rs = true;
         } else {
-            rs = false;
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().println("Gửi email không thành công. Vui lòng thử lại.");
         }
 
         // Set response type to JSON and encode in UTF-8

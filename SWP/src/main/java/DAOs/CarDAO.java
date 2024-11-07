@@ -455,7 +455,7 @@ public class CarDAO {
 
     public List<FuelModel> getAllFuelTypes() {
         List<FuelModel> models = new ArrayList<>();
-        String sql = "SELECT * FROM swp.fuel;";
+        String sql = "SELECT * FROM fuel;";
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
@@ -473,7 +473,7 @@ public class CarDAO {
 
     public List<BrandModel> getAllBrands() {
         List<BrandModel> brands = new ArrayList<>();
-        String sql = "SELECT * FROM swp.brands;";
+        String sql = "SELECT * FROM brands;";
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
@@ -493,7 +493,7 @@ public class CarDAO {
 
     public List<CarModel_Model> getAllModels() {
         List<CarModel_Model> models = new ArrayList<>();
-        String sql = "SELECT * FROM swp.model;";
+        String sql = "SELECT * FROM model;";
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 

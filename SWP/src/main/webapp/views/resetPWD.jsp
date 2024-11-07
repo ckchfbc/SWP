@@ -15,25 +15,21 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
-        <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
         <link rel="icon" href="${host}/ImageController/logo.png" type="image/x-icon">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css">
         <title>ResetPass</title>
         <%
             String host = request.getRequestURI();
         %>
         <style>
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-
             .logo  {
-                font-family: 'Kirsty', sans-serif;
+                font-family: "Oswald", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 500;
+                font-style: normal;
                 color: #050B20;
             }
 
@@ -76,7 +72,7 @@
                 // Kiểm tra định dạng email
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
-                    emailError.textContent = "Email không hợp lệ.";
+                    emailError.textContent = "Invalid email.";
                     event.preventDefault();
                     return false; // Ngăn form submit
                 }
@@ -84,14 +80,14 @@
                 // Kiểm tra mật khẩu
                 var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
                 if (!passwordRegex.test(password)) {
-                    passwordError.textContent = "Mật khẩu phải có từ 6-32 ký tự, ít nhất 1 chữ in hoa, 1 số và 1 ký tự đặc biệt.";
+                    passwordError.textContent = "Password must be 6-32 characters, at least 1 uppercase letter, 1 number and 1 special character.";
                     event.preventDefault();
                     return false; // Ngăn form submit
                 }
 
                 // Kiểm tra khớp mật khẩu
                 if (password !== confirmPassword) {
-                    confirmError.textContent = "Mật khẩu không khớp.";
+                    confirmError.textContent = "Passwords do not match.";
                     event.preventDefault();
                     return false; // Ngăn form submit
                 }
@@ -106,7 +102,7 @@
                 var resetBtn = document.querySelector("button[name='resetPWDBtn']");
 
                 if (password !== confirmPassword) {
-                    confirmError.textContent = "Mật khẩu không khớp.";
+                    confirmError.textContent = "Passwords do not match.";
                     resetBtn.disabled = true; // Vô hiệu hóa nút khi mật khẩu không khớp
                 } else {
                     confirmError.textContent = ""; // Xóa thông báo lỗi nếu mật khẩu khớp
@@ -146,22 +142,22 @@
                                 $('#otpSend').removeClass('mb-3');
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Thành công',
-                                    text: 'OTP đã được gửi thành công!'
+                                    title: 'Success',
+                                    text: 'OTP sent successfully!'
                                 });
                             } else {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Lỗi',
-                                    text: 'Đã xảy ra lỗi hoặc email chưa được đăng ký!'
+                                    title: 'Error',
+                                    text: 'An error occurred or email is not registered!'
                                 });
                             }
                         },
                         error: function (xhr, status, error) {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Lỗi',
-                                text: "Đã xảy ra lỗi: " + error
+                                title: 'Error',
+                                text: "An error occurred: " + error
                             });
                         }
                     });
@@ -189,7 +185,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Authentication successful',
-                                text: 'Your OTP has been successfully authenticated!',
+                                text: 'Your OTP has been successfully authenticated!'
                             });
                         } else {
                             $('#otpInput').hide();
@@ -199,7 +195,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Authentication failed',
-                                text: 'OTP is incorrect or expired. Please try again.',
+                                text: 'OTP is incorrect or expired. Please try again.'
                             });
                         }
                     },

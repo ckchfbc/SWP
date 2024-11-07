@@ -66,8 +66,9 @@
                 const employeePhone = document.getElementById('employeePhone').value;
 
                 // Email validation
-                if (!employeeEmail.includes('@')) {
-                    showAlert('Email must contain an @ symbol.');
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(employeeEmail)) {
+                    showAlert('Invalid email.');
                     event.preventDefault();
                     return;
                 }
@@ -81,9 +82,9 @@
                 }
 
                 // Phone number validation (10-15 digits)
-                const phonePattern = /^[0-9]{10,15}$/;
+                const phonePattern = /^[0-9]{10}$/;
                 if (!phonePattern.test(employeePhone)) {
-                    showAlert('Phone number must be between 10 and 15 digits.');
+                    showAlert('Phone number must be 10 digits.');
                     event.preventDefault();
                     return;
                 }

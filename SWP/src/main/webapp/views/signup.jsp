@@ -23,15 +23,11 @@
         <link rel="icon" href="${host}/ImageController/a/logo.png" type="image/x-icon">
         <title>Sign Up Page</title>
         <style>
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-
             .logo  {
-                font-family: 'Kirsty', sans-serif;
+                font-family: "Oswald", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 500;
+                font-style: normal;
                 color: #050B20;
             }
 

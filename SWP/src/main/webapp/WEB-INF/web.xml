@@ -42,7 +42,7 @@
     </servlet>
     <servlet>
         <servlet-name>EmployeeController</servlet-name>
-        <servlet-class>Controller.EmployeeController</servlet-class>
+        <servlet-class>Controllers.EmployeeController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>OrderController</servlet-name>

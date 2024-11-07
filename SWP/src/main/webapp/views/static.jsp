@@ -4,25 +4,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Daily Revenue and Car Statistics</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-            }
-            #revenueChart, #carStaticChart {
-                max-width: 80%;
-                margin: 0 auto;
-                margin-bottom: 40px;
-            }
-        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>        
         <script>
             $(document).ready(function () {
-                
+
                 $.ajax({
                     type: "POST",
                     url: "/DailyRevenueController",
-                    success: function (response) {                        
+                    success: function (response) {
                         // Parse the response
                         var dailyRevenue = response.dailyRevenue;
                         var dailyCarStatic = response.dailyCarStatic;
@@ -105,8 +94,12 @@
         </script>
     </head>
     <body>
-        <h1 style="text-align: center;">Daily Revenue and Car Statistics</h1>
-        <canvas id="revenueChart" class="w-100"></canvas>
-        <canvas id="carStaticChart" class="w-50"></canvas>
+        <h1 class="mb-3 text-center">Daily Revenue and Car Statistics</h1>
+        <canvas id="revenueChart" class="w-100 mb-5"></canvas>
+        <h2 class="text-center mb-3">Car Statistics</h2>
+        <div class="d-flex justify-content-center align-items-center">            
+            <canvas id="carStaticChart" class="w-50 h-50"></canvas>
+        </div>
+
     </body>
 </html>

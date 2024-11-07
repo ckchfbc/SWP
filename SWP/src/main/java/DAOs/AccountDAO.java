@@ -301,12 +301,33 @@ public class AccountDAO {
                     return rs.getString("name");
                 }
             } catch (SQLException e) {
-                e.printStackTrace();   
+                e.printStackTrace();
                 return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean checkAccountBan(String acc_email) {
+        String sql = "SELECT * FROM user_account where email=? and status = false;";
+
+        try ( Connection conn = DBConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, acc_email);
+
+            try ( ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

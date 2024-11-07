@@ -28,6 +28,25 @@
         </div>
 
         <script>
+            function formatCurrency(number) {
+                // Ensure the number has two decimal places
+                var decimalPart = (number % 1).toFixed(2).split('.')[1];
+
+                // Get the integer part of the number and convert it to a string
+                var integerPart = Math.floor(number).toString();
+
+                // Add thousand separator (dot) for the integer part
+                var formattedIntegerPart = '';
+                while (integerPart.length > 3) {
+                    formattedIntegerPart = '.' + integerPart.slice(-3) + formattedIntegerPart;
+                    integerPart = integerPart.slice(0, integerPart.length - 3);
+                }
+                formattedIntegerPart = integerPart + formattedIntegerPart;
+
+                // Return the formatted string with comma separating the integer and decimal parts
+                return formattedIntegerPart + ',' + decimalPart;
+            }
+
             $(document).ready(function () {
                 fetchBestSellingCars();
             });
@@ -59,7 +78,7 @@
 
                 for (let i = startIndex; i < endIndex && i < carsData.length; i++) {
                     const car = carsData[i];
-                    
+
                     const inStock = car.quantity > 0 ?
                             '<span class="badge bg-success me-2">In Stock</span>' :
                             '<span class="badge bg-danger me-2">Out of Stock</span>';
@@ -70,7 +89,7 @@
                             '<img src="/ImageController/c/' + car.first_car_image_id + '" class="card-img-top zoom-img" alt="' + car.car_name + '" style="height: 250px;">' +
                             '<div class="card-body">' +
                             '<h5 class="card-title">' + car.car_name + '</h5>' +
-                            '<p class="card-text">' + car.price + ' VND</p>' +
+                            '<p class="card-text">' + formatCurrency(car.price) + ' VND</p>' +
                             '<p class="card-text">' + inStock + '</p>' +
                             '</div>' +
                             '</div>' +

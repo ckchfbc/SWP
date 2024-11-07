@@ -2,13 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controllers;
 
-import Controllers.FeedBackController;
 import DAOs.EmployeeDAO;
 import DAOs.FeedbackDAO;
 import Models.EmployeeModels;
-import Models.EventModels;
 import Models.FeedbackModel;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -17,8 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,10 +69,12 @@ public class EmployeeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String host = request.getRequestURI();
-//        System.out.println("Request URI: " + host);  // Debug: Check the request URI
 
-        if (host.equals("/EmployeeController/Create")) {
-//            System.out.println("Navigating to createEvent.jsp");  // Debug
+        if (host.equals("/EmployeeController/Customer")) {
+            request.getRequestDispatcher("/views/empViewCus.jsp").forward(request, response);
+        } else if (host.equals("/EmployeeController/ResetPassword")) {
+            request.getRequestDispatcher("/views/employeeResetPwd.jsp").forward(request, response);
+        } else if (host.equals("/EmployeeController/Create")) {
             request.getRequestDispatcher("/views/createEmployee.jsp").forward(request, response);
         } else if (host.equals("/EmployeeController/CreateOrder")) {
             request.getRequestDispatcher("/views/createOrderEmployee.jsp").forward(request, response);
@@ -237,15 +235,6 @@ public class EmployeeController extends HttpServlet {
 
                 // Call DAO to update employee details
                 boolean isUpdated = employeeDAO.editEmployeeAccount(id, employeeEmail, employeeName, employeePassword, employeePhone);
-
-                // Generate response based on update success/failure
-                System.out.println("<html>");
-                System.out.println("<body>");
-                System.out.println("<h3>Update Status:</h3>");
-                System.out.println("<p>Employee ID: " + id + "</p>");
-                System.out.println("<p>Employee Name: " + employeeName + "</p>");
-                System.out.println("<p>Employee Email: " + employeeEmail + "</p>");
-                System.out.println("<p>Employee Phone: " + employeePhone + "</p>");
 
                 if (employeePassword != null && !employeePassword.isEmpty()) {
                     out.println("<p>Password: [Updated]</p>");

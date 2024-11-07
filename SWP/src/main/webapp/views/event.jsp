@@ -91,7 +91,9 @@
                                                             '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-danger">Disable</a>' :
                                                             '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-success">Active</a>');
                                         } else {
-                                            return '<p class="text-secondary fw-bold fs-5">Edit Unavailable</p>';
+                                            return (row.event_status ?
+                                                    '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-danger">Disable</a>' :
+                                                    '<a target="_blank" href="/EventController/Status/' + row.event_id + '" class="btn btn-success">Active</a>');
                                         }
                                     }
                                 }
