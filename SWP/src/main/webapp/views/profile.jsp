@@ -43,7 +43,7 @@
         <div class="container-fluid w-100 pt-5 mt-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <div class="card overflow-hidden">
+                    <div class="card">
                         <div class="row g-0 row-bordered row-border-light">
                             <div
                                 class="col-md-3 bg-light d-flex flex-column align-items-center p-4">
