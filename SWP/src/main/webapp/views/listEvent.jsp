@@ -18,17 +18,7 @@
             .card-img-top {
                 height: 300px; /* Đặt chiều cao cố định */
                 object-fit: cover; /* Cắt hình ảnh để vừa với kích thước mà không làm méo hình */
-            }
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-            .navbar-brand  {
-                font-family: 'Kirsty', sans-serif;
-                color: #050B20;
-            }
+            }          
         </style>
     </head>
     <body class="d-flex flex-column min-vh-100">

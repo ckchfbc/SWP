@@ -91,6 +91,10 @@ public class CustomerController extends HttpServlet {
         if (host.equals("/CustomerController/Appointment")) {
             request.getRequestDispatcher("/views/appointmentCustomer.jsp").forward(request, response);
         }
+        
+        if (host.equals("/CustomerController/ResetPassword")) {
+            request.getRequestDispatcher("/views/customerResetPwd.jsp").forward(request, response);
+        }
     }
 
     /**

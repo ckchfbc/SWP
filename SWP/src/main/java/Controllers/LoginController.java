@@ -86,12 +86,12 @@ public class LoginController extends HttpServlet {
             String accessToken = gg.getToken(code, state);
             GoogleAccount acc = gg.getUserInfo(accessToken, state);
             AccountDAO accDAO = new AccountDAO();
-            if (!accDAO.checkAccountExsit(acc.getEmail())) {
-                String message = "Account does not exist. Please register.";
+            if (!accDAO.checkAccountExsit(acc.getEmail()) || accDAO.checkAccountBan(acc.getEmail())) {
+                String message = "Account does not exist or get banned. Please register.";
                 sendMessageError(request, response, message, "/HomePageController/Login");
             } else {
                 String email = acc.getEmail();
-               setCookieLogin(request, response, email);
+                setCookieLogin(request, response, email);
             }
         }
 
@@ -177,7 +177,7 @@ public class LoginController extends HttpServlet {
                     if (accDao.loginAccount(email, password)) {
                         setCookieLogin(request, response, email);
                     } else {
-                        String message = "Incorrect Password or Email.";
+                        String message = "Incorrect Password or Email or get banned.";
                         sendMessageError(request, response, message, "/HomePageController/Login");
                     }
                 } else {
@@ -192,7 +192,7 @@ public class LoginController extends HttpServlet {
                         userCookie2.setHttpOnly(true); // Bảo mật
                         userCookie2.setPath("/");
                         response.addCookie(userCookie);
-                        response.addCookie(userCookie2); 
+                        response.addCookie(userCookie2);
                         response.sendRedirect("/AdminController/Dashboard");
                     } else {
                         String message = "Incorrect Password or Email.";

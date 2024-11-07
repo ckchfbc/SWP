@@ -15,19 +15,6 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <title>Profile User</title>
         <style>
-            @font-face {
-                font-family: 'Kirsty';
-                src: url('../fonts/KirstyRg-Regular.woff2') format('woff2'),
-                    url('../fonts/KirstyRg-Regular.woff') format('woff');
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-            }
-
-            .navbar-brand  {
-                font-family: 'Kirsty', sans-serif;
-                color: #050B20;
-            }
             body {
                 background-color: #f8f9fa;
             }
@@ -77,11 +64,13 @@
                                                href="/EmployeeController/Order">View List
                                                 Order</a></li>
                                         <li><a class="dropdown-item"
-                                               href="/ReviewController/Views">List review</a></li>
+                                               href="/ReviewController/Views">List Review</a></li>
                                         <li><a class="dropdown-item"
-                                               href="/EmployeeController/Feedback">List feedback</a></li>
+                                               href="/EmployeeController/Feedback">List Feedback</a></li>
                                         <li><a class="dropdown-item"
-                                               href="/EmployeeController/Appointment">List appointment</a></li>
+                                               href="/EmployeeController/Appointment">List Appointment</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="/EmployeeController/Customer">List Customer</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -133,7 +122,7 @@
                     </div>
                     <div class="row justify-content-md-end mt-4 mb-4">
                         <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-end">
-                            <a target="_blank" href="/HomePageController/ResetPassword" class="btn btn-warning btn-custom me-2">Change Password</a>
+                            <a target="_blank" href="/EmployeeController/ResetPassword" class="btn btn-warning btn-custom me-2">Change Password</a>
                             <form action="/LoginController" method="POST">
                                 <button type="submit" class="btn btn-secondary btn-custom" name="logOut">Log Out</button>
                             </form>

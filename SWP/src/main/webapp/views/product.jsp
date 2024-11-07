@@ -91,7 +91,7 @@
                                 );
                     });
                 } else {
-                    carList.append('<li>No cars found</li>');
+                    carList.append('<li class="text-center"><h2>No cars found</h2></li>');
                 }
 
                 renderPagination();
@@ -142,7 +142,7 @@
         <%@include file="navbar.jsp" %>
 
         <div class="container-fluid mt-5 pt-5">
-            <h2 class="text-center mb-5">Filter Products</h2>
+            <h1 class="text-center mb-5">Filter Cars</h1>
             <div class="container px-5 mb-5">
                 <div class="row">
                     <div class="col-md-4 mb-3">
@@ -197,12 +197,12 @@
                 </div>
             </div>
 
-            <h2 class="text-center mb-5">Car List</h2>
+            <h1 class="text-center mb-5">Car List</h1>
             <div class="container">
-                <ul class="row justify-content-center" id="carList">
+                <ul class="row justify-content-center list-unstyled text-center" id="carList">
                     <!-- Car list will be populated here -->
                 </ul>
-                <nav aria-label="Car list pagination">
+                <nav aria-label="Car-list-pagination">
                     <ul class="pagination justify-content-center" id="pagination">
                         <!-- Pagination buttons will be populated here -->
                     </ul>

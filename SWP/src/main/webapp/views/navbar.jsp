@@ -11,6 +11,22 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script src="https://kit.fontawesome.com/a611f8fd5b.js" crossorigin="anonymous"></script>
         <title>JSP Page</title>
+        <!-- Font chữ -->        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Outfit:wght@700&display=swap" rel="stylesheet">
+        <style>
+            .navbar-brand  {
+                font-family: "Oswald", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 500;
+                font-style: normal;
+                color: #050B20;
+            }
+
+            .searchResults{
+                overflow-y: auto;
+            }
+        </style>
     </head>
     <body>
         <!-- Navigation -->
@@ -27,13 +43,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/HomePageController/Event">Event</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Brand</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Zalo</a>
-                        </li>                        
+                        </li>                    
                         <!-- Nút logOut cho customer -->
 
                         <%
@@ -45,6 +55,10 @@
                             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
                             if (cookies != null) {
                                 for (Cookie cookie : cookies) {
+                                    if (cookie.getName().equals("admin")) {
+                                        response.sendRedirect("/AdminController/Dashboard");
+                                        break;
+                                    }
                                     if (cookie.getName().equals("userEmail")) {
                                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
                                     }
@@ -151,10 +165,7 @@
                             // Insert the HTML response directly into the search results container
                             $('#searchResults').html(response);
 
-                            // Smooth scroll to search results
-                            $('html, body').animate({
-                                scrollTop: $('#searchResults').offset().top
-                            }, 'slow');
+
                         },
                         error: function (xhr, status, error) {
                             const errorMessage = xhr.responseText || error || 'Unknown error';

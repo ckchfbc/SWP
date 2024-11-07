@@ -61,24 +61,13 @@
             a{
                 text-decoration: none;
             }
-
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-
-            .navbar-brand  {
-                font-family: 'Kirsty', sans-serif;
-                color: #050B20;
-            }
+            
             #relatedCar .zoom-img {
                 transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
             }
 
             #relatedCar .card:hover .zoom-img {
-                transform: scale(0.9); /* Zoom out ảnh khi hover */
+                transform: scale(1.1); /* Zoom out ảnh khi hover */
             }
 
             #relatedCar .card {
@@ -208,6 +197,7 @@
                     // Return the formatted string with comma separating the integer and decimal parts
                     return formattedIntegerPart + ',' + decimalPart;
                 }
+                
                 $(document).ready(function () {
                     // Khi trang load, thực hiện AJAX để lấy thông tin xe
                     $.ajax({

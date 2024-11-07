@@ -88,6 +88,18 @@ public class ResetPasswordController extends HttpServlet {
             }
         }
 
+        if (request.getParameter("resetUserPWDBtn") != null) {
+            AccountDAO accDAO = new AccountDAO();
+            if (accDAO.resetPassword(email, password)) {
+                response.sendRedirect("/HomePageController/ResetSuccess");;
+            } else {
+                String message = "Reset not success please try again.";
+                // Set cái message thông bào nếu ko reset dc
+                request.getSession().setAttribute("message", message);
+                response.sendRedirect("/CustomerController/ResetPassword");
+            }
+        }
+
     }
 
     /**

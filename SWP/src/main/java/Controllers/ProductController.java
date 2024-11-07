@@ -52,17 +52,16 @@ public class ProductController extends HttpServlet {
         int brandId = parseInteger(request.getParameter("brand_id"));
         int fuelId = parseInteger(request.getParameter("fuel_id"));
         int modelId = parseInteger(request.getParameter("model_id"));
-
-        // Print the received IDs to the server console
-        System.out.println("Received IDs:");
-        System.out.println("Brand ID: " + brandId);
-        System.out.println("Fuel ID: " + fuelId);
-        System.out.println("Model ID: " + modelId);
+//
+//        // Print the received IDs to the server console
+//        System.out.println("Received IDs:");
+//        System.out.println("Brand ID: " + brandId);
+//        System.out.println("Fuel ID: " + fuelId);
+//        System.out.println("Model ID: " + modelId);
 
         try ( PrintWriter out = response.getWriter()) {
             // Fetch filtered car list
             List<newCarModel> cars = carDAO.getAllFilterCars(brandId, fuelId, modelId);
-            System.out.println("carsID: " + cars);
             // Convert to JSON and send response
             String json = gson.toJson(cars);
             out.write(json);

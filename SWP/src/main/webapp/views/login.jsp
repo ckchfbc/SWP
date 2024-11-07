@@ -18,16 +18,12 @@
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
         <link rel="icon" href="/ImageController/a/logo.png" type="image/x-icon">
         <title>Login Page</title>
-        <style>
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-
+        <style>          
             .logo  {
-                font-family: 'Kirsty', sans-serif;
+                font-family: "Oswald", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 500;
+                font-style: normal;
                 color: #050B20;
             }
 

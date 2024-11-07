@@ -92,13 +92,7 @@
                             <a class="nav-link" href="/ProductController/Views">Product</a>                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/HomePageController/Event">Event</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Brand</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Zalo</a>
-                        </li>                        
+                        </li>                    
                         <!-- Nút logOut cho customer -->
 
                         <%
@@ -212,12 +206,7 @@
                             showLoadingIndicator(false); // Hide loader once response is received
 
                             // Insert the HTML response directly into the search results container
-                            $('#searchResults').html(response);
-
-                            // Smooth scroll to search results
-                            $('html, body').animate({
-                                scrollTop: $('#searchResults').offset().top
-                            }, 'slow');
+                            $('#searchResults').html(response);                           
                         },
                         error: function (xhr, status, error) {
                             const errorMessage = xhr.responseText || error || 'Unknown error';

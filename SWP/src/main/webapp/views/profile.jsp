@@ -15,16 +15,6 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <title>Profile User</title>
         <style>
-            @font-face {
-                font-family: 'Kirsty'; /* Your font name */
-                src: url('../fonts/kirsty rg.otf') format('opentype'); /* Path to your font */
-                font-weight: normal;
-                font-style: normal;
-            }
-            .navbar-brand  {
-                font-family: 'Kirsty', sans-serif;
-                color: #050B20;
-            }
             body {
                 background-color: #f8f9fa;
             }
@@ -148,7 +138,7 @@
                     <div class="row justify-content-md-end mt-4 mb-4">
                         <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-end">
                             <a target="_blank" href="/CustomerController/EditProfile" class="btn btn-primary btn-custom me-2">Edit</a>
-                            <a target="_blank" href="/HomePageController/ResetPassword" class="btn btn-warning btn-custom me-2">Change Password</a>
+                            <a target="_blank" href="/CustomerController/ResetPassword" class="btn btn-warning btn-custom me-2">Change Password</a>
                             <form action="/LoginController" method="POST">
                                 <button type="submit" class="btn btn-secondary btn-custom" name="logOut">Log Out</button>
                             </form>
