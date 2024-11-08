@@ -61,7 +61,7 @@
             a{
                 text-decoration: none;
             }
-            
+
             #relatedCar .zoom-img {
                 transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
             }
@@ -197,7 +197,7 @@
                     // Return the formatted string with comma separating the integer and decimal parts
                     return formattedIntegerPart + ',' + decimalPart;
                 }
-                
+
                 $(document).ready(function () {
                     // Khi trang load, thực hiện AJAX để lấy thông tin xe
                     $.ajax({
@@ -278,20 +278,27 @@
                                 desc.innerHTML = car.description;
                                 var role = document.getElementById('role').value;
                                 // Tình trạng kho (In Stock hoặc Out of Stock)
-                                if (car.quantity > 0 && role === 'customer') {
+                                if (car.quantity > 0) {
                                     $('#stock_status').text('In Stock').removeClass('bg-danger').addClass('bg-success');
                                     //Buy btn
-                                    var buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4">Buy</a>';
+                                    var buyBtn;
+                                    if (role !== 'customer') {
+                                        buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4 disabled">Buy</a>';
+                                    } else {
+                                        buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4">Buy</a>';
+                                    }
                                     $('#buy').append(buyBtn);
 
                                 } else {
                                     $('#stock_status').text('Out of Stock').removeClass('bg-success').addClass('bg-danger');
-                                    //Buy btn
+                                    //Buy btn                                    
                                     var buyBtn = '<a target="_blank" href="/OrderController/Buy/' + car.car_id + '" class="btn btn-primary btn-custom px-4 disabled">Buy</a>';
                                     $('#buy').append(buyBtn);
                                 }
 
-                                $('#wishlist').append('<button id="add-to-wishlist" class="btn btn-info rounded-pill text-white" data-car-id="' + car.car_id + '">Add to Wishlist</button>');
+                                if (role === 'customer') {
+                                    $('#wishlist').append('<button id="add-to-wishlist" class="btn btn-info rounded-pill text-white" data-car-id="' + car.car_id + '">Add to Wishlist</button>');
+                                }
 
                             } else {
                                 console.error("Car data is not available in the response");

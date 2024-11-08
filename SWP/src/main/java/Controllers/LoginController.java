@@ -6,17 +6,13 @@ package Controllers;
 
 import DAOs.AccountDAO;
 import GoogleClass.GoogleLogin;
-import Models.AccountModel;
-import Models.CustomerAccountModel;
 import Models.GoogleAccount;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 
 /**
@@ -51,16 +47,28 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        boolean error = false;
+        if (request.getParameter("error")!=null) {
+            error = request.getParameter("error").equals("access_denied");
+            error = true;
+        }
+
+        if (error == true) {
+            response.sendRedirect("/");
+            return;
+        }
 
         // Kiểm tra điều kiện state coi là đăng ký hay đăng nhập
         String state = request.getParameter("state");
         // Cho đăng ký bằng Google
+
         if (state.equals("signup")) {
             String code = request.getParameter("code");
             GoogleLogin gg = new GoogleLogin();
             String accessToken = gg.getToken(code, state);
             GoogleAccount acc = gg.getUserInfo(accessToken, state);
             AccountDAO accDAO = new AccountDAO();
+
             if (accDAO.checkAccountExsit(acc.getEmail())) {
                 String message = "Account already exists. Please log in.";
                 sendMessageError(request, response, message, "/HomePageController/SignUp");
@@ -72,9 +80,7 @@ public class LoginController extends HttpServlet {
                             setCookieLogin(request, response, email);
                         }
                     }
-
                 } catch (Exception e) {
-                    System.out.println("Lỗi add account google:\n" + e);
                     response.sendRedirect("/HomePageController/SignUp");
                 }
             }

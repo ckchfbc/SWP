@@ -16,6 +16,31 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     </head>
     <body>
+        <%
+            // Lấy danh sách cookies từ request
+            Cookie[] cookies = request.getCookies();
+            String userEmail = null;
+            String role = null;
+            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        response.sendRedirect("/AdminController/Dashboard");
+                        break;
+                    }
+                    if (cookie.getName().equals("userEmail")) {
+                        userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
+                    }
+                    if (cookie.getName().equals("role")) {
+                        role = cookie.getValue(); // Lấy giá trị email từ cookie                        
+                    }
+                }
+            }
+
+            if (!role.equals("employee")) {
+                response.sendRedirect("/");
+            }
+        %>
         <div class="container mt-5">
             <h2 class="text-center mb-4">Create Warranty</h2>
             <form id="warrantyForm">
@@ -43,11 +68,11 @@
             $("#warrantyForm").on("submit", function (event) {
                 event.preventDefault(); // Prevent default form submission
 
-                var urlPath = window.location.pathname; 
-                var parts = urlPath.split('/'); 
+                var urlPath = window.location.pathname;
+                var parts = urlPath.split('/');
 
                 const orderId = parts[parts.length - 1];
-                                
+
                 const warrantyDetails = $("#warrantyDetails").val();
                 const expirationDate = new Date($("#expirationDate").val());
                 const date = expirationDate.toISOString().split('T')[0];

@@ -40,7 +40,10 @@
 
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
-
+        <%            if (!role.equals("employee")) {
+                response.sendRedirect("/");
+            }
+        %>
         <!-- Order Table -->
         <script>
             function formatDate(dateString) {

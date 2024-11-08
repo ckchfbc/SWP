@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="css/font.css"/>
         <link rel="icon" href="/ImageController/a/logo.png" type="image/x-icon">
         <title>Login Page</title>
-        <style>          
+        <style>
             .logo  {
                 font-family: "Oswald", sans-serif;
                 font-optical-sizing: auto;
@@ -42,6 +42,10 @@
             // Duyệt qua các cookies và kiểm tra cookie "userEmail" nếu có thì quay về trang chủ
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        response.sendRedirect("/AdminController/Dashboard");
+                        break;
+                    }
                     if (cookie.getName().equals("userEmail")) {
                         response.sendRedirect("/");
                         break;
@@ -132,7 +136,7 @@
                 console.log("Form validation passed"); // Form hợp lệ
                 return true;
             }
-            
+
             function togglePassword() {
                 var passwordField = document.getElementById("password");
                 var icon = document.getElementById("icon");

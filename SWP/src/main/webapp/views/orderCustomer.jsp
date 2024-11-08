@@ -40,7 +40,10 @@
 
 
         <%@include file="navbar.jsp" %>
-
+        <%    if (!role.equals("customer")) {
+                response.sendRedirect("/");
+            }
+        %>
         <!-- Modal tìm kiếm -->
         <div class="modal fade p-0 m-0" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
             <div class="modal-dialog">

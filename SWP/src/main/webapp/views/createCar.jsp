@@ -24,9 +24,25 @@
         </style>       
     </head>
     <body>
-        <!--        <script>
-                    $.document.write(message);
-                </script>-->
+        <%
+            // Lấy danh sách cookies từ request
+            Cookie[] cookies = request.getCookies();
+            boolean isAdmin = false;
+            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        isAdmin = true;
+                    }
+                    if (cookie.getName().equals("email")) {
+                        String email = cookie.getValue();
+                    }
+                }
+            }
+            if (!isAdmin) {
+                response.sendRedirect("/");
+            }
+        %>
         <div class="container mt-5">
             <h2 class="mb-4">Create New Car</h2>
             <form id="carForm" class="mb-5" action="/CarController" method="post" enctype="multipart/form-data">                

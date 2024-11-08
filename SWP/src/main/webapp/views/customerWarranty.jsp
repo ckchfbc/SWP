@@ -40,7 +40,10 @@
 
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
-
+        <%    if (!role.equals("customer")) {
+                response.sendRedirect("/");
+            }
+        %>
         <!-- Warranty Table -->
         <script>
             function formatDate(dateString) {

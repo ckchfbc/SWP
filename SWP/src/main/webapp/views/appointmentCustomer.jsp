@@ -40,7 +40,10 @@
 
 
         <%@include file="navbar.jsp" %>
-
+        <%            if (!role.equals("customer")) {
+                response.sendRedirect("/");
+            }
+        %>
         <!-- Order Table -->
         <script>
             function formatDate(dateString) {

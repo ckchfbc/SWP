@@ -25,9 +25,13 @@
             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        response.sendRedirect("/AdminController/Dashboard");
+                        break;
+                    }
                     if (cookie.getName().equals("userEmail")) {
                         userEmail = cookie.getValue(); // Lấy giá trị email từ cookie                        
-%>
+        %>
         <input hidden value="<%= userEmail%>" id="userEmail">
         <%
                     }
@@ -37,10 +41,10 @@
                 }
             }
 
-            // Kiểm tra nếu cookie "userEmail" tồn tại
-            if (userEmail == null || role == null || !role.equals("customer")) {
-                response.sendRedirect("/HomePageController/Login");
+            if (!role.equals("customer")) {
+                response.sendRedirect("/");
             }
+
         %>
         <div class="container mt-5">
             <h2 class="text-center mb-4">Create Feedback</h2>

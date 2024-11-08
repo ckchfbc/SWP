@@ -23,6 +23,7 @@
         <title>ResetPass</title>
         <%
             String host = request.getRequestURI();
+
         %>
         <style>
             .logo  {
@@ -113,23 +114,26 @@
                 }
             }
         </script>       
-        <%
-            Cookie[] cookies = request.getCookies();
+        <%            Cookie[] cookies = request.getCookies();
 
             String userEmail = null;
             String role = null;
             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        response.sendRedirect("/AdminController/Dashboard");
+                        break;
+                    }
                     if (cookie.getName().equals("role")) {
                         role = cookie.getValue();
-                        if (role.equals("employee")) {
-                            response.sendRedirect("/EmployeeController/ResetPassword");
-                        }
                     }
                     if (cookie.getName().equals("userEmail")) {
                         userEmail = cookie.getValue();
                     }
+                }
+                if (!role.equals("customer")) {
+                    response.sendRedirect("/");
                 }
             }
         %>

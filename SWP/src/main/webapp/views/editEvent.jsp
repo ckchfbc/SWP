@@ -24,6 +24,25 @@
         </style>       
     </head>
     <body>
+        <%
+            // Lấy danh sách cookies từ request
+            Cookie[] cookies = request.getCookies();
+            boolean isAdmin = false;
+            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        isAdmin = true;
+                    }
+                    if (cookie.getName().equals("email")) {
+                        String email = cookie.getValue();
+                    }
+                }
+            }
+            if (!isAdmin) {
+                response.sendRedirect("/");
+            }
+        %>
         <div class="container mt-5">
             <h2>Edit Event</h2>
             <form action="EventController" method="post" enctype="multipart/form-data" id="eventForm">
@@ -156,8 +175,8 @@
                 }
 
                 if (eventImage.size > maxSizeInBytes) {
-                   sendMessageError("File must not exceed 16 MB.");
-                   event.preventDefault();
+                    sendMessageError("File must not exceed 16 MB.");
+                    event.preventDefault();
                 }
 
                 // Kiểm tra ngày (dateStart không nhỏ hơn ngày hiện tại và dateEnd không nhỏ hơn dateStart)
