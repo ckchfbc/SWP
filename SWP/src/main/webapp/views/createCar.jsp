@@ -200,9 +200,9 @@
                 }
 
                 // Kiểm tra price không vượt quá 12 ký tự và lớn hơn 0
-                if (price.length > 12) {
-                    if (price < 0) {
-                        sendMessageError('Price cannot exceed 12 characters and greater than 0.');
+                if (price.length > 19) {
+                    if (price < 0 && price > 8000000000000000000) {
+                        sendMessageError('Price cannot exceed 19 characters and greater than 0 and less than 8,000,000,000,000,000,000.');
                         event.preventDefault();
                     }
                 }
