@@ -59,8 +59,8 @@
                                     data: null,
                                     render: function (row) {
                                         return row.status ?
-                                                '<p class="text-danger fs-5">Disable</p>' :
-                                                '<p class="text-success fs-5">Active</p>';
+                                                '<p class="text-success fs-5">Active</p>' :
+                                                '<p class="text-danger fs-5">Disable</p>';
                                     }
                                 }
                             ]

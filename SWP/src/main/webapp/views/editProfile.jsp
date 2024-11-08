@@ -42,8 +42,8 @@
                             }
                             if (cookie.getName().equals("userEmail")) {
                                 userEmail = cookie.getValue(); // Lấy giá trị email từ cookie
-%>
-                <input hidden id="user_email" type="text" value="<%= userEmail%>">
+                %>
+                <input hidden id="user_email" type="text" name="user_email" value="<%= userEmail%>">
                 <%
                             }
                             if (cookie.getName().equals("role")) {
@@ -163,7 +163,7 @@
 
                     var OTPResult = document.getElementById('verificationResult').value; // Lấy giá trị của input hidden
                     if (OTPResult !== 'Success') { // Kiểm tra nếu giá trị không phải 'Success'
-                        sendMessageError("Vui lòng xác thực OTP"); // In ra giá trị OTPResult
+                        sendMessageError("Please verify OTP."); // In ra giá trị OTPResult
                         return false; // Dừng thực hiện
                     } else {
                         // Thực hiện hành động khác nếu OTPResult là 'Success'
@@ -185,10 +185,11 @@
                     return false; // Dừng form submit
                 }
 
-                if (phone.length > 10) {
-                    sendMessageError('Maximum 10 characters.');
+                if (!/^\d{10}$/.test(phone)) {
+                    sendMessageError('Phone number must be exactly 10 digits.');
                     return false; // Dừng form submit
                 }
+
 
                 if (address.length > 255) {
                     sendMessageError('Maximum 255 characters.');

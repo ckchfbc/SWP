@@ -120,7 +120,8 @@
                             <a class="border rounded-circle btn btn-outline-dark text-center" href="/CustomerController/Profile" title="Profile">
                                 <i class="fa-solid fa-user"></i>
                             </a>
-                        </li>                        <input hidden value="<%= userEmail%>" id="userEmail">    
+                        </li>                        
+                        <input hidden value="<%= userEmail%>" id="userEmail">    
                         <%
                         } else {
                             if ((userEmail != null) && (role.equals("employee"))) {
@@ -130,7 +131,8 @@
                             <a class="border rounded-circle btn btn-outline-dark text-center" href="/EmployeeController/Profile" title="Profile">
                                 <i class="fa-solid fa-user"></i>
                             </a>
-                        </li>                        <input hidden id="role" value="<%= role%>">
+                        </li>                        
+                        <input hidden id="role" value="<%= role%>">
                         <%
                         } else {
                         %>

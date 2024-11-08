@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -91,7 +92,7 @@ public class CustomerController extends HttpServlet {
         if (host.equals("/CustomerController/Appointment")) {
             request.getRequestDispatcher("/views/appointmentCustomer.jsp").forward(request, response);
         }
-        
+
         if (host.equals("/CustomerController/ResetPassword")) {
             request.getRequestDispatcher("/views/customerResetPwd.jsp").forward(request, response);
         }
@@ -116,7 +117,7 @@ public class CustomerController extends HttpServlet {
             String userEmail = request.getParameter("getInforUser");
             try {
                 CustomerAccountModel cus = cusDao.getCustomerInfor(userEmail);
-                // Chuyển đổi dữ liệu thành JSON
+                
                 Gson gson = new Gson();
                 String jsonResponse = gson.toJson(cus);
 
@@ -131,6 +132,7 @@ public class CustomerController extends HttpServlet {
         if (request.getParameter("editCusInfor") != null) {
             String name = request.getParameter("name");
             String email = request.getParameter("email");
+            String oldEmail = request.getParameter("user_email");
             String address = null;
             String phone = null;
             String emailSendOTP = (String) request.getSession().getAttribute("emailSendOTP");
@@ -142,8 +144,9 @@ public class CustomerController extends HttpServlet {
             }
 
             AccountDAO accDao = new AccountDAO();
-            CustomerAccountModel cus = accDao.getCustomerAccByEmail(email);
+            CustomerAccountModel cus = accDao.getCustomerAccByEmail(oldEmail);
             int cus_id = cus.getCustomer_id();
+            int user_id = cus.getUser_id();
 
             if (request.getParameter("address") != null) {
                 address = request.getParameter("address");
@@ -153,9 +156,10 @@ public class CustomerController extends HttpServlet {
                 phone = request.getParameter("phone").trim();
             }
 
-            boolean isUpdate = cusDao.updateCusotmerInfor(name, email, address, phone, cus_id);
+            boolean isUpdate = cusDao.updateCusotmerInfor(name, email, address, phone, cus_id, user_id);
             response.setContentType("text/html;charset=UTF-8");
             if (isUpdate) {
+                changeCookie(request, response, email);
                 try ( PrintWriter out = response.getWriter()) {
                     out.println("<script>");
                     out.println("alert('Success');");
@@ -234,6 +238,27 @@ public class CustomerController extends HttpServlet {
     public void sendMessageError(HttpServletRequest request, HttpServletResponse response, String message, String redirect) throws IOException {
         request.getSession().setAttribute("message", message);
         response.sendRedirect(redirect);
+    }
+
+    public void changeCookie(HttpServletRequest request, HttpServletResponse response, String newEmail) {
+        Cookie[] cookies = request.getCookies();
+        Cookie userEmailCookie = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("userEmail")) {
+                    userEmailCookie = cookie;
+                    break;
+                }
+            }
+        }
+
+        if (userEmailCookie != null) {
+            userEmailCookie.setValue(newEmail);
+        } else {
+            userEmailCookie = new Cookie("userEmail", newEmail);
+        }
+        response.addCookie(userEmailCookie);
     }
 
     /**

@@ -47,12 +47,27 @@ public class AppointmentDAO {
     }
 
     public boolean checkHaveAppointment(int cus_id) {
-        String sql = "SELECT * FROM appointments WHERE customer_id = ? and appointment_status = false;";
+        String sql = "SELECT customer_id, appointment_status AS status \n"
+                + "FROM appointments \n"
+                + "WHERE customer_id = ? \n"
+                + "  AND appointment_status = false\n"
+                + "\n"
+                + "UNION \n"
+                + "\n"
+                + "SELECT customer_id, \n"
+                + "       CASE \n"
+                + "           WHEN deposit_status = false THEN 'Deposit Pending' \n"
+                + "           ELSE 'Order Pending' \n"
+                + "       END AS status \n"
+                + "FROM orders \n"
+                + "WHERE customer_id = ? \n"
+                + "  AND (deposit_status = false OR order_status = false);";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try ( Connection conn = DBConnection.getConnection()) {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, cus_id);
+            stmt.setInt(2, cus_id);
             rs = stmt.executeQuery();
             while (rs.next()) {
                 return true;
