@@ -162,7 +162,6 @@
                     data: {getInforUser: userEmail}, // Gửi email dưới dạng tham số
                     dataType: 'json', // Định dạng dữ liệu trả về là JSON
                     success: function (user) {
-                        // Điền các giá trị vào các input tương ứng
                         $('#name').val(user.name);
                         console.log(user);
                         $('#email').val(user.email);

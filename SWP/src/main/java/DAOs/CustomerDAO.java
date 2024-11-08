@@ -21,7 +21,7 @@ import java.util.List;
 public class CustomerDAO {
 
     public static CustomerAccountModel getCustomerInfor(String email) throws SQLException {
-        String sql = "SELECT * FROM customers WHERE email = ?";
+        String sql = "SELECT * FROM customers WHERE email = ?;";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         CustomerAccountModel cus = new CustomerAccountModel();
@@ -48,14 +48,13 @@ public class CustomerDAO {
         return null;
     }
 
-    public boolean updateCusotmerInfor(String name, String email, String address, String phone, int cus_id) {
+    public boolean updateCusotmerInfor(String name, String email, String address, String phone, int cus_id, int user_id) {
         String sql1 = "UPDATE customers SET name = ?, email = ?, address = ?, phone_number = ? WHERE customer_id = ?; ";
         String sql2 = "UPDATE customers SET name = ?, email = ? WHERE customer_id = ?; ";
         String sql3 = "UPDATE customers SET name = ?, email = ?, phone_number = ? WHERE customer_id = ?; ";
         String sql4 = "UPDATE customers SET name = ?, email = ?, address = ? WHERE customer_id = ?; ";
+        String sql5 = "UPDATE user_account set email = ? where user_id = ?;";
         PreparedStatement stmt = null;
-//        System.out.println(name + " " + email + " " + address + " " + phone.length() + " " + cus_id);
-        //Everything ko null
         if (address != null && phone != null) {
             try ( Connection conn = DBConnection.getConnection()) {
                 stmt = conn.prepareStatement(sql1);
@@ -65,7 +64,17 @@ public class CustomerDAO {
                 stmt.setString(4, phone);
                 stmt.setInt(5, cus_id);
                 int row = stmt.executeUpdate();
-                return (row > 0);
+                if (row > 0) {
+                    try ( Connection conn1 = DBConnection.getConnection()) {
+                        PreparedStatement stmt2 = conn1.prepareStatement(sql5);
+                        stmt2.setString(1, email);
+                        stmt2.setInt(2, user_id);
+                        int row2 = stmt2.executeUpdate();
+                        return (row2 > 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -80,7 +89,17 @@ public class CustomerDAO {
                 stmt.setString(3, address);
                 stmt.setInt(4, cus_id);
                 int row = stmt.executeUpdate();
-                return (row > 0);
+                if (row > 0) {
+                    try ( Connection conn1 = DBConnection.getConnection()) {
+                        PreparedStatement stmt2 = conn1.prepareStatement(sql5);
+                        stmt2.setString(1, email);
+                        stmt2.setInt(2, user_id);
+                        int row2 = stmt2.executeUpdate();
+                        return (row2 > 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,7 +114,17 @@ public class CustomerDAO {
                 stmt.setString(3, phone);
                 stmt.setInt(4, cus_id);
                 int row = stmt.executeUpdate();
-                return (row > 0);
+               if (row > 0) {
+                    try ( Connection conn1 = DBConnection.getConnection()) {
+                        PreparedStatement stmt2 = conn1.prepareStatement(sql5);
+                        stmt2.setString(1, email);
+                        stmt2.setInt(2, user_id);
+                        int row2 = stmt2.executeUpdate();
+                        return (row2 > 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -109,7 +138,17 @@ public class CustomerDAO {
                 stmt.setString(2, email);
                 stmt.setInt(3, cus_id);
                 int row = stmt.executeUpdate();
-                return (row > 0);
+                if (row > 0) {
+                    try ( Connection conn1 = DBConnection.getConnection()) {
+                        PreparedStatement stmt2 = conn1.prepareStatement(sql5);
+                        stmt2.setString(1, email);
+                        stmt2.setInt(2, user_id);
+                        int row2 = stmt2.executeUpdate();;
+                        return (row2 > 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
