@@ -78,7 +78,7 @@
                 console.log("Form validation passed"); // Form hợp lệ
                 return true;
             }
-            
+
             function togglePassword() {
                 var passwordField = document.getElementById("password");
                 var icon = document.getElementById("icon");
@@ -236,6 +236,10 @@
             // Duyệt qua các cookies và kiểm tra cookie "userEmail" nếu có thì quay về trang chủ
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        response.sendRedirect("/AdminController/Dashboard");
+                        break;
+                    }
                     if (cookie.getName().equals("userEmail")) {
                         response.sendRedirect("/");
                         break;

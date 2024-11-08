@@ -49,10 +49,10 @@
                 var confirmPassword = document.getElementById("confirmPassword").value;
                 var passwordError = document.getElementById("passwordError");
                 var confirmError = document.getElementById("confirmError");
-                
+
                 passwordError.textContent = "";
                 confirmError.textContent = "";
-                
+
                 // Kiểm tra mật khẩu
                 var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,32}$/;
                 if (!passwordRegex.test(password)) {
@@ -60,23 +60,23 @@
                     event.preventDefault();
                     return false; // Ngăn form submit
                 }
-                
+
                 // Kiểm tra khớp mật khẩu
                 if (password !== confirmPassword) {
                     confirmError.textContent = "Passwords do not match.";
                     event.preventDefault();
                     return false; // Ngăn form submit
                 }
-                
+
                 return true; // Cho phép submit nếu hợp lệ
             }
-            
+
             function checkPasswordsMatch() {
                 var password = document.getElementById('password').value;
                 var confirmPassword = document.getElementById('confirmPassword').value;
                 var confirmError = document.getElementById('confirmError');
                 var resetBtn = document.querySelector("button[name='resetUserPWDBtn']");
-                
+
                 if (password !== confirmPassword) {
                     confirmError.textContent = "Passwords do not match.";
                     resetBtn.disabled = true;
@@ -85,11 +85,11 @@
                     resetBtn.disabled = false;
                 }
             }
-            
+
             function togglePassword() {
                 var passwordField = document.getElementById("password");
                 var icon = document.getElementById("icon");
-                
+
                 if (passwordField.type === "password") {
                     passwordField.type = "text";
                     icon.classList.remove("fa-eye");
@@ -100,12 +100,12 @@
                     icon.classList.add("fa-eye");
                 }
             }
-            
+
             function checkPasswords() {
                 var password = document.getElementById('password').value;
                 var confirmPassword = document.getElementById('confirmPassword').value;
                 var confirmError = document.getElementById('confirmError');
-                
+
                 if (password !== confirmPassword) {
                     confirmError.textContent = "Passwords do not match.";
                 } else {
@@ -113,24 +113,28 @@
                 }
             }
         </script>       
-        <%    
+        <%
             Cookie[] cookies = request.getCookies();
-            
+
             String userEmail = null;
             String role = null;
             // Duyệt qua các cookies và kiểm tra cookie "userEmail"
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        response.sendRedirect("/AdminController/Dashboard");
+                        break;
+                    }
                     if (cookie.getName().equals("role")) {
                         role = cookie.getValue();
-                        if (role.equals("customer")) {
-                            response.sendRedirect("/CustomerController/ResetPassword");
-                        }
                     }
                     if (cookie.getName().equals("userEmail")) {
                         userEmail = cookie.getValue();
                     }
                 }
+            }
+            if (!role.equals("employee")) {
+                response.sendRedirect("/");
             }
         %>
         <div class="container-fluid vh-100 m-0 p-0">
@@ -141,7 +145,7 @@
                         <c:if test="${not empty message}">
                             <div class="alert alert-warning">${message}</div>
                         </c:if>
-                        <%                    
+                        <%
                             session.removeAttribute("message");
                         %>
                         <h2 class="mb-3">Reset Password</h2>

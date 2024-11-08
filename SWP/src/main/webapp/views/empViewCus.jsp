@@ -75,6 +75,10 @@
         </script>
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
+        <%            if (!role.equals("employee")) {
+                response.sendRedirect("/");
+            }
+        %>
         <div class="container mt-5 pt-5 mb-5">
             <h2 class="text-center mb-3">View Customer</h2>
             <!-- Table Structure -->

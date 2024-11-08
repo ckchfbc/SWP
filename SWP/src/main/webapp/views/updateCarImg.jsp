@@ -18,6 +18,25 @@
         <%
             String imgId = (String) request.getAttribute("imgId");
         %>
+        <%
+            // Lấy danh sách cookies từ request
+            Cookie[] cookies = request.getCookies();
+            boolean isAdmin = false;
+            // Duyệt qua các cookies và kiểm tra cookie "userEmail"
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("admin")) {
+                        isAdmin = true;
+                    }
+                    if (cookie.getName().equals("email")) {
+                        String email = cookie.getValue();
+                    }
+                }
+            }
+            if (!isAdmin) {
+                response.sendRedirect("/");
+            }
+        %>
         <div class="container text-center">
             <h1 class="text-center">Update Car Image</h1>
             <!-- Phần alert của bắt lỗi -->
@@ -52,14 +71,14 @@
                     event.preventDefault();
                 }
             });
-            
+
             function sendMessageError(mess) {
                 const alertText = document.getElementById('alertTxt');
                 const alertError = document.getElementById('alertError');
                 alertError.classList.remove("d-none");
                 alertText.innerHTML = mess;
             }
-            
+
             function hideAlert() {
                 var alertElement = document.getElementById('alertError');
                 alertElement.classList.add('d-none');

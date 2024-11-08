@@ -39,8 +39,12 @@
         src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
 
 
-        <%@include file="navbar.jsp" %>
+        <%@include file="navbar.jsp" %>       
 
+        <%            if (!role.equals("employee")) {
+                response.sendRedirect("/");
+            }
+        %>
         <!-- Order Table -->
         <script>
             function formatDate(dateString) {

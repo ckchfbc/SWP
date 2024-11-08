@@ -64,7 +64,10 @@
     <body class="d-flex flex-column min-vh-100">
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
-
+        <%    if (!role.equals("customer")) {
+                response.sendRedirect("/");
+            }
+        %>
         <!-- wishlist -->
         <div class="container my-5">
             <h2 class="text-center mt-5 pt-5">Your Wishlist</h2>

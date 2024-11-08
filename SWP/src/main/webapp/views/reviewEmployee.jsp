@@ -40,7 +40,10 @@
 
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
-
+        <%    if (!role.equals("employee")) {
+                response.sendRedirect("/");
+            }
+        %>
         <!-- Warranty Table -->
         <script>
             // Function to format date in "dd/mm/yyyy" format

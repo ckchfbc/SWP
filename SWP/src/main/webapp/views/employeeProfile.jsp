@@ -39,7 +39,10 @@
     <body class="container-fluid p-0 d-flex flex-column min-vh-100">
         <!-- navBar -->
         <%@include file="navbar.jsp" %>
-
+        <%    if (!role.equals("employee")) {
+                response.sendRedirect("/");
+            }
+        %>
         <div class="container-fluid w-100 pt-5 mt-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
