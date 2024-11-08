@@ -72,7 +72,7 @@ public class OrderController extends HttpServlet {
         }
         if (host.startsWith("/OrderController/Edit/")) {
             request.getRequestDispatcher("/views/orderEdit.jsp").forward(request, response);
-        }          
+        }
     }
 
     /**
@@ -209,7 +209,7 @@ public class OrderController extends HttpServlet {
         if (request.getParameter("createOrderEmp") != null && request.getParameter("createOrderEmp").equals("true")) {
             int cusId = Integer.parseInt(request.getParameter("customer_id"));
             int carId = Integer.parseInt(request.getParameter("car_id"));
-            BigDecimal price = BigDecimal.valueOf(Integer.parseInt(request.getParameter("car_price")));
+            BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter("car_price")));
             BigDecimal vat = price.multiply(BigDecimal.valueOf(0.10));
             BigDecimal total = price.add(vat);
             String cccd = request.getParameter("cusCCCD");

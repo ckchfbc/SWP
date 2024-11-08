@@ -53,7 +53,7 @@
                 </div>                
                 <div class="mb-3">
                     <label for="date_start" class="form-label">Date Start</label>
-                    <input type="date" class="form-control" id="date_start" name="date_start" required>
+                    <input readonly type="date" class="form-control" id="date_start" name="date_start" required>
                 </div>
                 <div class="mb-3">
                     <label for="color" class="form-label">Color</label>
@@ -184,6 +184,7 @@
                     data: {carId: carId},
                     dataType: 'json',
                     success: function (car) {
+                        console.log(car)
                         // Populate các input với dữ liệu car
                         $('#car_name').val(car.car_name);
                         $('#date_start').val(car.date_start);
@@ -195,6 +196,7 @@
                         $('#brand_name').val(car.brand_id); // Set đúng brand_id
                         $('#fuel_name').val(car.fuel_id);   // Set đúng fuel_id
                         $('#model_name').val(car.model_id); // Set đúng model_id
+                        $('#quantity').val(car.quantity);
                     },
                     error: function (xhr, status, error) {
                         console.error("Error fetching car data: ", error);
@@ -219,15 +221,7 @@
                 if (car_name.length > 255) {
                     sendMessageError('Name cannot exceed 255 characters.');
                     event.preventDefault();
-                }
-
-                // Kiểm tra date_start không nhỏ hơn hôm nay
-                const today = new Date();
-                const curDate = today.toLocaleDateString('en-CA'); // 'en-CA' cho định dạng YYYY-MM-DD                                               
-                if (dateStart < curDate) {
-                    sendMessageError('The start date cannot be less than today.');
-                    event.preventDefault();
-                }
+                }               
 
                 // Kiểm tra color không vượt quá 255 ký tự
                 if (color.length > 255) {
